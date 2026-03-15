@@ -74,7 +74,7 @@ const GallerySection = () => {
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors duration-500 flex items-end p-6">
-                <p className="font-body text-xs tracking-[0.3em] text-foreground uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="font-body text-xs tracking-[0.3em] text-primary-foreground uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {img.category}
                 </p>
               </div>

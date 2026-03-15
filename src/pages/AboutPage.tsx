@@ -112,7 +112,7 @@ const AboutPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 1 }}
-              className="font-display text-3xl md:text-5xl text-foreground mb-8 leading-tight"
+              className="font-display text-3xl md:text-5xl text-primary-foreground mb-8 leading-tight"
             >
               Each frame is crafted with intention.
               <br />
