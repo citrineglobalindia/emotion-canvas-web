@@ -61,7 +61,7 @@ const HeroSection = () => {
         transition={{ delay: 2.5, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2"
       >
-        <div className="w-px h-16 bg-foreground/30 animate-pulse" />
+        <div className="w-px h-16 bg-primary-foreground/30 animate-pulse" />
       </motion.div>
     </section>
   );
