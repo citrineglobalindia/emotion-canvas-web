@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
+import logo from "@/assets/logo.png";
 
 const navItems = [
   { label: "Films", path: "/films" },
@@ -40,8 +41,7 @@ const Header = () => {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/90 backdrop-blur-md shadow-sm" : "bg-transparent"}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4 md:px-10">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-display text-2xl font-semibold text-foreground">Stories</span>
-          <span className="font-display text-2xl italic text-accent">by B&W</span>
+          <img src={logo} alt="Black & White" className="h-10 w-auto dark:invert" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">

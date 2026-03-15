@@ -5,6 +5,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { useState, useCallback } from "react";
+import Loader from "@/components/Loader";
 import Index from "./pages/Index.tsx";
 import FilmsPage from "./pages/FilmsPage.tsx";
 import GalleryPage from "./pages/GalleryPage.tsx";
@@ -32,18 +34,31 @@ const AnimatedRoutes = () => {
   );
 };
 
-const App = () => (
-  <ThemeProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AnimatedRoutes />
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+const App = () => {
+  const [loading, setLoading] = useState(() => {
+    const shown = sessionStorage.getItem("bw-loader-shown");
+    return !shown;
+  });
+
+  const handleComplete = useCallback(() => {
+    setLoading(false);
+    sessionStorage.setItem("bw-loader-shown", "true");
+  }, []);
+
+  return (
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          {loading && <Loader onComplete={handleComplete} />}
+          <BrowserRouter>
+            <AnimatedRoutes />
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
+};
 
 export default App;
