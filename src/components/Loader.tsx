@@ -126,7 +126,7 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               <motion.img
                 src={logoDark}
                 alt="Black & White"
-                className="w-20 h-20 object-contain invert"
+                className="w-20 h-20 object-contain invert mix-blend-screen"
                 animate={{ scale: [1, 1.03, 1] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
