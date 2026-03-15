@@ -15,6 +15,7 @@ const navItems = [
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { theme, toggle } = useTheme();
 
   const handleNav = (path: string) => {
     setIsOpen(false);
