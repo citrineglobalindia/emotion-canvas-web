@@ -24,6 +24,7 @@ const AnimatedRoutes = () => {
         <Route path="/films" element={<FilmsPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/stories" element={<StoriesPage />} />
+        <Route path="/blog" element={<BlogPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
