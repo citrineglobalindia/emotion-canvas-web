@@ -1,16 +1,14 @@
 import FilmGrain from "@/components/FilmGrain";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
-import VideoSection from "@/components/VideoSection";
-import FeaturedFilms from "@/components/FeaturedFilms";
-import GallerySection from "@/components/GallerySection";
-import StorySection from "@/components/StorySection";
-import ServicesSection from "@/components/ServicesSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import ContactSection from "@/components/ContactSection";
-import FloatingButtons from "@/components/FloatingButtons";
+import BioSection from "@/components/BioSection";
+import VideoGrid from "@/components/VideoGrid";
+import DefinesUsSection from "@/components/DefinesUsSection";
+import MagicSection from "@/components/MagicSection";
+import PhotoGrid from "@/components/PhotoGrid";
+import InstagramFeed from "@/components/InstagramFeed";
 import Footer from "@/components/Footer";
+import FloatingButtons from "@/components/FloatingButtons";
 import LeadPopup from "@/components/LeadPopup";
 
 const Index = () => {
@@ -19,14 +17,12 @@ const Index = () => {
       <FilmGrain />
       <Header />
       <HeroSection />
-      <AboutSection />
-      <VideoSection videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ" />
-      <FeaturedFilms />
-      <GallerySection />
-      <StorySection />
-      <ServicesSection />
-      <TestimonialsSection />
-      <ContactSection />
+      <BioSection />
+      <VideoGrid />
+      <DefinesUsSection />
+      <MagicSection />
+      <PhotoGrid />
+      <InstagramFeed />
       <Footer />
       <FloatingButtons />
       <LeadPopup />
