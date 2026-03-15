@@ -41,8 +41,8 @@ const Header = () => {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/90 backdrop-blur-md shadow-sm" : "bg-transparent"}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4 md:px-10">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Black & White" className={`h-10 w-auto transition-all duration-500 ${scrolled ? "dark:invert" : "invert brightness-0 invert"}`}
-            style={{ filter: scrolled ? undefined : "brightness(0) invert(1)" }} />
+          <img src={logo} alt="Black & White" className="h-10 w-auto transition-all duration-500"
+            style={{ filter: scrolled ? "none" : "brightness(0) invert(1)" }} />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
