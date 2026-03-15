@@ -4,7 +4,6 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import logoDark from "@/assets/logo-dark.jpg";
-import logoLight from "@/assets/logo-light.jpg";
 
 const navItems = [
   { label: "STORIES", path: "/stories" },
