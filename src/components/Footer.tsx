@@ -1,5 +1,5 @@
 import { Instagram, Heart } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-clean.png";
 
 const Footer = () => (
   <footer className="border-t border-border py-12 px-6 md:px-10 bg-card">
