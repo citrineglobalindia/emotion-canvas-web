@@ -59,9 +59,18 @@ const Header = () => {
           )}
         </nav>
 
-        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground">
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={toggle}
+            className="text-foreground/70 hover:text-accent transition-colors duration-300"
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground">
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
