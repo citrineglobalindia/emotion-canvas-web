@@ -50,9 +50,15 @@ const ContactSection = () => {
 
   return (
     <section id="contact">
-      {/* Full-bleed image */}
-      <div className="w-full aspect-[21/9] overflow-hidden">
-        <img src={contactBg} alt="Contact" className="w-full h-full object-cover" />
+      {/* Stats Banner */}
+      <div className="w-full aspect-[21/9] bg-foreground flex flex-col items-center justify-center gap-4">
+        <img src={logoDark} alt="Black & White" className="h-12 md:h-16 w-auto object-contain invert mix-blend-screen" />
+        <p className="font-display text-5xl md:text-7xl lg:text-8xl text-background/90 tracking-tight">
+          50<span className="text-background/50">+</span>
+        </p>
+        <p className="font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-background/50">
+          Stories Captured
+        </p>
       </div>
 
       {/* Contact Section */}
