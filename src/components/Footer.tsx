@@ -4,7 +4,7 @@ import logoLight from "@/assets/logo-light.jpg";
 const Footer = () => (
   <footer className="bg-foreground py-12 px-6 md:px-10">
     <div className="max-w-[1600px] mx-auto flex flex-col items-center gap-6">
-      <img src={logo} alt="Black & White" className="h-8 w-auto invert dark:invert-0" />
+      <img src={logoLight} alt="Black & White" className="h-8 w-auto object-contain" />
       <a
         href="https://www.instagram.com/storiesby_black_and_white"
         target="_blank"

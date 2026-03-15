@@ -124,9 +124,9 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               className="relative z-10"
             >
               <motion.img
-                src={logo}
+                src={logoLight}
                 alt="Black & White"
-                className="w-20 h-20 object-contain invert"
+                className="w-20 h-20 object-contain"
                 animate={{ scale: [1, 1.03, 1] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />

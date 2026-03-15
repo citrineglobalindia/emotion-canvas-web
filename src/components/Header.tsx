@@ -41,10 +41,9 @@ const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img
-            src={logo}
+            src={scrolled ? logoDark : logoLight}
             alt="Black & White"
-            className="h-12 md:h-14 w-auto transition-all duration-500"
-            style={{ filter: scrolled ? "none" : "brightness(0) invert(1)" }}
+            className="h-12 md:h-14 w-auto transition-all duration-500 object-contain"
           />
         </Link>
 
