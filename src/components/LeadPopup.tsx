@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles } from "lucide-react";
+import { X, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const LeadPopup = () => {
   const [show, setShow] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (dismissed) return;
@@ -21,10 +24,24 @@ const LeadPopup = () => {
 
   const close = () => { setShow(false); setDismissed(true); };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thank you! We'll reach out soon.");
-    close();
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from("contact_submissions").insert({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || null,
+        message: "Lead popup submission",
+      });
+      if (error) throw error;
+      toast.success("Thank you! We'll reach out soon.");
+      close();
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -46,10 +63,12 @@ const LeadPopup = () => {
             <h3 className="font-display text-3xl text-foreground mb-2">Book Your <em className="text-accent">Story</em></h3>
             <p className="font-body text-sm text-muted-foreground mb-8">Reserve your date before it's gone.</p>
             <form onSubmit={handleSubmit} className="space-y-3">
-              <Input placeholder="Name" className="bg-card border-border font-body h-11 rounded-xl" required />
-              <Input type="email" placeholder="Email" className="bg-card border-border font-body h-11 rounded-xl" required />
-              <Input type="tel" placeholder="Phone" className="bg-card border-border font-body h-11 rounded-xl" />
-              <Button variant="accent" type="submit" className="w-full">Reserve My Date</Button>
+              <Input placeholder="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-card border-border font-body h-11 rounded-xl" required />
+              <Input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-card border-border font-body h-11 rounded-xl" required />
+              <Input type="tel" placeholder="Phone" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="bg-card border-border font-body h-11 rounded-xl" />
+              <Button variant="accent" type="submit" className="w-full" disabled={submitting}>
+                {submitting ? <><Loader2 size={16} className="animate-spin mr-2" /> Reserving...</> : "Reserve My Date"}
+              </Button>
             </form>
           </motion.div>
         </motion.div>
