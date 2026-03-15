@@ -1,34 +1,60 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
-const navItems = ["Films", "Gallery", "Stories", "About", "Contact"];
+const navItems = [
+  { label: "Films", path: "/films" },
+  { label: "Gallery", path: "/gallery" },
+  { label: "Stories", path: "/stories" },
+  { label: "About", path: "/about" },
+  { label: "Contact", path: "/#contact" },
+];
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
+  const handleNav = (path: string) => {
     setIsOpen(false);
+    if (path.startsWith("/#")) {
+      if (location.pathname !== "/") {
+        window.location.href = path;
+      } else {
+        document.getElementById(path.slice(2))?.scrollIntoView({ behavior: "smooth" });
+      }
+    }
   };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/20 backdrop-blur-sm">
       <div className="flex items-center justify-between px-8 py-6 md:px-16">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="text-foreground font-display text-lg tracking-[0.2em]">
+        <Link to="/" className="text-foreground font-display text-lg tracking-[0.2em]">
           B&W FILMS
-        </button>
+        </Link>
 
         <nav className="hidden md:flex items-center gap-10">
-          {navItems.map((item) => (
-            <button
-              key={item}
-              onClick={() => scrollTo(item)}
-              className="text-foreground/70 hover:text-accent font-body text-xs tracking-[0.3em] uppercase transition-colors duration-300"
-            >
-              {item}
-            </button>
-          ))}
+          {navItems.map((item) =>
+            item.path.startsWith("/#") ? (
+              <button
+                key={item.label}
+                onClick={() => handleNav(item.path)}
+                className={`font-body text-xs tracking-[0.3em] uppercase transition-colors duration-300 text-foreground/70 hover:text-accent`}
+              >
+                {item.label}
+              </button>
+            ) : (
+              <Link
+                key={item.label}
+                to={item.path}
+                className={`font-body text-xs tracking-[0.3em] uppercase transition-colors duration-300 ${
+                  location.pathname === item.path ? "text-accent" : "text-foreground/70 hover:text-accent"
+                }`}
+              >
+                {item.label}
+              </Link>
+            )
+          )}
         </nav>
 
         <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground">
@@ -44,15 +70,26 @@ const Header = () => {
             exit={{ opacity: 0, y: -20 }}
             className="md:hidden bg-background/95 backdrop-blur-md px-8 pb-8"
           >
-            {navItems.map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollTo(item)}
-                className="block w-full text-left py-4 text-foreground/70 hover:text-accent font-body text-sm tracking-[0.3em] uppercase border-b border-border transition-colors"
-              >
-                {item}
-              </button>
-            ))}
+            {navItems.map((item) =>
+              item.path.startsWith("/#") ? (
+                <button
+                  key={item.label}
+                  onClick={() => handleNav(item.path)}
+                  className="block w-full text-left py-4 text-foreground/70 hover:text-accent font-body text-sm tracking-[0.3em] uppercase border-b border-border transition-colors"
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <Link
+                  key={item.label}
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className="block w-full text-left py-4 text-foreground/70 hover:text-accent font-body text-sm tracking-[0.3em] uppercase border-b border-border transition-colors"
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
           </motion.div>
         )}
       </AnimatePresence>
