@@ -1,6 +1,5 @@
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef, useState } from "react";
-import { Grid3X3 } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
@@ -8,65 +7,60 @@ import gallery4 from "@/assets/gallery-4.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
 import gallery6 from "@/assets/gallery-6.jpg";
 
-const categories = ["All", "Weddings", "Couple Stories", "Portraits", "Destination"];
 const images = [
-  { src: gallery1, category: "Couple Stories" },
-  { src: gallery2, category: "Destination" },
-  { src: gallery3, category: "Portraits" },
-  { src: gallery4, category: "Weddings" },
-  { src: gallery5, category: "Weddings" },
-  { src: gallery6, category: "Couple Stories" },
+  { src: gallery1, span: "md:col-span-4 md:row-span-2" },
+  { src: gallery2, span: "md:col-span-4" },
+  { src: gallery3, span: "md:col-span-4" },
+  { src: gallery4, span: "md:col-span-6" },
+  { src: gallery5, span: "md:col-span-6" },
+  { src: gallery6, span: "md:col-span-12" },
 ];
 
 const GallerySection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [activeFilter, setActiveFilter] = useState("All");
-
-  const filtered = activeFilter === "All" ? images : images.filter((img) => img.category === activeFilter);
 
   return (
-    <section id="gallery" className="py-24 md:py-32 px-6 md:px-10">
-      <div ref={ref} className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
-            className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
-            <Grid3X3 size={14} />
-            <span className="font-body text-xs font-medium uppercase tracking-wider">Portfolio</span>
-          </motion.div>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2 }}
-            className="font-display text-4xl md:text-5xl text-foreground">
-            Our <em className="text-accent">Gallery</em>
+    <section id="gallery" className="py-20 md:py-28">
+      <div ref={ref} className="max-w-[1600px] mx-auto px-4 md:px-6">
+        <div className="text-center mb-16 md:mb-20">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            className="font-body text-[11px] tracking-[0.35em] text-muted-foreground uppercase mb-5"
+          >
+            Portfolio
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.15 }}
+            className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground"
+          >
+            Gallery
           </motion.h2>
         </div>
 
-        <div className="flex justify-center gap-2 mb-12 flex-wrap">
-          {categories.map((cat) => (
-            <button key={cat} onClick={() => setActiveFilter(cat)}
-              className={`font-body text-sm px-5 py-2 rounded-full transition-all duration-300 ${
-                activeFilter === cat ? "bg-accent text-accent-foreground shadow-md" : "bg-secondary text-muted-foreground hover:bg-accent/10 hover:text-accent"
-              }`}>
-              {cat}
-            </button>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
+          {images.map((img, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 25 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.08 * i }}
+              className={`${img.span} overflow-hidden group cursor-pointer`}
+            >
+              <div className="relative w-full h-full min-h-[250px] md:min-h-[300px]">
+                <img
+                  src={img.src}
+                  alt="Gallery"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500" />
+              </div>
+            </motion.div>
           ))}
-        </div>
-
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((img, i) => (
-              <motion.div key={img.src + activeFilter} layout
-                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ delay: 0.05 * i, duration: 0.4 }}
-                className="mb-4 break-inside-avoid group relative overflow-hidden rounded-2xl cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src={img.src} alt={img.category} className="w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex items-end p-5">
-                  <span className="bg-primary-foreground/15 backdrop-blur-md text-primary-foreground font-body text-xs px-3 py-1.5 rounded-full border border-primary-foreground/20">
-                    {img.category}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
         </div>
       </div>
     </section>

@@ -6,9 +6,9 @@ import film2 from "@/assets/film-2.jpg";
 import film3 from "@/assets/film-3.jpg";
 
 const films = [
-  { image: film1, title: "Wedding Films", subtitle: "Timeless ceremonies captured in cinematic glory", tag: "Most Popular" },
-  { image: film2, title: "Love Stories", subtitle: "Intimate pre-wedding narratives in dreamy locations", tag: "Trending" },
-  { image: film3, title: "Cinematic Stories", subtitle: "Destination weddings turned into visual poetry", tag: "New" },
+  { image: film1, title: "Wedding Films", subtitle: "Timeless ceremonies captured in cinematic glory" },
+  { image: film2, title: "Love Stories", subtitle: "Intimate pre-wedding narratives" },
+  { image: film3, title: "Cinematic Stories", subtitle: "Destination weddings as visual poetry" },
 ];
 
 const FeaturedFilms = () => {
@@ -16,60 +16,97 @@ const FeaturedFilms = () => {
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
-    <section id="films" className="py-24 md:py-32 px-6 md:px-10 bg-warm">
-      <div ref={ref} className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
-            className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
-            <Play size={14} />
-            <span className="font-body text-xs font-medium uppercase tracking-wider">Featured Work</span>
-          </motion.div>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2 }}
-            className="font-display text-4xl md:text-5xl text-foreground">
-            Our <em className="text-accent">Films</em>
+    <section id="films" className="px-4 md:px-6 pb-4 md:pb-6">
+      <div ref={ref} className="max-w-[1600px] mx-auto">
+        {/* Section label */}
+        <div className="py-16 md:py-20 text-center">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            className="font-body text-[11px] tracking-[0.35em] text-muted-foreground uppercase mb-5"
+          >
+            Featured Work
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.15 }}
+            className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground"
+          >
+            Our Films
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {films.map((film, i) => (
-            <FilmCard key={film.title} film={film} index={i} isInView={isInView} />
-          ))}
+        {/* Editorial asymmetric grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5">
+          {/* Large left */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="md:col-span-7"
+          >
+            <FilmCard film={films[0]} aspect="aspect-[4/5]" />
+          </motion.div>
+
+          {/* Right column - stacked */}
+          <div className="md:col-span-5 flex flex-col gap-4 md:gap-5">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.35 }}
+            >
+              <FilmCard film={films[1]} aspect="aspect-[3/2]" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              <FilmCard film={films[2]} aspect="aspect-[3/2]" />
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-const FilmCard = ({ film, index, isInView }: { film: typeof films[0]; index: number; isInView: boolean }) => {
-  const [isHovered, setIsHovered] = useState(false);
+const FilmCard = ({ film, aspect }: { film: typeof films[0]; aspect: string }) => {
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <motion.div initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay: 0.2 + index * 0.15 }}
-      className="group cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-      <div className="relative overflow-hidden rounded-2xl aspect-[3/4] shadow-lg">
-        <motion.img src={film.image} alt={film.title} className="w-full h-full object-cover"
-          animate={{ scale: isHovered ? 1.08 : 1 }} transition={{ duration: 0.6 }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+    <div
+      className={`relative overflow-hidden cursor-pointer group ${aspect}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <motion.img
+        src={film.image}
+        alt={film.title}
+        className="absolute inset-0 w-full h-full object-cover"
+        animate={{ scale: hovered ? 1.05 : 1 }}
+        transition={{ duration: 0.8 }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
 
-        <div className="absolute top-4 left-4">
-          <span className="bg-accent text-accent-foreground font-body text-[10px] font-medium uppercase tracking-wider px-3 py-1.5 rounded-full">{film.tag}</span>
+      {/* Play icon */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center"
+        animate={{ opacity: hovered ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="w-16 h-16 bg-primary-foreground/15 backdrop-blur-sm rounded-full flex items-center justify-center border border-primary-foreground/25">
+          <Play className="text-primary-foreground ml-0.5" size={20} fill="currentColor" />
         </div>
+      </motion.div>
 
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div animate={{ scale: isHovered ? 1 : 0.8, opacity: isHovered ? 1 : 0 }} transition={{ duration: 0.3 }}
-            className="w-14 h-14 bg-primary-foreground/20 backdrop-blur-md rounded-full flex items-center justify-center border border-primary-foreground/30">
-            <Play className="text-primary-foreground ml-0.5" size={18} fill="currentColor" />
-          </motion.div>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <h3 className="font-display text-2xl text-primary-foreground font-semibold">{film.title}</h3>
-          <p className="font-body text-sm text-primary-foreground/70 mt-1 leading-relaxed">{film.subtitle}</p>
-        </div>
+      {/* Text */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+        <h3 className="font-display text-2xl md:text-3xl text-primary-foreground">{film.title}</h3>
+        <p className="font-body text-[13px] text-primary-foreground/60 mt-2">{film.subtitle}</p>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
