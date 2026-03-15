@@ -1,5 +1,6 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
+import { Grid3X3 } from "lucide-react";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
@@ -8,14 +9,13 @@ import gallery5 from "@/assets/gallery-5.jpg";
 import gallery6 from "@/assets/gallery-6.jpg";
 
 const categories = ["All", "Weddings", "Couple Stories", "Portraits", "Destination"];
-
 const images = [
-  { src: gallery1, category: "Couple Stories", tall: true },
-  { src: gallery2, category: "Destination", tall: false },
-  { src: gallery3, category: "Portraits", tall: true },
-  { src: gallery4, category: "Weddings", tall: false },
-  { src: gallery5, category: "Weddings", tall: true },
-  { src: gallery6, category: "Couple Stories", tall: false },
+  { src: gallery1, category: "Couple Stories" },
+  { src: gallery2, category: "Destination" },
+  { src: gallery3, category: "Portraits" },
+  { src: gallery4, category: "Weddings" },
+  { src: gallery5, category: "Weddings" },
+  { src: gallery6, category: "Couple Stories" },
 ];
 
 const GallerySection = () => {
@@ -26,60 +26,47 @@ const GallerySection = () => {
   const filtered = activeFilter === "All" ? images : images.filter((img) => img.category === activeFilter);
 
   return (
-    <section id="gallery" className="py-32 px-6 md:px-16">
-      <div ref={ref}>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          className="font-body text-xs tracking-[0.5em] text-accent uppercase text-center mb-4"
-        >
-          Portfolio
-        </motion.p>
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2 }}
-          className="font-display text-3xl md:text-5xl text-foreground text-center mb-12"
-        >
-          Our <em>Gallery</em>
-        </motion.h2>
+    <section id="gallery" className="py-24 md:py-32 px-6 md:px-10">
+      <div ref={ref} className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
+            className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
+            <Grid3X3 size={14} />
+            <span className="font-body text-xs font-medium uppercase tracking-wider">Portfolio</span>
+          </motion.div>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2 }}
+            className="font-display text-4xl md:text-5xl text-foreground">
+            Our <em className="text-accent">Gallery</em>
+          </motion.h2>
+        </div>
 
-        <div className="flex justify-center gap-6 mb-16 flex-wrap">
+        <div className="flex justify-center gap-2 mb-12 flex-wrap">
           {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveFilter(cat)}
-              className={`font-body text-xs tracking-[0.2em] uppercase transition-colors duration-300 pb-1 border-b ${
-                activeFilter === cat ? "text-accent border-accent" : "text-muted-foreground border-transparent hover:text-foreground"
-              }`}
-            >
+            <button key={cat} onClick={() => setActiveFilter(cat)}
+              className={`font-body text-sm px-5 py-2 rounded-full transition-all duration-300 ${
+                activeFilter === cat ? "bg-accent text-accent-foreground shadow-md" : "bg-secondary text-muted-foreground hover:bg-accent/10 hover:text-accent"
+              }`}>
               {cat}
             </button>
           ))}
         </div>
 
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 max-w-6xl mx-auto">
-          {filtered.map((img, i) => (
-            <motion.div
-              key={img.src}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.1 * i, duration: 0.6 }}
-              className="mb-4 break-inside-avoid group relative overflow-hidden cursor-pointer"
-            >
-              <img
-                src={img.src}
-                alt={img.category}
-                className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors duration-500 flex items-end p-6">
-                <p className="font-body text-xs tracking-[0.3em] text-primary-foreground uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  {img.category}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
+          <AnimatePresence mode="popLayout">
+            {filtered.map((img, i) => (
+              <motion.div key={img.src + activeFilter} layout
+                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ delay: 0.05 * i, duration: 0.4 }}
+                className="mb-4 break-inside-avoid group relative overflow-hidden rounded-2xl cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src={img.src} alt={img.category} className="w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex items-end p-5">
+                  <span className="bg-primary-foreground/15 backdrop-blur-md text-primary-foreground font-body text-xs px-3 py-1.5 rounded-full border border-primary-foreground/20">
+                    {img.category}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </section>
