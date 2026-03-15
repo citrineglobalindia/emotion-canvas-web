@@ -1,6 +1,6 @@
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
-import { Send, Bot, User } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { Send, Bot, User, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 
@@ -8,31 +8,49 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-const ChatBot = () => {
-  const ref = useRef(null);
+const QUICK_REPLIES = [
+  "📸 Photography packages",
+  "🎬 Wedding film styles",
+  "💰 Pricing info",
+  "📅 Check availability",
+];
+
+interface ChatBotProps {
+  variant?: "inline" | "floating";
+}
+
+const ChatBot = ({ variant = "inline" }: ChatBotProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const inputRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Hi there! 💕 I'd love to hear about your wedding plans. How can I help you today?" },
+    {
+      role: "assistant",
+      content: "Hi there! 💕 I'd love to hear about your wedding plans. How can I help you today?",
+    },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showQuickReplies, setShowQuickReplies] = useState(true);
 
   const scrollToBottom = () => {
     setTimeout(() => {
       scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-    }, 50);
+    }, 60);
   };
 
-  const send = async () => {
-    const text = input.trim();
-    if (!text || isLoading) return;
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-    const userMsg: Msg = { role: "user", content: text };
+  const send = async (text?: string) => {
+    const msg = (text || input).trim();
+    if (!msg || isLoading) return;
+
+    setShowQuickReplies(false);
+    const userMsg: Msg = { role: "user", content: msg };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
-    scrollToBottom();
 
     let assistantSoFar = "";
 
@@ -86,7 +104,6 @@ const ChatBot = () => {
                 }
                 return [...prev, { role: "assistant", content: assistantSoFar }];
               });
-              scrollToBottom();
             }
           } catch {
             textBuffer = line + "\n" + textBuffer;
@@ -97,96 +114,133 @@ const ChatBot = () => {
     } catch (e) {
       console.error(e);
       toast.error(e instanceof Error ? e.message : "Something went wrong");
-      // Remove failed user message if no assistant response
       if (!assistantSoFar) {
         setMessages((prev) => prev.slice(0, -1));
       }
     } finally {
       setIsLoading(false);
+      inputRef.current?.focus();
     }
   };
 
+  const isFloating = variant === "floating";
+  const chatHeight = isFloating ? "h-[350px]" : "h-[380px]";
+
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay: 0.3 }}
-      className="w-full max-w-xl mx-auto"
-    >
-      {/* Chat window */}
-      <div className="border border-border/50 bg-background/50 backdrop-blur-sm overflow-hidden">
+    <div className={`w-full ${isFloating ? "" : "max-w-xl mx-auto"}`}>
+      <div className={`bg-background overflow-hidden ${isFloating ? "" : "border border-border/40 rounded-xl shadow-sm"}`}>
         {/* Messages */}
-        <div ref={scrollRef} className="h-[320px] overflow-y-auto p-4 md:p-6 space-y-4 scrollbar-thin">
+        <div ref={scrollRef} className={`${chatHeight} overflow-y-auto px-4 py-5 space-y-4 scrollbar-thin`}>
           {messages.map((msg, i) => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 8 }}
+              key={`${i}-${msg.content.slice(0, 10)}`}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className={`flex gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
             >
+              {/* Avatar */}
               <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                  msg.role === "user" ? "bg-foreground text-background" : "bg-accent text-accent-foreground"
+                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-1 ${
+                  msg.role === "user"
+                    ? "bg-foreground text-background"
+                    : "bg-accent/80 text-accent-foreground"
                 }`}
               >
-                {msg.role === "user" ? <User size={13} /> : <Bot size={13} />}
+                {msg.role === "user" ? <User size={12} /> : <Sparkles size={12} />}
               </div>
+
+              {/* Bubble */}
               <div
-                className={`max-w-[80%] px-4 py-2.5 ${
+                className={`max-w-[78%] px-3.5 py-2.5 ${
                   msg.role === "user"
-                    ? "bg-foreground text-background font-body text-sm"
-                    : "bg-secondary/60 text-foreground"
+                    ? "bg-foreground text-background rounded-2xl rounded-tr-sm"
+                    : "bg-muted/60 text-foreground rounded-2xl rounded-tl-sm"
                 }`}
               >
                 {msg.role === "assistant" ? (
-                  <div className="font-body text-sm leading-relaxed prose prose-sm max-w-none dark:prose-invert prose-p:my-1">
+                  <div className="font-body text-[13px] leading-relaxed prose prose-sm max-w-none dark:prose-invert prose-p:my-0.5 prose-p:leading-relaxed">
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   </div>
                 ) : (
-                  <p className="text-sm leading-relaxed">{msg.content}</p>
+                  <p className="font-body text-[13px] leading-relaxed">{msg.content}</p>
                 )}
               </div>
             </motion.div>
           ))}
-          {isLoading && messages[messages.length - 1]?.role === "user" && (
-            <div className="flex gap-3">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-accent text-accent-foreground">
-                <Bot size={13} />
-              </div>
-              <div className="bg-secondary/60 px-4 py-3">
-                <div className="flex gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:0ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:150ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:300ms]" />
+
+          {/* Typing indicator */}
+          <AnimatePresence>
+            {isLoading && messages[messages.length - 1]?.role === "user" && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex gap-2.5"
+              >
+                <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-accent/80 text-accent-foreground">
+                  <Sparkles size={12} />
                 </div>
-              </div>
-            </div>
-          )}
+                <div className="bg-muted/60 rounded-2xl rounded-tl-sm px-4 py-3">
+                  <div className="flex gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:0ms]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:150ms]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:300ms]" />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Quick replies */}
+          <AnimatePresence>
+            {showQuickReplies && !isLoading && messages.length === 1 && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ delay: 0.3, duration: 0.3 }}
+                className="flex flex-wrap gap-2 pt-1"
+              >
+                {QUICK_REPLIES.map((text, i) => (
+                  <motion.button
+                    key={text}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4 + i * 0.08 }}
+                    onClick={() => send(text)}
+                    className="px-3 py-1.5 rounded-full border border-border/60 bg-background hover:bg-muted/50 font-body text-[11px] text-foreground/70 hover:text-foreground transition-all duration-200 hover:border-foreground/30"
+                  >
+                    {text}
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Input */}
-        <div className="border-t border-border/50 p-3 flex gap-2">
+        {/* Input area */}
+        <div className="border-t border-border/40 bg-muted/20 p-3 flex items-center gap-2">
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
-            placeholder="Ask about our services..."
-            className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground/50 px-3 py-2 focus:outline-none"
+            placeholder="Type a message..."
+            className="flex-1 bg-transparent font-body text-[13px] text-foreground placeholder:text-muted-foreground/40 px-2 py-1.5 focus:outline-none"
             disabled={isLoading}
           />
           <button
-            onClick={send}
+            onClick={() => send()}
             disabled={isLoading || !input.trim()}
-            className="w-9 h-9 flex items-center justify-center text-foreground/60 hover:text-foreground disabled:opacity-30 transition-all"
+            className="w-8 h-8 rounded-full bg-foreground text-background flex items-center justify-center disabled:opacity-20 hover:opacity-80 transition-all duration-200 shrink-0"
           >
-            <Send size={16} />
+            <Send size={13} className="-translate-x-[0.5px]" />
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
