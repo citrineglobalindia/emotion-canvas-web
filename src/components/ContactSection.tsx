@@ -4,6 +4,45 @@ import { Mail, Phone, MapPin, Instagram, Send } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import logoDark from "@/assets/logo-dark.jpg";
+import photo1 from "@/assets/photo-1.jpg";
+import photo2 from "@/assets/photo-2.jpg";
+import photo3 from "@/assets/photo-3.jpg";
+import photo4 from "@/assets/photo-4.jpg";
+import photo5 from "@/assets/photo-5.jpg";
+import photo6 from "@/assets/photo-6.jpg";
+import photo7 from "@/assets/photo-7.jpg";
+import photo8 from "@/assets/photo-8.jpg";
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery2 from "@/assets/gallery-2.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery4 from "@/assets/gallery-4.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
+import gallery6 from "@/assets/gallery-6.jpg";
+import blog1 from "@/assets/blog-1.jpg";
+import blog2 from "@/assets/blog-2.jpg";
+import blog3 from "@/assets/blog-3.jpg";
+import blog4 from "@/assets/blog-4.jpg";
+import blog5 from "@/assets/blog-5.jpg";
+import blog6 from "@/assets/blog-6.jpg";
+import film1 from "@/assets/film-1.jpg";
+import film2 from "@/assets/film-2.jpg";
+import film3 from "@/assets/film-3.jpg";
+import story1 from "@/assets/story-1.jpg";
+import story2 from "@/assets/story-2.jpg";
+import heroBg from "@/assets/hero-bg.jpg";
+import contactBg from "@/assets/contact-bg.jpg";
+import aboutTeam from "@/assets/about-team.jpg";
+
+const mosaicPhotos = [
+  photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8,
+  gallery1, gallery2, gallery3, gallery4, gallery5, gallery6,
+  blog1, blog2, blog3, blog4, blog5, blog6,
+  film1, film2, film3, story1, story2, heroBg, contactBg, aboutTeam,
+  // Repeat to fill ~50
+  photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8,
+  gallery1, gallery2, gallery3, gallery4, gallery5, gallery6,
+  film1, film2, film3, story1, story2, heroBg, contactBg, aboutTeam,
+];
 
 const ContactSection = () => {
   const ref = useRef(null);
@@ -50,15 +89,29 @@ const ContactSection = () => {
 
   return (
     <section id="contact">
-      {/* Stats Banner */}
-      <div className="w-full aspect-[21/9] bg-foreground flex flex-col items-center justify-center gap-4">
-        <img src={logoDark} alt="Black & White" className="h-12 md:h-16 w-auto object-contain invert mix-blend-screen" />
-        <p className="font-display text-5xl md:text-7xl lg:text-8xl text-background/90 tracking-tight">
-          50<span className="text-background/50">+</span>
-        </p>
-        <p className="font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-background/50">
-          Stories Captured
-        </p>
+      {/* Photo Mosaic with Centered Logo */}
+      <div className="relative w-full overflow-hidden">
+        <div className="grid grid-cols-7 md:grid-cols-10 gap-0">
+          {mosaicPhotos.map((photo, i) => (
+            <div key={i} className="aspect-square overflow-hidden">
+              <img
+                src={photo}
+                alt=""
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+        {/* Dark overlay + centered logo */}
+        <div className="absolute inset-0 bg-foreground/60 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <img src={logoDark} alt="Black & White" className="h-14 md:h-20 w-auto object-contain invert mix-blend-screen" />
+            <p className="font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-background/60">
+              50+ Stories Captured
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Contact Section */}
