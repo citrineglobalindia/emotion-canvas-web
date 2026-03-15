@@ -2,6 +2,7 @@ import FilmGrain from "@/components/FilmGrain";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
+import VideoSection from "@/components/VideoSection";
 import FeaturedFilms from "@/components/FeaturedFilms";
 import GallerySection from "@/components/GallerySection";
 import StorySection from "@/components/StorySection";
@@ -19,6 +20,7 @@ const Index = () => {
       <Header />
       <HeroSection />
       <AboutSection />
+      <VideoSection videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ" />
       <FeaturedFilms />
       <GallerySection />
       <StorySection />
