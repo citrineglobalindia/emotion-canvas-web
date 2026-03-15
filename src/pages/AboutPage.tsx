@@ -105,7 +105,7 @@ const AboutPage = () => {
         {/* Philosophy */}
         <div className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
           <img src={heroBg} alt="Cinematic backdrop" className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-background/70" />
+          <div className="absolute inset-0 bg-foreground/70" />
           <div className="relative z-10 text-center px-6 py-24">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
