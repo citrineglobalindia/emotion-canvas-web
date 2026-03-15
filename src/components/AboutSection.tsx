@@ -1,74 +1,60 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import aboutImg from "@/assets/about-team.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
 
 const AboutSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" className="py-0">
-      {/* Full-bleed image */}
-      <div className="relative w-full h-[70vh] overflow-hidden">
-        <motion.div
-          initial={{ scale: 1.05 }}
-          animate={isInView ? { scale: 1 } : {}}
-          transition={{ duration: 1.5 }}
-          className="w-full h-full"
-        >
-          <img src={aboutImg} alt="Our team at work" className="w-full h-full object-cover" />
-        </motion.div>
-      </div>
-
-      {/* Minimal text block */}
-      <div ref={ref} className="max-w-3xl mx-auto px-6 py-20 md:py-28 text-center">
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8 }}
-          className="font-body text-[11px] tracking-[0.35em] text-muted-foreground uppercase mb-8"
-        >
-          Our Philosophy
-        </motion.p>
-
+    <section id="about" ref={ref}>
+      {/* "a Unique take" tagline */}
+      <div className="bg-warm py-20 md:py-28 text-center px-6">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="font-display text-3xl md:text-5xl lg:text-6xl text-foreground leading-[1.15] mb-8"
+          transition={{ duration: 1 }}
+          className="font-display text-3xl md:text-5xl lg:text-6xl text-foreground leading-[1.3] max-w-4xl mx-auto"
         >
-          We are storytellers <em>of emotion.</em>
+          a <em>Unique</em> take on
+          <br />
+          Fine Art Documentary
+          <br />
+          Wedding Photography
         </motion.h2>
+      </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-body text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto"
-        >
-          Through cinematic films and timeless photography, we capture moments that become memories.
-          Every frame is painted with emotion, light, and authenticity. We believe your love story
-          deserves to be told with the same passion and artistry as the greatest films ever made.
-        </motion.p>
-
+      {/* Image grid - two stacked images */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex justify-center gap-16 mt-14"
+          transition={{ duration: 1, delay: 0.2 }}
+          className="aspect-[3/4] overflow-hidden"
         >
-          {[
-            { num: "200+", label: "Films" },
-            { num: "500+", label: "Stories" },
-            { num: "15+", label: "Countries" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="font-display text-3xl md:text-4xl text-foreground">{stat.num}</p>
-              <p className="font-body text-[11px] tracking-[0.2em] text-muted-foreground uppercase mt-1">{stat.label}</p>
-            </div>
-          ))}
+          <img src={aboutImg} alt="Wedding photography" className="w-full h-full object-cover" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="aspect-[3/4] overflow-hidden"
+        >
+          <img src={gallery3} alt="Wedding moment" className="w-full h-full object-cover" />
         </motion.div>
       </div>
+
+      {/* Full bleed image */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+        transition={{ duration: 1, delay: 0.5 }}
+        className="w-full aspect-[21/9] overflow-hidden"
+      >
+        <img src={gallery5} alt="Cinematic scene" className="w-full h-full object-cover" />
+      </motion.div>
     </section>
   );
 };

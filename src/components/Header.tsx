@@ -6,12 +6,9 @@ import { useTheme } from "@/hooks/useTheme";
 import logo from "@/assets/logo-clean.png";
 
 const navItems = [
-  { label: "Films", path: "/films" },
-  { label: "Gallery", path: "/gallery" },
-  { label: "Stories", path: "/stories" },
-  { label: "Blog", path: "/blog" },
-  { label: "About", path: "/about" },
-  { label: "Contact", path: "/#contact" },
+  { label: "STORIES", path: "/stories" },
+  { label: "FILMS", path: "/films" },
+  { label: "BLOGS", path: "/blog" },
 ];
 
 const Header = () => {
@@ -38,66 +35,93 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/90 backdrop-blur-md shadow-sm" : "bg-transparent"}`}>
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4 md:px-10">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Black & White" className="h-10 w-auto transition-all duration-500"
-            style={{ filter: scrolled ? "none" : "brightness(0) invert(1)" }} />
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled ? "bg-background/95 backdrop-blur-sm" : "bg-transparent"}`}>
+      <div className="flex items-center justify-between px-6 md:px-10 py-5 md:py-6">
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <img
+            src={logo}
+            alt="Black & White"
+            className="h-12 md:h-14 w-auto transition-all duration-500"
+            style={{ filter: scrolled ? "none" : "brightness(0) invert(1)" }}
+          />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item) =>
-            item.path.startsWith("/#") ? (
-              <button key={item.label} onClick={() => handleNav(item.path)}
-                className="font-body text-sm text-foreground/70 hover:text-accent transition-colors duration-300 relative group">
-                {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full rounded-full" />
-              </button>
-            ) : (
-              <Link key={item.label} to={item.path}
-                className={`font-body text-sm transition-colors duration-300 relative group ${location.pathname === item.path ? "text-accent" : "text-foreground/70 hover:text-accent"}`}>
-                {item.label}
-                <span className={`absolute -bottom-1 left-0 h-0.5 bg-accent transition-all duration-300 rounded-full ${location.pathname === item.path ? "w-full" : "w-0 group-hover:w-full"}`} />
-              </Link>
-            )
-          )}
-        </nav>
+        {/* Right nav */}
+        <div className="hidden md:flex items-center gap-8">
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              to={item.path}
+              className={`font-body text-[12px] tracking-[0.25em] transition-colors duration-300 ${
+                scrolled ? "text-foreground/70 hover:text-foreground" : "text-primary-foreground/70 hover:text-primary-foreground"
+              } ${location.pathname === item.path ? (scrolled ? "text-foreground" : "text-primary-foreground") : ""}`}
+            >
+              {item.label}
+            </Link>
+          ))}
 
-        <div className="flex items-center gap-3">
-          <button onClick={toggle} className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-foreground/70 hover:text-accent hover:bg-accent/10 transition-all duration-300" aria-label="Toggle theme">
-            {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
-          </button>
-          <Link to="/#contact" className="hidden md:inline-flex font-body text-sm bg-accent text-accent-foreground px-5 py-2.5 rounded-full hover:bg-accent/90 transition-all duration-300 shadow-md hover:shadow-lg">
-            Book Now
+          <Link
+            to="/#contact"
+            onClick={() => handleNav("/#contact")}
+            className={`font-body text-[12px] tracking-[0.25em] px-5 py-2 border transition-all duration-300 ${
+              scrolled
+                ? "border-foreground/30 text-foreground hover:bg-foreground hover:text-background"
+                : "border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground hover:text-foreground"
+            }`}
+          >
+            BOOK US
           </Link>
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-foreground">
-            {isOpen ? <X size={18} /> : <Menu size={18} />}
+
+          <button
+            onClick={toggle}
+            className={`w-8 h-8 flex items-center justify-center transition-colors duration-300 ${
+              scrolled ? "text-foreground/50 hover:text-foreground" : "text-primary-foreground/50 hover:text-primary-foreground"
+            }`}
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? <Moon size={14} /> : <Sun size={14} />}
           </button>
         </div>
+
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`md:hidden w-9 h-9 flex items-center justify-center transition-colors ${
+            scrolled ? "text-foreground" : "text-primary-foreground"
+          }`}
+        >
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
 
+      {/* Mobile menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background/98 backdrop-blur-xl border-t border-border overflow-hidden">
-            <div className="px-6 py-4 space-y-1">
-              {navItems.map((item) =>
-                item.path.startsWith("/#") ? (
-                  <button key={item.label} onClick={() => handleNav(item.path)}
-                    className="block w-full text-left py-3 text-foreground/80 hover:text-accent font-body text-base transition-colors">
-                    {item.label}
-                  </button>
-                ) : (
-                  <Link key={item.label} to={item.path} onClick={() => setIsOpen(false)}
-                    className="block w-full text-left py-3 text-foreground/80 hover:text-accent font-body text-base transition-colors">
-                    {item.label}
-                  </Link>
-                )
-              )}
-              <div className="pt-3 border-t border-border">
-                <Link to="/#contact" onClick={() => setIsOpen(false)}
-                  className="block w-full text-center py-3 bg-accent text-accent-foreground rounded-lg font-body text-sm">
-                  Book Now
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-background/98 backdrop-blur-xl overflow-hidden"
+          >
+            <div className="px-6 py-6 space-y-1">
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className="block py-3 font-body text-[12px] tracking-[0.25em] text-foreground/80 hover:text-foreground transition-colors"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div className="pt-4 border-t border-border">
+                <Link
+                  to="/#contact"
+                  onClick={() => { handleNav("/#contact"); setIsOpen(false); }}
+                  className="block text-center py-3 border border-foreground/30 font-body text-[12px] tracking-[0.25em] text-foreground hover:bg-foreground hover:text-background transition-all"
+                >
+                  BOOK US
                 </Link>
               </div>
             </div>

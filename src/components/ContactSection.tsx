@@ -2,7 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import contactBg from "@/assets/contact-bg.jpg";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,36 +34,50 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="min-h-screen">
-      <div ref={ref} className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
-        {/* Form side */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8 }}
-          className="p-8 md:p-16 lg:p-24 flex flex-col justify-center"
-        >
-          <p className="font-body text-[11px] tracking-[0.35em] text-muted-foreground uppercase mb-6">Get In Touch</p>
-          <h2 className="font-display text-4xl md:text-5xl text-foreground mb-3">
-            Book Your <em>Story</em>
-          </h2>
-          <p className="font-body text-muted-foreground mb-12">Let's create something unforgettable together.</p>
+    <section id="contact">
+      {/* Full-bleed image */}
+      <div className="w-full aspect-[21/9] overflow-hidden">
+        <img src={contactBg} alt="Contact" className="w-full h-full object-cover" />
+      </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Form */}
+      <div ref={ref} className="bg-warm py-24 md:py-36 px-6 md:px-10">
+        <div className="max-w-xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1 }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">
+              Let's <em>Connect</em>
+            </h2>
+            <p className="font-body text-sm text-muted-foreground">
+              We'd love to hear your story.
+            </p>
+          </motion.div>
+
+          <motion.form
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
             <Input
               placeholder="Your Name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="bg-transparent border-0 border-b border-border rounded-none text-foreground placeholder:text-muted-foreground/50 font-body h-12 px-0 focus-visible:ring-0 focus-visible:border-accent transition-colors"
+              className="bg-transparent border-0 border-b border-foreground/20 rounded-none text-foreground placeholder:text-muted-foreground/50 font-body h-12 px-0 focus-visible:ring-0 focus-visible:border-foreground transition-colors"
               required
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <Input
                 type="email"
                 placeholder="Email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="bg-transparent border-0 border-b border-border rounded-none text-foreground placeholder:text-muted-foreground/50 font-body h-12 px-0 focus-visible:ring-0 focus-visible:border-accent transition-colors"
+                className="bg-transparent border-0 border-b border-foreground/20 rounded-none text-foreground placeholder:text-muted-foreground/50 font-body h-12 px-0 focus-visible:ring-0 focus-visible:border-foreground transition-colors"
                 required
               />
               <Input
@@ -71,49 +85,26 @@ const ContactSection = () => {
                 placeholder="Phone"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="bg-transparent border-0 border-b border-border rounded-none text-foreground placeholder:text-muted-foreground/50 font-body h-12 px-0 focus-visible:ring-0 focus-visible:border-accent transition-colors"
+                className="bg-transparent border-0 border-b border-foreground/20 rounded-none text-foreground placeholder:text-muted-foreground/50 font-body h-12 px-0 focus-visible:ring-0 focus-visible:border-foreground transition-colors"
               />
             </div>
             <Textarea
               placeholder="Tell us about your story..."
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              className="bg-transparent border-0 border-b border-border rounded-none text-foreground placeholder:text-muted-foreground/50 font-body min-h-[100px] resize-none px-0 focus-visible:ring-0 focus-visible:border-accent transition-colors"
+              className="bg-transparent border-0 border-b border-foreground/20 rounded-none text-foreground placeholder:text-muted-foreground/50 font-body min-h-[100px] resize-none px-0 focus-visible:ring-0 focus-visible:border-foreground transition-colors"
             />
-            <button
-              type="submit"
-              disabled={submitting}
-              className="font-body text-[11px] tracking-[0.3em] uppercase text-foreground border-b border-foreground pb-1 hover:text-accent hover:border-accent transition-all duration-300 mt-4 disabled:opacity-50 inline-flex items-center gap-2"
-            >
-              {submitting ? <><Loader2 size={12} className="animate-spin" /> Sending...</> : "Send Message"}
-            </button>
-          </form>
-
-          <div className="flex flex-col gap-4 mt-14 text-muted-foreground">
-            <a href="mailto:hello@storiesbybw.com" className="flex items-center gap-3 font-body text-sm hover:text-accent transition-colors">
-              <Mail size={14} />
-              hello@storiesbybw.com
-            </a>
-            <a href="tel:+919876543210" className="flex items-center gap-3 font-body text-sm hover:text-accent transition-colors">
-              <Phone size={14} />
-              +91 98765 43210
-            </a>
-            <p className="flex items-center gap-3 font-body text-sm">
-              <MapPin size={14} />
-              Mumbai, India
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Image side */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="hidden lg:block relative"
-        >
-          <img src={contactBg} alt="Contact" className="w-full h-full object-cover" />
-        </motion.div>
+            <div className="text-center pt-4">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="font-body text-[12px] tracking-[0.25em] uppercase text-foreground border border-foreground/30 px-8 py-3 hover:bg-foreground hover:text-background transition-all duration-300 disabled:opacity-50 inline-flex items-center gap-2"
+              >
+                {submitting ? <><Loader2 size={12} className="animate-spin" /> Sending...</> : "Send Message"}
+              </button>
+            </div>
+          </motion.form>
+        </div>
       </div>
     </section>
   );
