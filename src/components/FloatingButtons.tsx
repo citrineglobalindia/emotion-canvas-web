@@ -14,7 +14,7 @@ const FloatingButtons = () => {
       </a>
       <a
         href="tel:+919876543210"
-        className="w-12 h-12 border border-foreground/30 text-foreground flex items-center justify-center hover:border-accent hover:text-accent transition-all duration-300"
+        className="w-12 h-12 border border-border text-foreground flex items-center justify-center hover:border-accent hover:text-accent transition-all duration-300"
         aria-label="Call Now"
       >
         <Phone size={20} />

@@ -91,7 +91,7 @@ const ContactSection = () => {
           className="hidden lg:block relative"
         >
           <img src={contactBg} alt="Contact" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-background/30" />
+          <div className="absolute inset-0 bg-foreground/30" />
         </motion.div>
       </div>
     </section>

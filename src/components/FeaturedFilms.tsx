@@ -64,18 +64,18 @@ const FilmCard = ({ film, index, isInView }: { film: typeof films[0]; index: num
         animate={{ scale: isHovered ? 1.05 : 1 }}
         transition={{ duration: 0.6 }}
       />
-      <div className="absolute inset-0 bg-background/40 group-hover:bg-background/60 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-foreground/40 group-hover:bg-foreground/60 transition-colors duration-500" />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.div
           animate={{ scale: isHovered ? 1 : 0, opacity: isHovered ? 1 : 0 }}
           transition={{ duration: 0.3 }}
-          className="w-16 h-16 border border-foreground/50 flex items-center justify-center mb-6"
+          className="w-16 h-16 border border-primary-foreground/50 flex items-center justify-center mb-6"
         >
-          <Play className="text-foreground" size={20} />
+          <Play className="text-primary-foreground" size={20} />
         </motion.div>
-        <h3 className="font-display text-2xl text-foreground">{film.title}</h3>
-        <p className="font-body text-xs tracking-[0.3em] text-foreground/60 uppercase mt-2">{film.subtitle}</p>
+        <h3 className="font-display text-2xl text-primary-foreground">{film.title}</h3>
+        <p className="font-body text-xs tracking-[0.3em] text-primary-foreground/60 uppercase mt-2">{film.subtitle}</p>
       </div>
     </motion.div>
   );
