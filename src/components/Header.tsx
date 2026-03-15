@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
-import logo from "@/assets/logo-clean.png";
+import logoDark from "@/assets/logo-dark.jpg";
+import logoLight from "@/assets/logo-light.jpg";
 
 const navItems = [
   { label: "STORIES", path: "/stories" },
