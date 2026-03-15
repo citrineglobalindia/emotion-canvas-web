@@ -1,5 +1,6 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import CursorImage from "@/components/CursorImage";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
@@ -7,18 +8,16 @@ import gallery4 from "@/assets/gallery-4.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
 import gallery6 from "@/assets/gallery-6.jpg";
 
-const ParallaxImage = ({ src, alt, className, children }: { src: string; alt: string; className?: string; children?: React.ReactNode }) => {
+const ParallaxCursorImage = ({ src, alt, className, label, children }: { src: string; alt: string; className?: string; label?: string; children?: React.ReactNode }) => {
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
   return (
-    <div ref={ref} className={`overflow-hidden relative group ${className || ""}`}>
-      <motion.img src={src} alt={alt} className="w-full h-[120%] object-cover transition-transform duration-700 group-hover:scale-105" style={{ y }} loading="lazy" />
-      {children}
+    <div ref={ref} className={className}>
+      <CursorImage src={src} alt={alt} className="w-full h-full" label={label} parallaxStyle={{ y } as any}>
+        {children}
+      </CursorImage>
     </div>
   );
 };
@@ -67,24 +66,24 @@ const GallerySection = () => {
           { img: gallery2, word: "artful" },
           { img: gallery4, word: "timeless" },
         ].map((item) => (
-          <ParallaxImage key={item.word} src={item.img} alt={item.word} className="aspect-[3/4] cursor-pointer">
+          <ParallaxCursorImage key={item.word} src={item.img} alt={item.word} className="aspect-[3/4]" label={item.word}>
             <div className="absolute inset-0 bg-black/20" />
             <div className="absolute inset-0 flex items-center justify-center">
               <h3 className="font-display text-4xl md:text-5xl lg:text-6xl text-primary-foreground italic">
                 {item.word}
               </h3>
             </div>
-          </ParallaxImage>
+          </ParallaxCursorImage>
         ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
         {[gallery3, gallery5].map((img, i) => (
-          <ParallaxImage key={i} src={img} alt="Gallery" className="aspect-[4/3] cursor-pointer" />
+          <ParallaxCursorImage key={i} src={img} alt="Gallery" className="aspect-[4/3]" />
         ))}
       </div>
 
-      <ParallaxImage src={gallery6} alt="Cinematic wide" className="w-full aspect-[21/9]" />
+      <ParallaxCursorImage src={gallery6} alt="Cinematic wide" className="w-full aspect-[21/9]" />
     </section>
   );
 };
