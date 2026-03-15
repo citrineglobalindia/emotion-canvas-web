@@ -63,10 +63,12 @@ const LeadPopup = () => {
             <h3 className="font-display text-3xl text-foreground mb-2">Book Your <em className="text-accent">Story</em></h3>
             <p className="font-body text-sm text-muted-foreground mb-8">Reserve your date before it's gone.</p>
             <form onSubmit={handleSubmit} className="space-y-3">
-              <Input placeholder="Name" className="bg-card border-border font-body h-11 rounded-xl" required />
-              <Input type="email" placeholder="Email" className="bg-card border-border font-body h-11 rounded-xl" required />
-              <Input type="tel" placeholder="Phone" className="bg-card border-border font-body h-11 rounded-xl" />
-              <Button variant="accent" type="submit" className="w-full">Reserve My Date</Button>
+              <Input placeholder="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-card border-border font-body h-11 rounded-xl" required />
+              <Input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-card border-border font-body h-11 rounded-xl" required />
+              <Input type="tel" placeholder="Phone" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="bg-card border-border font-body h-11 rounded-xl" />
+              <Button variant="accent" type="submit" className="w-full" disabled={submitting}>
+                {submitting ? <><Loader2 size={16} className="animate-spin mr-2" /> Reserving...</> : "Reserve My Date"}
+              </Button>
             </form>
           </motion.div>
         </motion.div>
