@@ -64,25 +64,31 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          location: string | null
           message: string | null
           name: string
           phone: string | null
+          service: string | null
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
+          location?: string | null
           message?: string | null
           name: string
           phone?: string | null
+          service?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          location?: string | null
           message?: string | null
           name?: string
           phone?: string | null
+          service?: string | null
         }
         Relationships: []
       }
