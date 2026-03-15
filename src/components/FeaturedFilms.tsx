@@ -64,7 +64,7 @@ const FilmCard = ({ film, index, isInView }: { film: typeof films[0]; index: num
         animate={{ scale: isHovered ? 1.05 : 1 }}
         transition={{ duration: 0.6 }}
       />
-      <div className="absolute inset-0 bg-background/40 group-hover:bg-background/60 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-foreground/40 group-hover:bg-foreground/60 transition-colors duration-500" />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.div
