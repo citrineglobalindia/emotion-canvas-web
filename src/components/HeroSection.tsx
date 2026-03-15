@@ -24,7 +24,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-foreground tracking-tight leading-none"
+          className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground tracking-tight leading-none"
         >
           BLACK & WHITE
           <br />
