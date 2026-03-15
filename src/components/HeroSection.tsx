@@ -15,7 +15,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="font-body text-xs tracking-[0.5em] text-foreground/60 uppercase mb-6"
+          className="font-body text-xs tracking-[0.5em] text-primary-foreground/60 uppercase mb-6"
         >
           Cinematic Storytelling
         </motion.p>
