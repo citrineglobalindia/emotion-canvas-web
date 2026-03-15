@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useTheme } from "@/hooks/useTheme";
 
 const navItems = [
   { label: "Films", path: "/films" },
@@ -14,6 +15,7 @@ const navItems = [
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { theme, toggle } = useTheme();
 
   const handleNav = (path: string) => {
     setIsOpen(false);
@@ -57,9 +59,18 @@ const Header = () => {
           )}
         </nav>
 
-        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground">
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={toggle}
+            className="text-foreground/70 hover:text-accent transition-colors duration-300"
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground">
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
