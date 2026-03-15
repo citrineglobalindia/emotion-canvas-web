@@ -27,7 +27,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/20 backdrop-blur-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
       <div className="flex items-center justify-between px-8 py-6 md:px-16">
         <Link to="/" className="text-foreground font-display text-lg tracking-[0.2em]">
           B&W FILMS
