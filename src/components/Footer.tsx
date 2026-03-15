@@ -1,5 +1,5 @@
 import { Instagram } from "lucide-react";
-import logo from "@/assets/logo-clean.png";
+import logoLight from "@/assets/logo-light.jpg";
 
 const Footer = () => (
   <footer className="bg-foreground py-12 px-6 md:px-10">
