@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { Mail, Phone, MapPin, Instagram, Send } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import contactBg from "@/assets/contact-bg.jpg";
+import logoDark from "@/assets/logo-dark.jpg";
 
 const ContactSection = () => {
   const ref = useRef(null);
