@@ -8,6 +8,7 @@ const navItems = [
   { label: "Films", path: "/films" },
   { label: "Gallery", path: "/gallery" },
   { label: "Stories", path: "/stories" },
+  { label: "Blog", path: "/blog" },
   { label: "About", path: "/about" },
   { label: "Contact", path: "/#contact" },
 ];

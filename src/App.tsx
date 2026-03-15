@@ -9,6 +9,7 @@ import Index from "./pages/Index.tsx";
 import FilmsPage from "./pages/FilmsPage.tsx";
 import GalleryPage from "./pages/GalleryPage.tsx";
 import StoriesPage from "./pages/StoriesPage.tsx";
+import BlogPage from "./pages/BlogPage.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
