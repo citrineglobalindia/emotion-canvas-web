@@ -7,7 +7,7 @@ const HeroSection = () => {
     <section className="relative h-screen w-full overflow-hidden">
       <div className="absolute inset-0">
         <img src={heroBg} alt="Cinematic wedding silhouette" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-background/50" />
+        <div className="absolute inset-0 bg-foreground/50" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
