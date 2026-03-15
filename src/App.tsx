@@ -41,6 +41,20 @@ const App = () => {
     return !shown;
   });
 
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+    return () => lenis.destroy();
+  }, []);
+
   const handleComplete = useCallback(() => {
     setLoading(false);
     sessionStorage.setItem("bw-loader-shown", "true");
