@@ -7,6 +7,7 @@ import DefinesUsSection from "@/components/DefinesUsSection";
 import MagicSection from "@/components/MagicSection";
 import PhotoGrid from "@/components/PhotoGrid";
 import InstagramFeed from "@/components/InstagramFeed";
+import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
 import LeadPopup from "@/components/LeadPopup";
@@ -23,6 +24,7 @@ const Index = () => {
       <MagicSection />
       <PhotoGrid />
       <InstagramFeed />
+      <ContactSection />
       <Footer />
       <FloatingButtons />
       <LeadPopup />
