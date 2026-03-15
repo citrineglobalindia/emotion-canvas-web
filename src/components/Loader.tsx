@@ -4,11 +4,12 @@ import logo from "@/assets/logo-clean.png";
 
 const Loader = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const holdTimer = setTimeout(() => setPhase("hold"), 600);
-    const exitTimer = setTimeout(() => setPhase("exit"), 2200);
-    const doneTimer = setTimeout(() => onComplete(), 3000);
+    const holdTimer = setTimeout(() => setPhase("hold"), 400);
+    const exitTimer = setTimeout(() => setPhase("exit"), 2800);
+    const doneTimer = setTimeout(() => onComplete(), 3500);
     return () => {
       clearTimeout(holdTimer);
       clearTimeout(exitTimer);
@@ -16,103 +17,187 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
     };
   }, [onComplete]);
 
+  // Smooth progress
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 100) return 100;
+        const remaining = 100 - p;
+        return p + remaining * 0.04;
+      });
+    }, 30);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <AnimatePresence>
-      {phase !== "exit" ? null : null}
       <motion.div
         key="loader"
         initial={{ opacity: 1 }}
         animate={phase === "exit" ? { opacity: 0 } : { opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-        className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-background"
+        transition={{ duration: 0.7, ease: "easeInOut" }}
+        className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-foreground overflow-hidden"
         style={{ pointerEvents: phase === "exit" ? "none" : "all" }}
       >
-        {/* Animated rings */}
-        <div className="relative flex items-center justify-center">
-          {/* Outer ring */}
+        {/* Ambient light particles */}
+        {[...Array(6)].map((_, i) => (
           <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.15 }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
-            className="absolute w-52 h-52 rounded-full border-2 border-accent"
-          />
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.08 }}
-            transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-            className="absolute w-72 h-72 rounded-full border border-accent"
-          />
-
-          {/* Spinning ring */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0, rotate: 0 }}
-            animate={{ scale: 1, opacity: 0.25, rotate: 360 }}
-            transition={{
-              scale: { duration: 0.8, ease: "easeOut" },
-              opacity: { duration: 0.8 },
-              rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+            key={i}
+            className="absolute rounded-full bg-background/5"
+            initial={{
+              x: Math.random() * 400 - 200,
+              y: Math.random() * 400 - 200,
+              scale: 0,
             }}
-            className="absolute w-40 h-40 rounded-full"
+            animate={{
+              x: [Math.random() * 300 - 150, Math.random() * 300 - 150],
+              y: [Math.random() * 300 - 150, Math.random() * 300 - 150],
+              scale: [0, 1, 0.5],
+              opacity: [0, 0.3, 0],
+            }}
+            transition={{
+              duration: 4 + i * 0.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.3,
+            }}
             style={{
-              background: "conic-gradient(from 0deg, transparent 0%, hsl(var(--accent)) 30%, transparent 60%)",
+              width: 80 + i * 40,
+              height: 80 + i * 40,
             }}
           />
+        ))}
 
-          {/* Logo */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0, rotate: -10 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            transition={{
-              duration: 0.8,
-              delay: 0.3,
-              ease: [0.34, 1.56, 0.64, 1],
-            }}
-            className="relative z-10"
-          >
-            <motion.img
-              src={logo}
-              alt="Black & White"
-              className="w-24 h-24 object-contain dark:invert"
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        {/* Center content */}
+        <div className="relative flex flex-col items-center">
+          {/* Shutter ring animation */}
+          <div className="relative flex items-center justify-center mb-8">
+            {/* Outer glow ring */}
+            <motion.div
+              initial={{ scale: 0.6, opacity: 0 }}
+              animate={{ scale: [0.8, 1.1, 0.8], opacity: [0.05, 0.15, 0.05] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute w-44 h-44 rounded-full border border-background/20"
             />
-          </motion.div>
-        </div>
 
-        {/* Brand text */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="mt-10 text-center"
-        >
-          <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide">
-            Black & White
-          </h2>
+            {/* Rotating dashed ring */}
+            <motion.div
+              initial={{ rotate: 0, opacity: 0 }}
+              animate={{ rotate: 360, opacity: 0.3 }}
+              transition={{
+                rotate: { duration: 12, repeat: Infinity, ease: "linear" },
+                opacity: { duration: 1, delay: 0.3 },
+              }}
+              className="absolute w-36 h-36 rounded-full"
+              style={{
+                border: "1px dashed hsla(var(--background) / 0.25)",
+              }}
+            />
+
+            {/* Inner spinning arc */}
+            <svg className="absolute w-32 h-32" viewBox="0 0 100 100">
+              <motion.circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="hsla(var(--background) / 0.4)"
+                strokeWidth="0.5"
+                strokeDasharray="70 210"
+                strokeLinecap="round"
+                initial={{ rotate: 0 }}
+                animate={{ rotate: -360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: "center" }}
+              />
+            </svg>
+
+            {/* Logo with reveal */}
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="relative z-10"
+            >
+              <motion.img
+                src={logo}
+                alt="Black & White"
+                className="w-20 h-20 object-contain invert"
+                animate={{ scale: [1, 1.03, 1] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </motion.div>
+          </div>
+
+          {/* Brand text with stagger */}
+          <div className="text-center overflow-hidden">
+            <motion.h2
+              initial={{ y: 40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="font-display text-2xl md:text-3xl text-background tracking-[0.15em]"
+            >
+              BLACK & WHITE
+            </motion.h2>
+          </div>
+
+          <motion.div
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: 48, opacity: 0.3 }}
+            transition={{ delay: 0.9, duration: 0.6 }}
+            className="h-px bg-background my-4"
+          />
+
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.5 }}
-            className="font-body text-xs text-muted-foreground mt-2 uppercase tracking-[0.3em]"
+            initial={{ opacity: 0, letterSpacing: "0.1em" }}
+            animate={{ opacity: 0.5, letterSpacing: "0.35em" }}
+            transition={{ delay: 1.1, duration: 0.8 }}
+            className="font-body text-[10px] text-background uppercase"
           >
             Cinematic Wedding Films
           </motion.p>
-        </motion.div>
 
-        {/* Loading bar */}
+          {/* Minimal progress indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4 }}
+            className="mt-10 flex flex-col items-center gap-3"
+          >
+            <div className="w-32 h-[1px] bg-background/10 relative overflow-hidden">
+              <motion.div
+                className="absolute inset-y-0 left-0 bg-background/50"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              transition={{ delay: 1.6 }}
+              className="font-body text-[9px] text-background tabular-nums tracking-[0.2em]"
+            >
+              {Math.round(progress)}%
+            </motion.span>
+          </motion.div>
+        </div>
+
+        {/* Film strip lines at edges */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="mt-10 w-40 h-[2px] bg-border rounded-full overflow-hidden"
-        >
-          <motion.div
-            initial={{ width: "0%" }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 1.8, delay: 0.4, ease: "easeInOut" }}
-            className="h-full bg-accent rounded-full"
-          />
-        </motion.div>
+          animate={{ opacity: 0.06 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="absolute top-0 left-6 w-px h-full bg-background"
+        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.06 }}
+          transition={{ delay: 0.7, duration: 1 }}
+          className="absolute top-0 right-6 w-px h-full bg-background"
+        />
       </motion.div>
     </AnimatePresence>
   );
