@@ -5,7 +5,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/useTheme";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import Lenis from "lenis";
 import Loader from "@/components/Loader";
 import Index from "./pages/Index.tsx";
 import FilmsPage from "./pages/FilmsPage.tsx";
@@ -39,6 +40,20 @@ const App = () => {
     const shown = sessionStorage.getItem("bw-loader-shown");
     return !shown;
   });
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+    return () => lenis.destroy();
+  }, []);
 
   const handleComplete = useCallback(() => {
     setLoading(false);
