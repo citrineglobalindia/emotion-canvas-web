@@ -35,7 +35,7 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.3 }}
-          className="font-body text-sm md:text-base text-foreground/60 tracking-[0.2em] mt-8 max-w-lg"
+          className="font-body text-sm md:text-base text-primary-foreground/60 tracking-[0.2em] mt-8 max-w-lg"
         >
           Crafting Stories Through Light & Emotion
         </motion.p>
