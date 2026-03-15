@@ -59,7 +59,9 @@ const ContactSection = () => {
             </div>
             <Textarea placeholder="Tell us about your story..." value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               className="bg-card border-border text-foreground placeholder:text-muted-foreground font-body min-h-[120px] resize-none rounded-xl" />
-            <Button variant="accent" type="submit" className="w-full">Send Message</Button>
+            <Button variant="accent" type="submit" className="w-full" disabled={submitting}>
+              {submitting ? <><Loader2 size={16} className="animate-spin mr-2" /> Sending...</> : "Send Message"}
+            </Button>
           </form>
 
           <div className="flex flex-col gap-3 mt-10 text-muted-foreground">

@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles } from "lucide-react";
+import { X, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const LeadPopup = () => {
   const [show, setShow] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (dismissed) return;
@@ -21,10 +24,24 @@ const LeadPopup = () => {
 
   const close = () => { setShow(false); setDismissed(true); };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thank you! We'll reach out soon.");
-    close();
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from("contact_submissions").insert({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || null,
+        message: "Lead popup submission",
+      });
+      if (error) throw error;
+      toast.success("Thank you! We'll reach out soon.");
+      close();
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
