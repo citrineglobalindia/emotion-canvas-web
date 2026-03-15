@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import logo from "@/assets/logo-clean.png";
+import logoDark from "@/assets/logo-dark.jpg";
 
 const Loader = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
@@ -124,9 +124,9 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               className="relative z-10"
             >
               <motion.img
-                src={logo}
+                src={logoDark}
                 alt="Black & White"
-                className="w-20 h-20 object-contain invert"
+                className="w-20 h-20 object-contain invert mix-blend-screen"
                 animate={{ scale: [1, 1.03, 1] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />

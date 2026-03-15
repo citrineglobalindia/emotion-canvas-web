@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
-import logo from "@/assets/logo-clean.png";
+import logoDark from "@/assets/logo-dark.jpg";
 
 const navItems = [
   { label: "STORIES", path: "/stories" },
@@ -40,10 +40,11 @@ const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img
-            src={logo}
+            src={logoDark}
             alt="Black & White"
-            className="h-12 md:h-14 w-auto transition-all duration-500"
-            style={{ filter: scrolled ? "none" : "brightness(0) invert(1)" }}
+            className={`h-12 md:h-14 w-auto transition-all duration-500 object-contain ${
+              scrolled ? "mix-blend-multiply" : "mix-blend-screen invert"
+            }`}
           />
         </Link>
 
