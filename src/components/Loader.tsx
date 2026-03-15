@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import logoLight from "@/assets/logo-light.jpg";
+import logoDark from "@/assets/logo-dark.jpg";
 
 const Loader = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
