@@ -89,15 +89,29 @@ const ContactSection = () => {
 
   return (
     <section id="contact">
-      {/* Stats Banner */}
-      <div className="w-full aspect-[21/9] bg-foreground flex flex-col items-center justify-center gap-4">
-        <img src={logoDark} alt="Black & White" className="h-12 md:h-16 w-auto object-contain invert mix-blend-screen" />
-        <p className="font-display text-5xl md:text-7xl lg:text-8xl text-background/90 tracking-tight">
-          50<span className="text-background/50">+</span>
-        </p>
-        <p className="font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-background/50">
-          Stories Captured
-        </p>
+      {/* Photo Mosaic with Centered Logo */}
+      <div className="relative w-full overflow-hidden">
+        <div className="grid grid-cols-7 md:grid-cols-10 gap-0">
+          {mosaicPhotos.map((photo, i) => (
+            <div key={i} className="aspect-square overflow-hidden">
+              <img
+                src={photo}
+                alt=""
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+        {/* Dark overlay + centered logo */}
+        <div className="absolute inset-0 bg-foreground/60 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <img src={logoDark} alt="Black & White" className="h-14 md:h-20 w-auto object-contain invert mix-blend-screen" />
+            <p className="font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-background/60">
+              50+ Stories Captured
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Contact Section */}
