@@ -24,6 +24,7 @@ const Index = () => {
       <MagicSection />
       <PhotoGrid />
       <InstagramFeed />
+      <ContactSection />
       <Footer />
       <FloatingButtons />
       <LeadPopup />
