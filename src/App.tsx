@@ -14,6 +14,7 @@ import GalleryPage from "./pages/GalleryPage.tsx";
 import StoriesPage from "./pages/StoriesPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
+import ContactPage from "./pages/ContactPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
