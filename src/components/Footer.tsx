@@ -128,6 +128,17 @@ const Footer = () => {
           <p className="font-body text-[10px] tracking-[0.15em] text-background/30 uppercase">
             © {new Date().getFullYear()} Black & White Films. All rights reserved.
           </p>
+          <p className="font-body text-[10px] tracking-[0.15em] text-background/30 uppercase">
+            Designed & Developed by{" "}
+            <a
+              href="https://stepstones.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-background/50 hover:text-background transition-colors"
+            >
+              Stepstones
+            </a>
+          </p>
           <button
             onClick={scrollToTop}
             className="font-body text-[10px] tracking-[0.15em] text-background/30 hover:text-background/60 transition-colors uppercase"
