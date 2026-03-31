@@ -4,6 +4,11 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import logoDark from "@/assets/logo-dark.jpg";
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
+
+const headerPhotos = [gallery1, gallery3, gallery5];
 
 const navItems = [
   { label: "STORIES", path: "/stories" },
