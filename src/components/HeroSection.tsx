@@ -1,11 +1,15 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import heroBg from "@/assets/hero-bg.jpg";
+import heroImg2 from "@/assets/hero-2.jpg";
+import heroImg3 from "@/assets/hero-3.jpg";
 
 const words = ["love", "moments", "memories"];
+const heroImages = [heroBg, heroImg2, heroImg3];
 
 const HeroSection = () => {
   const ref = useRef(null);
+  const [currentImage, setCurrentImage] = useState(0);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -15,10 +19,28 @@ const HeroSection = () => {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section ref={ref} className="relative h-screen w-full overflow-hidden">
       <motion.div className="absolute inset-0" style={{ y: imgY }}>
-        <img src={heroBg} alt="Wedding couple" className="w-full h-[130%] object-cover grayscale" />
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentImage}
+            src={heroImages[currentImage]}
+            alt="Wedding couple"
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-[130%] object-cover grayscale"
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-black/30" />
       </motion.div>
 
