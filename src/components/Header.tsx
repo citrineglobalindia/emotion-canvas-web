@@ -103,7 +103,7 @@ const Header = () => {
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={`md:hidden w-9 h-9 flex items-center justify-center transition-colors ${
-            scrolled ? "text-foreground" : "text-primary-foreground"
+            scrolled || isOpen ? "text-foreground" : "text-primary-foreground"
           }`}
         >
           {isOpen ? <X size={20} /> : <Menu size={20} />}
