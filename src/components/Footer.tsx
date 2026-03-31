@@ -66,10 +66,10 @@ const Footer = () => {
       </div>
 
       {/* Main footer */}
-      <div className="max-w-[1600px] mx-auto px-6 md:px-10 pt-16 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-          {/* Brand */}
-          <div className="lg:col-span-1">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-10 pt-12 md:pt-16 pb-10">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
+          {/* Brand - full width on mobile */}
+          <div className="col-span-2 lg:col-span-1">
             <Link to="/" onClick={scrollToTop}>
               <img
                 src={logoDark}
@@ -91,12 +91,12 @@ const Footer = () => {
             </a>
           </div>
 
-          {/* Navigation */}
-          <div>
-            <h4 className="font-display text-sm tracking-[0.15em] uppercase text-background/80 mb-5">
+          {/* Explore - side by side with Services on mobile */}
+          <div className="col-span-1">
+            <h4 className="font-display text-sm tracking-[0.15em] uppercase text-background/80 mb-4 md:mb-5">
               Explore
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5 md:space-y-3">
               {navLinks.map((link) => (
                 <li key={link.path}>
                   <Link
@@ -115,12 +115,12 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Services */}
-          <div>
-            <h4 className="font-display text-sm tracking-[0.15em] uppercase text-background/80 mb-5">
+          {/* Services - side by side with Explore on mobile */}
+          <div className="col-span-1">
+            <h4 className="font-display text-sm tracking-[0.15em] uppercase text-background/80 mb-4 md:mb-5">
               Services
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5 md:space-y-3">
               {services.map((service) => (
                 <li key={service}>
                   <span className="font-body text-[12px] tracking-[0.1em] text-background/50 uppercase">
@@ -131,12 +131,12 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h4 className="font-display text-sm tracking-[0.15em] uppercase text-background/80 mb-5">
+          {/* Contact - full width on mobile */}
+          <div className="col-span-2 lg:col-span-1 pt-2 md:pt-0 border-t border-background/10 md:border-0">
+            <h4 className="font-display text-sm tracking-[0.15em] uppercase text-background/80 mb-4 md:mb-5 pt-4 md:pt-0">
               Get in Touch
             </h4>
-            <ul className="space-y-4">
+            <ul className="space-y-3 md:space-y-4">
               <li>
                 <a
                   href="mailto:hello@blackandwhitefilms.com"
