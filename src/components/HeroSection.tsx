@@ -38,7 +38,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 1.2, ease: "easeInOut" }}
-            className="absolute inset-0 w-full h-[130%] object-cover grayscale"
+            className="absolute inset-0 w-full h-full min-h-screen object-cover object-center grayscale"
           />
         </AnimatePresence>
         <div className="absolute inset-0 bg-black/30" />
