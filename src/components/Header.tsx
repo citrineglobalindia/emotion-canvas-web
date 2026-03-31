@@ -20,8 +20,16 @@ const navItems = [
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [currentPhoto, setCurrentPhoto] = useState(0);
   const location = useLocation();
   const { theme, toggle } = useTheme();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPhoto((prev) => (prev + 1) % headerPhotos.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
