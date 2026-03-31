@@ -165,7 +165,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      </div>
 
       {/* Bottom bar */}
       <div className="border-t border-background/10">
