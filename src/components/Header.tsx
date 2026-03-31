@@ -57,7 +57,7 @@ const Header = () => {
             src={logoDark}
             alt="Black & White"
             className={`h-12 md:h-14 w-auto transition-all duration-500 object-contain ${
-              scrolled ? "mix-blend-multiply" : "mix-blend-screen invert"
+              scrolled || isOpen ? "mix-blend-multiply" : "mix-blend-screen invert"
             }`}
           />
         </Link>
