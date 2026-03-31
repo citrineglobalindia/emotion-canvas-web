@@ -80,7 +80,7 @@ const FloatingButtons = () => {
           transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="w-11 h-11 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-green-500/25 hover:bg-green-600 transition-colors duration-300"
+          className="w-[52px] h-[52px] bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-green-500/25 hover:bg-green-600 transition-colors duration-300"
           aria-label="Call Now"
         >
           <Phone size={16} />
