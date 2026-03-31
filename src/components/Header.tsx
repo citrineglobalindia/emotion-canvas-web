@@ -49,7 +49,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled ? "bg-background/95 backdrop-blur-sm" : "bg-transparent"}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled || isOpen ? "bg-background/95 backdrop-blur-sm" : "bg-transparent"}`}>
       <div className="flex items-center justify-between px-6 md:px-10 py-5 md:py-6">
         {/* Logo */}
         <Link to="/" className="flex items-center">
@@ -57,7 +57,7 @@ const Header = () => {
             src={logoDark}
             alt="Black & White"
             className={`h-12 md:h-14 w-auto transition-all duration-500 object-contain ${
-              scrolled ? "mix-blend-multiply" : "mix-blend-screen invert"
+              scrolled || isOpen ? "mix-blend-multiply" : "mix-blend-screen invert"
             }`}
           />
         </Link>
@@ -103,7 +103,7 @@ const Header = () => {
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={`md:hidden w-9 h-9 flex items-center justify-center transition-colors ${
-            scrolled ? "text-foreground" : "text-primary-foreground"
+            scrolled || isOpen ? "text-foreground" : "text-primary-foreground"
           }`}
         >
           {isOpen ? <X size={20} /> : <Menu size={20} />}
