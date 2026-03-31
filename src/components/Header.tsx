@@ -4,6 +4,9 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import logoDark from "@/assets/logo-dark.jpg";
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
 
 const navItems = [
   { label: "STORIES", path: "/stories" },
@@ -12,9 +15,12 @@ const navItems = [
   { label: "CONTACT", path: "/contact" },
 ];
 
+const headerPhotos = [gallery1, gallery3, gallery5];
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activePhoto, setActivePhoto] = useState(0);
   const location = useLocation();
   const { theme, toggle } = useTheme();
 
@@ -22,6 +28,13 @@ const Header = () => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActivePhoto((prev) => (prev + 1) % headerPhotos.length);
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleNav = (path: string) => {
@@ -48,6 +61,39 @@ const Header = () => {
             }`}
           />
         </Link>
+
+        {/* Center: Auto-scrolling photos */}
+        <div className="hidden md:flex items-center gap-1.5 relative">
+          {headerPhotos.map((photo, i) => (
+            <div
+              key={i}
+              className={`relative w-10 h-10 rounded-full overflow-hidden border-2 transition-all duration-500 ${
+                i === activePhoto
+                  ? scrolled
+                    ? "border-foreground/60 scale-110"
+                    : "border-primary-foreground/60 scale-110"
+                  : scrolled
+                    ? "border-foreground/15 scale-100 opacity-50"
+                    : "border-primary-foreground/15 scale-100 opacity-50"
+              }`}
+            >
+              <img
+                src={photo}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+              {i === activePhoto && (
+                <motion.div
+                  layoutId="photo-ring"
+                  className={`absolute inset-0 rounded-full ring-1 ${
+                    scrolled ? "ring-foreground/30" : "ring-primary-foreground/30"
+                  }`}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
 
         {/* Right nav */}
         <div className="hidden md:flex items-center gap-8">
@@ -107,6 +153,20 @@ const Header = () => {
             className="md:hidden bg-background/98 backdrop-blur-xl overflow-hidden"
           >
             <div className="px-6 py-6 space-y-1">
+              {/* Mobile photo strip */}
+              <div className="flex items-center justify-center gap-2 pb-4 mb-3 border-b border-border">
+                {headerPhotos.map((photo, i) => (
+                  <div
+                    key={i}
+                    className={`w-16 h-16 rounded-lg overflow-hidden transition-all duration-500 ${
+                      i === activePhoto ? "ring-2 ring-foreground/40 scale-105" : "opacity-50"
+                    }`}
+                  >
+                    <img src={photo} alt="" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+
               {navItems.map((item) => (
                 <Link
                   key={item.label}
