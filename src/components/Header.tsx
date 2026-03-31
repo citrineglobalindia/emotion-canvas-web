@@ -4,6 +4,11 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import logoDark from "@/assets/logo-dark.jpg";
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
+
+const headerPhotos = [gallery1, gallery3, gallery5];
 
 const navItems = [
   { label: "STORIES", path: "/stories" },
@@ -15,8 +20,16 @@ const navItems = [
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [currentPhoto, setCurrentPhoto] = useState(0);
   const location = useLocation();
   const { theme, toggle } = useTheme();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPhoto((prev) => (prev + 1) % headerPhotos.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -96,6 +109,38 @@ const Header = () => {
           {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
+
+      {/* Auto-scrolling photo strip */}
+      {!scrolled && (
+        <div className="hidden md:block relative h-[60px] overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPhoto}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="absolute inset-0 flex gap-2 px-6 py-1 justify-center"
+            >
+              {headerPhotos.map((photo, i) => (
+                <div
+                  key={i}
+                  className={`h-full aspect-[3/2] overflow-hidden rounded-sm transition-opacity duration-500 ${
+                    i === currentPhoto ? "opacity-100" : "opacity-30"
+                  }`}
+                >
+                  <img
+                    src={photo}
+                    alt={`Header photo ${i + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-primary-foreground/10" />
+        </div>
+      )}
 
       {/* Mobile menu */}
       <AnimatePresence>
