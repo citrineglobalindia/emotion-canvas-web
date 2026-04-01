@@ -7,15 +7,7 @@ import Footer from "@/components/Footer";
 import FilmGrain from "@/components/FilmGrain";
 import { Button } from "@/components/ui/button";
 import { BookOpen, ArrowRight, MapPin, Sparkles } from "lucide-react";
-import story1 from "@/assets/story-1.jpg";
-import story2 from "@/assets/story-2.jpg";
-import film1 from "@/assets/film-1.jpg";
-
-const stories = [
-  { image: story1, title: "The Palace Affair", couple: "Priya & Arjun", excerpt: "A royal love story set against the golden corridors of a Rajasthani palace. Every glance, every touch — preserved in cinematic glory.", location: "Udaipur, Rajasthan" },
-  { image: story2, title: "Through the Door", couple: "Sarah & Michael", excerpt: "Two souls stepping into a new chapter. A sunset wedding bathed in golden light, where time seemed to stand still.", location: "Tuscany, Italy" },
-  { image: film1, title: "Shores of Forever", couple: "Aisha & Ravi", excerpt: "The traditions witnessed their vows. A colorful ceremony surrounded by love, where families became one.", location: "Kerala, India" },
-];
+import { stories, type Story } from "@/data/stories";
 
 const StoriesPage = () => (
   <PageTransition>
@@ -67,7 +59,7 @@ const StoriesPage = () => (
             className="relative"
           >
             <div className="relative aspect-[4/5] overflow-hidden border border-border/70 bg-card p-3 shadow-sm">
-              <img src={story2} alt="Featured wedding story" className="h-full w-full object-cover" />
+              <img src={stories[1].image} alt="Featured wedding story" className="h-full w-full object-cover" />
               <div className="absolute inset-3 bg-gradient-to-t from-primary/65 via-transparent to-transparent" />
               <div className="absolute inset-x-8 bottom-8 text-left text-primary-foreground">
                 <p className="font-body text-xs uppercase tracking-[0.24em] text-primary-foreground/80">Featured frame</p>
@@ -149,7 +141,7 @@ const StoryStat = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-const StoryBlock = ({ story, reversed }: { story: typeof stories[0]; index: number; reversed: boolean }) => {
+const StoryBlock = ({ story, index, reversed }: { story: Story; index: number; reversed: boolean }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -157,17 +149,19 @@ const StoryBlock = ({ story, reversed }: { story: typeof stories[0]; index: numb
     <article ref={ref} className="grid grid-cols-1 overflow-hidden border border-border/70 bg-card/40 lg:grid-cols-2">
       <motion.div initial={{ opacity: 0, x: reversed ? 30 : -30 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.8 }}
         className={`relative min-h-[24rem] overflow-hidden ${reversed ? "lg:order-2" : ""}`}>
-        <img src={story.image} alt={story.title} className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/35 via-transparent to-transparent" />
+        <Link to={`/stories/${story.slug}`} className="block h-full">
+          <img src={story.image} alt={story.title} className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/35 via-transparent to-transparent" />
+        </Link>
       </motion.div>
       <motion.div initial={{ opacity: 0, x: reversed ? -30 : 30 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.8, delay: 0.2 }}
         className={`flex flex-col justify-center p-8 md:p-12 lg:p-16 ${reversed ? "lg:order-1" : ""}`}>
         <div className="mb-8 flex items-start justify-between gap-4 border-b border-border/60 pb-6">
           <div>
             <p className="font-body text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Featured story</p>
-            <h3 className="mt-3 font-display text-3xl text-foreground md:text-5xl">{story.title}</h3>
+            <Link to={`/stories/${story.slug}`} className="mt-3 block font-display text-3xl text-foreground transition-opacity hover:opacity-70 md:text-5xl">{story.title}</Link>
           </div>
-          <span className="font-display text-5xl leading-none text-border md:text-6xl">0{stories.findIndex((item) => item.title === story.title) + 1}</span>
+          <span className="font-display text-5xl leading-none text-border md:text-6xl">0{index + 1}</span>
         </div>
 
         <div className="mb-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -179,6 +173,9 @@ const StoryBlock = ({ story, reversed }: { story: typeof stories[0]; index: numb
         </div>
 
         <p className="max-w-xl font-body text-base leading-relaxed text-muted-foreground md:text-lg">{story.excerpt}</p>
+        <Link to={`/stories/${story.slug}`} className="mt-8 inline-flex items-center gap-2 font-body text-xs uppercase tracking-[0.24em] text-accent transition-opacity hover:opacity-70">
+          Read full story <ArrowRight size={14} />
+        </Link>
       </motion.div>
     </article>
   );
