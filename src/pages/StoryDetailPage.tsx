@@ -17,6 +17,9 @@ const StoryDetailPage = () => {
     return <NotFound />;
   }
 
+  const currentIndex = stories.findIndex((entry) => entry.slug === story.slug);
+  const previousStory = stories[(currentIndex - 1 + stories.length) % stories.length];
+  const nextStory = stories[(currentIndex + 1) % stories.length];
   const relatedStories = stories.filter((entry) => entry.slug !== story.slug).slice(0, 2);
 
   return (
@@ -152,6 +155,32 @@ const StoryDetailPage = () => {
 
         <section className="border-t border-border/60 px-6 py-20 md:px-10 lg:px-16">
           <div className="mx-auto max-w-7xl">
+            <div className="mb-14 grid gap-6 border-b border-border/60 pb-10 md:grid-cols-2">
+              <Link to={`/stories/${previousStory.slug}`} className="group border border-border/70 bg-card/30 p-6 transition-colors hover:bg-card/60">
+                <p className="font-body text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Previous story</p>
+                <div className="mt-4 flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="font-display text-3xl text-foreground md:text-4xl">{previousStory.title}</h3>
+                    <p className="mt-2 font-display text-lg italic text-accent md:text-xl">{previousStory.couple}</p>
+                    <p className="mt-3 font-body text-xs uppercase tracking-[0.18em] text-muted-foreground">{previousStory.location}</p>
+                  </div>
+                  <ArrowLeft size={18} className="mt-2 text-accent transition-transform duration-300 group-hover:-translate-x-1" />
+                </div>
+              </Link>
+
+              <Link to={`/stories/${nextStory.slug}`} className="group border border-border/70 bg-card/30 p-6 text-right transition-colors hover:bg-card/60">
+                <p className="font-body text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Next story</p>
+                <div className="mt-4 flex items-start justify-between gap-4">
+                  <ArrowRight size={18} className="mt-2 text-accent transition-transform duration-300 group-hover:translate-x-1 md:order-2" />
+                  <div className="md:order-1 md:ml-auto">
+                    <h3 className="font-display text-3xl text-foreground md:text-4xl">{nextStory.title}</h3>
+                    <p className="mt-2 font-display text-lg italic text-accent md:text-xl">{nextStory.couple}</p>
+                    <p className="mt-3 font-body text-xs uppercase tracking-[0.18em] text-muted-foreground">{nextStory.location}</p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+
             <div className="mb-10 flex items-end justify-between gap-6">
               <div>
                 <p className="font-body text-xs uppercase tracking-[0.28em] text-muted-foreground">Continue exploring</p>
