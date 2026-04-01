@@ -12,6 +12,7 @@ import Index from "./pages/Index.tsx";
 import FilmsPage from "./pages/FilmsPage.tsx";
 import GalleryPage from "./pages/GalleryPage.tsx";
 import StoriesPage from "./pages/StoriesPage.tsx";
+import StoryDetailPage from "./pages/StoryDetailPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
@@ -28,6 +29,7 @@ const AnimatedRoutes = () => {
         <Route path="/films" element={<FilmsPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/stories" element={<StoriesPage />} />
+        <Route path="/stories/:slug" element={<StoryDetailPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
