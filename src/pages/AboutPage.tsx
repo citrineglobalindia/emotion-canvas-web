@@ -5,10 +5,12 @@ import PageTransition from "@/components/PageTransition";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FilmGrain from "@/components/FilmGrain";
+import PageHero from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
-import { Award, Film, Heart, Globe, ArrowRight, Users } from "lucide-react";
+import { Award, Film, Heart, Globe, ArrowRight } from "lucide-react";
 import aboutTeam from "@/assets/about-team.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
+import heroImg2 from "@/assets/hero-2.jpg";
 
 const stats = [
   { icon: Film, value: "200+", label: "Films Crafted" },
@@ -25,17 +27,13 @@ const AboutPage = () => {
     <PageTransition>
       <FilmGrain />
       <Header />
-      <div className="min-h-screen pt-28 pb-0">
-        <div className="px-6 md:px-10 mb-20 text-center">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
-            <Users size={14} />
-            <span className="font-body text-xs font-medium uppercase tracking-wider">Who We Are</span>
-          </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            className="font-display text-4xl md:text-6xl text-foreground">About <em className="text-accent">Us</em></motion.h1>
-        </div>
-
+      <PageHero
+        eyebrow="Who We Are"
+        title="The Studio"
+        tagline="A small, devoted team of filmmakers and photographers crafting cinematic wedding stories."
+        image={[aboutTeam, heroBg, heroImg2]}
+      />
+      <div className="min-h-screen pt-16 md:pt-24 pb-0">
         <div ref={ref} className="grid grid-cols-1 lg:grid-cols-2 min-h-[70vh]">
           <motion.div initial={{ opacity: 0, x: -30 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.8 }}
             className="relative overflow-hidden lg:rounded-r-3xl">

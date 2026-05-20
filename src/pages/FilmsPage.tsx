@@ -5,6 +5,7 @@ import PageTransition from "@/components/PageTransition";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FilmGrain from "@/components/FilmGrain";
+import PageHero from "@/components/PageHero";
 import film1 from "@/assets/film-1.jpg";
 import film2 from "@/assets/film-2.jpg";
 import film3 from "@/assets/film-3.jpg";
@@ -33,20 +34,14 @@ const FilmsPage = () => {
     <PageTransition>
       <FilmGrain />
       <Header />
-      <div className="min-h-screen pt-28 pb-20 px-6 md:px-10">
+      <PageHero
+        eyebrow="Visual Storytelling"
+        title="Films"
+        tagline="Every film is a love letter — a cinematic journey through the most meaningful day of your life."
+        image={[film1, gallery5, film2]}
+      />
+      <div className="bg-background pt-16 md:pt-24 pb-20 px-6 md:px-10">
         <div ref={ref} className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
-              className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
-              <Play size={14} />
-              <span className="font-body text-xs font-medium uppercase tracking-wider">Our Collection</span>
-            </motion.div>
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2 }}
-              className="font-display text-4xl md:text-6xl text-foreground mb-4">Our <em className="text-accent">Films</em></motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.4 }}
-              className="font-body text-muted-foreground max-w-xl mx-auto">Every film is a love letter — a cinematic journey through the most meaningful day of your life.</motion.p>
-          </div>
-
           <div className="flex justify-center gap-2 mb-12 flex-wrap">
             {categories.map((cat) => (
               <button key={cat} onClick={() => setActiveFilter(cat)}

@@ -5,8 +5,9 @@ import PageTransition from "@/components/PageTransition";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FilmGrain from "@/components/FilmGrain";
+import PageHero from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
-import { BookOpen, ArrowRight, Calendar, Clock, Tag } from "lucide-react";
+import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import blog1 from "@/assets/blog-1.jpg";
 import blog2 from "@/assets/blog-2.jpg";
@@ -67,22 +68,14 @@ const BlogPage = () => {
     <PageTransition>
       <FilmGrain />
       <Header />
-      <div className="min-h-screen pt-28 pb-0">
-        <div className="px-6 md:px-10 mb-12 text-center">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
-            <BookOpen size={14} />
-            <span className="font-body text-xs font-medium uppercase tracking-wider">Insights & Inspiration</span>
-          </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            className="font-display text-4xl md:text-6xl text-foreground mb-4">Our <em className="text-accent">Blog</em></motion.h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-            className="font-body text-muted-foreground max-w-xl mx-auto">
-            Tips, stories, and behind-the-scenes from the world of cinematic wedding filmmaking.
-          </motion.p>
-        </div>
-
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
+      <PageHero
+        eyebrow="Insights &amp; Inspiration"
+        title="Journal"
+        tagline="Tips, stories, and behind-the-scenes from the world of cinematic wedding filmmaking."
+        image={[blog3, blog4, blog6]}
+      />
+      <div className="min-h-screen pt-16 md:pt-24 pb-0">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
           className="flex flex-wrap justify-center gap-3 px-6 mb-16">
           {categories.map((cat) => (
             <button key={cat} onClick={() => setActiveCategory(cat)}

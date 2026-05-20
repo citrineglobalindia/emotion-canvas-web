@@ -5,6 +5,7 @@ import PageTransition from "@/components/PageTransition";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FilmGrain from "@/components/FilmGrain";
+import PageHero from "@/components/PageHero";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
@@ -34,20 +35,14 @@ const GalleryPage = () => {
     <PageTransition>
       <FilmGrain />
       <Header />
-      <div className="min-h-screen pt-28 pb-20 px-6 md:px-10">
+      <PageHero
+        eyebrow="Portfolio"
+        title="Gallery"
+        tagline="A curated collection of our most treasured frames — each one a story frozen in time."
+        image={[gallery2, gallery5, gallery3]}
+      />
+      <div className="bg-background pt-16 md:pt-24 pb-20 px-6 md:px-10">
         <div ref={ref} className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}}
-              className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6">
-              <Grid3X3 size={14} />
-              <span className="font-body text-xs font-medium uppercase tracking-wider">Portfolio</span>
-            </motion.div>
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2 }}
-              className="font-display text-4xl md:text-6xl text-foreground mb-4">Our <em className="text-accent">Gallery</em></motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.4 }}
-              className="font-body text-muted-foreground max-w-xl mx-auto">A curated collection of our most treasured frames — each one a story frozen in time.</motion.p>
-          </div>
-
           <div className="flex justify-center gap-2 mb-12 flex-wrap">
             {categories.map((cat) => (
               <button key={cat} onClick={() => setActiveFilter(cat)}
