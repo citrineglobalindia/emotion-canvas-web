@@ -49,31 +49,6 @@ const Header = () => {
             : "bg-transparent border-b border-transparent"
         }`}
       >
-        {/* Tagline strip — only visible at top of page */}
-        <div
-          className={`overflow-hidden transition-all duration-500 ${
-            scrolled ? "max-h-0 opacity-0" : "max-h-10 opacity-100"
-          }`}
-        >
-          <div
-            className={`flex items-center justify-center gap-3 py-2 text-[10px] tracking-[0.35em] uppercase ${
-              onLight ? "text-foreground/55" : "text-primary-foreground/65"
-            }`}
-          >
-            <span className="hidden sm:inline">Wedding Films &amp; Photography</span>
-            <span className="hidden sm:inline opacity-40">·</span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              </span>
-              Booking 2026 dates
-            </span>
-            <span className="hidden md:inline opacity-40">·</span>
-            <span className="hidden md:inline">Mumbai &amp; Worldwide</span>
-          </div>
-        </div>
-
         {/* Main bar — 3-column grid: logo · nav · actions */}
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 px-6 md:px-10 py-4 md:py-5">
           {/* Wordmark */}
