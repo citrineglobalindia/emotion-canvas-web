@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Instagram, Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import logoDark from "@/assets/logo-dark.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
@@ -10,7 +9,9 @@ import gallery5 from "@/assets/gallery-5.jpg";
 const navLinks = [
   { label: "Stories", path: "/stories" },
   { label: "Films", path: "/films" },
-  { label: "Blogs", path: "/blog" },
+  { label: "Gallery", path: "/gallery" },
+  { label: "Journal", path: "/blog" },
+  { label: "Studio", path: "/about" },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -70,12 +71,13 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
           {/* Brand - full width on mobile */}
           <div className="col-span-2 lg:col-span-1">
-            <Link to="/" onClick={scrollToTop}>
-              <img
-                src={logoDark}
-                alt="Black & White Films"
-                className="h-10 w-auto object-contain invert mix-blend-screen mb-5"
-              />
+            <Link to="/" onClick={scrollToTop} className="inline-block mb-5" aria-label="Black & White Films — Home">
+              <div className="font-display text-[24px] font-light tracking-[0.18em] text-background leading-none">
+                BLACK<span className="opacity-50 mx-0.5">&amp;</span>WHITE
+              </div>
+              <div className="mt-1.5 font-body text-[8px] tracking-[0.5em] uppercase text-background/45">
+                Films · Photography
+              </div>
             </Link>
             <p className="font-body text-[12px] leading-relaxed text-background/50 max-w-[260px]">
               Crafting cinematic wedding stories that celebrate love in its most authentic form.

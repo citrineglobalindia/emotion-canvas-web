@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import logoDark from "@/assets/logo-dark.jpg";
 
 const Loader = ({ onComplete }: { onComplete: () => void }) => {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
@@ -112,24 +111,25 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               />
             </svg>
 
-            {/* Logo with reveal */}
+            {/* Ampersand monogram with subtle pulse */}
             <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
+              initial={{ scale: 0.7, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{
                 duration: 0.8,
                 delay: 0.2,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="relative z-10"
+              className="relative z-10 flex items-center justify-center w-20 h-20"
+              aria-label="Black & White Films"
             >
-              <motion.img
-                src={logoDark}
-                alt="Black & White"
-                className="w-20 h-20 object-contain invert mix-blend-screen"
-                animate={{ scale: [1, 1.03, 1] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              />
+              <motion.span
+                className="font-display italic font-light text-background text-[68px] leading-none"
+                animate={{ scale: [1, 1.04, 1], opacity: [0.92, 1, 0.92] }}
+                transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+              >
+                &amp;
+              </motion.span>
             </motion.div>
           </div>
 

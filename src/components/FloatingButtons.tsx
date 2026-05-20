@@ -2,7 +2,6 @@ import { MessageCircle, Phone, X, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ChatBot from "@/components/ChatBot";
-import logoDark from "@/assets/logo-dark.jpg";
 
 const FloatingButtons = () => {
   const [chatOpen, setChatOpen] = useState(false);
@@ -43,11 +42,7 @@ const FloatingButtons = () => {
               {/* Header */}
               <div className="bg-foreground text-background px-4 py-3.5 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center ring-2 ring-background/20">
-                  <img
-                    src={logoDark}
-                    alt="Black & White"
-                    className="w-5 h-5 object-contain invert mix-blend-screen"
-                  />
+                  <span className="font-display italic font-light text-background text-[22px] leading-none">&amp;</span>
                 </div>
                 <div className="flex-1">
                   <p className="font-display text-sm tracking-wide leading-none">Film Concierge</p>

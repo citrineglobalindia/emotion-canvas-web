@@ -3,7 +3,6 @@ import { useRef, useState } from "react";
 import { Mail, Phone, MapPin, Instagram, Send } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import logoDark from "@/assets/logo-dark.jpg";
 import photo1 from "@/assets/photo-1.jpg";
 import photo2 from "@/assets/photo-2.jpg";
 import photo3 from "@/assets/photo-3.jpg";
@@ -103,11 +102,18 @@ const ContactSection = () => {
             </div>
           ))}
         </div>
-        {/* Dark overlay + centered logo */}
+        {/* Dark overlay + centered wordmark */}
         <div className="absolute inset-0 bg-foreground/60 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <img src={logoDark} alt="Black & White" className="h-14 md:h-20 w-auto object-contain invert mix-blend-screen" />
-            <p className="font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-background/60">
+            <div className="text-center" aria-label="Black & White Films">
+              <div className="font-display text-[28px] md:text-[36px] font-light tracking-[0.18em] text-background leading-none">
+                BLACK<span className="opacity-50 mx-0.5">&amp;</span>WHITE
+              </div>
+              <div className="mt-2 font-body text-[8px] md:text-[9px] tracking-[0.5em] uppercase text-background/55">
+                Films · Photography
+              </div>
+            </div>
+            <p className="mt-2 font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-background/60">
               50+ Stories Captured
             </p>
           </div>
