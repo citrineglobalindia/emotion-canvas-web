@@ -5,6 +5,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
+import {
+  SITE_EMAIL,
+  SITE_EMAIL_HREF,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_HREF,
+  SITE_LOCATION_LABEL,
+  SITE_MAPS_URL,
+  SITE_INSTAGRAM_URL,
+} from "@/lib/siteContact";
 
 const navLinks = [
   { label: "Stories", path: "/stories" },
@@ -83,7 +92,7 @@ const Footer = () => {
               Crafting cinematic wedding stories that celebrate love in its most authentic form.
             </p>
             <a
-              href="https://www.instagram.com/storiesby_black_and_white"
+              href={SITE_INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 mt-5 font-body text-[11px] tracking-[0.15em] text-background/50 hover:text-background transition-colors uppercase"
@@ -141,27 +150,32 @@ const Footer = () => {
             <ul className="space-y-3 md:space-y-4">
               <li>
                 <a
-                  href="mailto:hello@blackandwhitefilms.com"
-                  className="flex items-start gap-2.5 font-body text-[12px] text-background/50 hover:text-background transition-colors"
+                  href={SITE_EMAIL_HREF}
+                  className="flex items-start gap-2.5 font-body text-[12px] text-background/50 hover:text-background transition-colors break-all"
                 >
                   <Mail size={13} className="mt-0.5 shrink-0" />
-                  hello@blackandwhitefilms.com
+                  {SITE_EMAIL}
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+919876543210"
+                  href={SITE_PHONE_HREF}
                   className="flex items-start gap-2.5 font-body text-[12px] text-background/50 hover:text-background transition-colors"
                 >
                   <Phone size={13} className="mt-0.5 shrink-0" />
-                  +91 98765 43210
+                  {SITE_PHONE_DISPLAY}
                 </a>
               </li>
               <li>
-                <div className="flex items-start gap-2.5 font-body text-[12px] text-background/50">
+                <a
+                  href={SITE_MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-2.5 font-body text-[12px] text-background/50 hover:text-background transition-colors"
+                >
                   <MapPin size={13} className="mt-0.5 shrink-0" />
-                  <span>Mumbai, India</span>
-                </div>
+                  <span>{SITE_LOCATION_LABEL}</span>
+                </a>
               </li>
             </ul>
           </div>

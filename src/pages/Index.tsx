@@ -6,6 +6,7 @@ import VideoGrid from "@/components/VideoGrid";
 import DefinesUsSection from "@/components/DefinesUsSection";
 import MagicSection from "@/components/MagicSection";
 import PhotoGrid from "@/components/PhotoGrid";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import InstagramFeed from "@/components/InstagramFeed";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
@@ -23,6 +24,7 @@ const Index = () => {
       <DefinesUsSection />
       <MagicSection />
       <PhotoGrid />
+      <TestimonialsSection />
       <InstagramFeed />
       <ContactSection />
       <Footer />

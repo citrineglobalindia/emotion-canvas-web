@@ -3,6 +3,14 @@ import { useRef, useState } from "react";
 import { Mail, Phone, MapPin, Instagram, Send } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  SITE_EMAIL,
+  SITE_EMAIL_HREF,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_HREF,
+  SITE_LOCATION_LABEL,
+  SITE_MAPS_URL,
+} from "@/lib/siteContact";
 import photo1 from "@/assets/photo-1.jpg";
 import photo2 from "@/assets/photo-2.jpg";
 import photo3 from "@/assets/photo-3.jpg";
@@ -151,30 +159,35 @@ const ContactSection = () => {
                   Get in Touch
                 </p>
                 <div className="space-y-5">
-                  <a href="mailto:hello@blackandwhitefilms.in" className="flex items-center gap-3 group">
+                  <a href={SITE_EMAIL_HREF} className="flex items-center gap-3 group">
                     <div className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center group-hover:border-foreground transition-colors">
                       <Mail size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
                     <span className="font-body text-sm text-foreground/70 group-hover:text-foreground transition-colors">
-                      hello@blackandwhitefilms.in
+                      {SITE_EMAIL}
                     </span>
                   </a>
-                  <a href="tel:+919876543210" className="flex items-center gap-3 group">
+                  <a href={SITE_PHONE_HREF} className="flex items-center gap-3 group">
                     <div className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center group-hover:border-foreground transition-colors">
                       <Phone size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
                     <span className="font-body text-sm text-foreground/70 group-hover:text-foreground transition-colors">
-                      +91 98765 43210
+                      {SITE_PHONE_DISPLAY}
                     </span>
                   </a>
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center">
-                      <MapPin size={14} className="text-muted-foreground" />
+                  <a
+                    href={SITE_MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 group"
+                  >
+                    <div className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center group-hover:border-foreground transition-colors">
+                      <MapPin size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
-                    <span className="font-body text-sm text-foreground/70">
-                      Hyderabad, India
+                    <span className="font-body text-sm text-foreground/70 group-hover:text-foreground transition-colors underline-offset-4 group-hover:underline">
+                      {SITE_LOCATION_LABEL}
                     </span>
-                  </div>
+                  </a>
                 </div>
               </div>
 

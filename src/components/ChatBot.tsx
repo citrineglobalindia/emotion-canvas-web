@@ -3,6 +3,7 @@ import { Send, Bot, User, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { logChatEvent } from "@/lib/chatEvents";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -45,6 +46,9 @@ const ChatBot = ({ variant = "inline" }: ChatBotProps) => {
   const send = async (text?: string) => {
     const msg = (text || input).trim();
     if (!msg || isLoading) return;
+
+    // Notify admins of the visitor's first message (fires once per session).
+    void logChatEvent("first_message", msg);
 
     setShowQuickReplies(false);
     const userMsg: Msg = { role: "user", content: msg };

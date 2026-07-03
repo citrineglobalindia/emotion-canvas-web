@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
+import NotificationsBell from "@/components/admin/NotificationsBell";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -102,6 +103,9 @@ export const AdminLayout = () => {
       </aside>
 
       <main className="md:pl-64">
+        <header className="sticky top-0 z-20 flex h-14 items-center justify-end border-b bg-background/80 px-4 backdrop-blur md:px-8">
+          <NotificationsBell />
+        </header>
         <div className="mx-auto max-w-6xl p-4 md:p-8">
           <Outlet />
         </div>

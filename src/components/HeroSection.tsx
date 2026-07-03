@@ -11,7 +11,7 @@ const slides = [
   { src: heroImg3, caption: "Goa · 2024" },
 ];
 
-const words = ["love", "moments", "memories"];
+const words = ["stories", "moments", "frames"];
 
 const SLIDE_DURATION = 6500; // ms each slide is "active"
 const CROSSFADE_DURATION = 1.8; // seconds
