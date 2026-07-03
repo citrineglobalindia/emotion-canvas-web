@@ -78,7 +78,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.3, delay: 0.45 + i * 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-5xl md:text-7xl lg:text-8xl font-light text-primary-foreground tracking-[0.3em] md:tracking-[0.4em] lowercase leading-[1.25]"
+            className="font-display text-2xl md:text-4xl lg:text-5xl font-light text-primary-foreground tracking-[0.3em] md:tracking-[0.4em] lowercase leading-[1.25]"
           >
             {word}
           </motion.h1>
