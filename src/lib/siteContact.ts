@@ -12,9 +12,7 @@ export const SITE_PHONE_HREF = "tel:+919686580152";
 export const SITE_LOCATION_LABEL = "Poorna Prajna Layout, Bengaluru";
 export const SITE_ADDRESS_FULL =
   "1st floor, 205, 26th Main Rd, Poorna Prajna Layout, Poorna Pragnanagara, Bengaluru, Karnataka 560061";
-export const SITE_MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=" +
-  encodeURIComponent(SITE_ADDRESS_FULL);
+export const SITE_MAPS_URL = "https://www.google.com/maps?cid=16610912581295908341";
 
 export const SITE_INSTAGRAM_URL =
   "https://www.instagram.com/storiesby_black_and_white";
