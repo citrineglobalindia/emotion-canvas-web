@@ -96,38 +96,6 @@ const ContactSection = () => {
 
   return (
     <section id="contact">
-      {/* Photo Mosaic with Centered Logo */}
-      <div className="relative w-full overflow-hidden">
-        <div className="grid grid-cols-7 md:grid-cols-10 gap-0">
-          {mosaicPhotos.map((photo, i) => (
-            <div key={i} className="aspect-square overflow-hidden">
-              <img
-                src={photo}
-                alt=""
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        </div>
-        {/* Dark overlay + centered wordmark */}
-        <div className="absolute inset-0 bg-foreground/60 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="text-center" aria-label="Black & White Films">
-              <div className="font-display text-[28px] md:text-[36px] font-light tracking-[0.18em] text-background leading-none">
-                BLACK<span className="opacity-50 mx-0.5">&amp;</span>WHITE
-              </div>
-              <div className="mt-2 font-body text-[8px] md:text-[9px] tracking-[0.5em] uppercase text-background/55">
-                Films · Photography
-              </div>
-            </div>
-            <p className="mt-2 font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-background/60">
-              50+ Stories Captured
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Contact Section */}
       <div ref={ref} className="bg-warm py-24 md:py-36 px-6 md:px-10">
         <div className="max-w-[1100px] mx-auto">
