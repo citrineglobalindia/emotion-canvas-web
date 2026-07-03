@@ -30,6 +30,7 @@ import SiteContentPage from "./pages/admin/SiteContentPage.tsx";
 import ContactSubmissionsPage from "./pages/admin/ContactSubmissionsPage.tsx";
 import MediaLibraryPage from "./pages/admin/MediaLibraryPage.tsx";
 import UsersPage from "./pages/admin/UsersPage.tsx";
+import TestimonialsListPage from "./pages/admin/TestimonialsListPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,7 @@ const AnimatedRoutes = () => {
           <Route path="contact" element={<ContactSubmissionsPage />} />
           <Route path="media" element={<MediaLibraryPage />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="testimonials" element={<TestimonialsListPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

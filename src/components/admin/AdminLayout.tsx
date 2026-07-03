@@ -7,6 +7,7 @@ import {
   Mail,
   Image as ImageIcon,
   Users,
+  Quote,
   LogOut,
   ExternalLink,
   Menu,
@@ -25,6 +26,7 @@ const NAV = [
   { to: "/admin/site-content", label: "Site Content", icon: LayoutIcon },
   { to: "/admin/contact", label: "Contact", icon: Mail },
   { to: "/admin/media", label: "Media", icon: ImageIcon },
+  { to: "/admin/testimonials", label: "Testimonials", icon: Quote },
   { to: "/admin/users", label: "Users", icon: Users },
 ];
 
