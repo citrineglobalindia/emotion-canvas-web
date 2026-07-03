@@ -1,15 +1,32 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { X } from "lucide-react";
-import film1 from "@/assets/film-1.jpg";
+import { X, Play } from "lucide-react";
 import film2 from "@/assets/film-2.jpg";
 import film3 from "@/assets/film-3.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery4 from "@/assets/gallery-4.jpg";
 
-const videos = [
-  { thumb: film1, title: "Priya & Arjun", location: "Udaipur", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+type VideoItem = {
+  thumb: string;
+  title: string;
+  location: string;
+  /** Self-hosted file served from /public (takes priority over `url`). */
+  file?: string;
+  /** YouTube/Vimeo embed URL. */
+  url?: string;
+  /** Portrait (9:16) reel — shown in a taller modal. */
+  portrait?: boolean;
+};
+
+const videos: VideoItem[] = [
+  {
+    thumb: "/films/reel-1.jpg",
+    title: "Featured Reel",
+    location: "Stories by Black & White",
+    file: "/films/reel-1.mp4",
+    portrait: true,
+  },
   { thumb: film2, title: "Sarah & Michael", location: "Tuscany", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
   { thumb: film3, title: "Aisha & Ravi", location: "Jaipur", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
   { thumb: gallery1, title: "Meera & Karan", location: "Goa", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
@@ -21,6 +38,8 @@ const VideoGrid = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [activeVideo, setActiveVideo] = useState<number | null>(null);
+
+  const active = activeVideo !== null ? videos[activeVideo] : null;
 
   return (
     <section ref={ref} className="bg-background">
@@ -59,6 +78,12 @@ const VideoGrid = () => {
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
             />
+            {/* Play icon */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-background/25 backdrop-blur-sm border border-white/40 flex items-center justify-center">
+                <Play size={18} className="text-white translate-x-[1px]" fill="currentColor" />
+              </div>
+            </div>
             {/* Subtle gradient overlay on hover */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             {/* Title revealed on hover */}
@@ -75,7 +100,7 @@ const VideoGrid = () => {
       </div>
 
       {/* Fullscreen video modal */}
-      {activeVideo !== null && (
+      {active && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -83,28 +108,4 @@ const VideoGrid = () => {
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 md:p-10"
           onClick={() => setActiveVideo(null)}
         >
-          <button
-            onClick={() => setActiveVideo(null)}
-            className="absolute top-6 right-6 z-50 w-10 h-10 flex items-center justify-center text-primary-foreground/70 hover:text-primary-foreground transition-colors"
-          >
-            <X size={24} />
-          </button>
-          <div
-            className="w-full max-w-5xl aspect-video"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <iframe
-              src={`${videos[activeVideo].url}?autoplay=1&rel=0`}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title={videos[activeVideo].title}
-            />
-          </div>
-        </motion.div>
-      )}
-    </section>
-  );
-};
-
-export default VideoGrid;
+  
