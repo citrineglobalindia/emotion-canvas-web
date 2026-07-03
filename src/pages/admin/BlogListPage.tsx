@@ -30,7 +30,7 @@ const BlogListPage = () => {
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("blog_posts")
+      .from("bw_blog_posts")
       .select("*")
       .order("created_at", { ascending: false });
     if (error) toast.error(error.message);
@@ -43,7 +43,7 @@ const BlogListPage = () => {
   const togglePublished = async (post: Post) => {
     const next = !post.published;
     const { error } = await supabase
-      .from("blog_posts")
+      .from("bw_blog_posts")
       .update({ published: next, published_at: next ? new Date().toISOString() : null })
       .eq("id", post.id);
     if (error) return toast.error(error.message);
@@ -54,7 +54,7 @@ const BlogListPage = () => {
   const onDelete = async () => {
     if (!confirmDelete) return;
     setDeleting(true);
-    const { error } = await supabase.from("blog_posts").delete().eq("id", confirmDelete.id);
+    const { error } = await supabase.from("bw_blog_posts").delete().eq("id", confirmDelete.id);
     setDeleting(false);
     if (error) return toast.error(error.message);
     toast.success("Post deleted");

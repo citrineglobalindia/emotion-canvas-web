@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     setRolesLoading(true);
     const { data, error } = await supabase
-      .from("user_roles")
+      .from("bw_user_roles")
       .select("role")
       .eq("user_id", userId);
     if (error) {
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const claimFirstAdmin = useCallback(async () => {
-    const { data, error } = await supabase.rpc("claim_first_admin");
+    const { data, error } = await supabase.rpc("bw_claim_first_admin");
     if (error) return { error: error.message, isAdmin: false };
     if (session?.user?.id) await fetchRoles(session.user.id);
     return { error: null, isAdmin: Boolean(data) };

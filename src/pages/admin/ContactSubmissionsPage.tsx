@@ -48,7 +48,7 @@ const ContactSubmissionsPage = () => {
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("contact_submissions")
+      .from("bw_contact_submissions")
       .select("*")
       .order("created_at", { ascending: false });
     if (error) toast.error(error.message);
@@ -82,7 +82,7 @@ const ContactSubmissionsPage = () => {
     if (!active) return;
     setSaving(true);
     const { error } = await supabase
-      .from("contact_submissions")
+      .from("bw_contact_submissions")
       .update({
         notes: editNotes || null,
         status: editStatus,
@@ -98,7 +98,7 @@ const ContactSubmissionsPage = () => {
 
   const onDelete = async () => {
     if (!confirmDelete) return;
-    const { error } = await supabase.from("contact_submissions").delete().eq("id", confirmDelete.id);
+    const { error } = await supabase.from("bw_contact_submissions").delete().eq("id", confirmDelete.id);
     if (error) return toast.error(error.message);
     toast.success("Deleted");
     setItems((prev) => prev.filter((i) => i.id !== confirmDelete.id));

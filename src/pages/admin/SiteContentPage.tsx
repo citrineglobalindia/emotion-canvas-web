@@ -40,7 +40,7 @@ const SiteContentPage = () => {
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("site_content")
+      .from("bw_site_content")
       .select("*")
       .order("page_key")
       .order("sort_order")
@@ -68,7 +68,7 @@ const SiteContentPage = () => {
   const onSaveBlock = async (b: Block) => {
     setSaving(b.id);
     const { error } = await supabase
-      .from("site_content")
+      .from("bw_site_content")
       .update({
         page_key: b.page_key,
         section_key: b.section_key,
@@ -98,7 +98,7 @@ const SiteContentPage = () => {
       sort_order: Number(newBlock.sort_order) || 0,
       published: newBlock.published ?? true,
     };
-    const { data, error } = await supabase.from("site_content").insert(insert).select().single();
+    const { data, error } = await supabase.from("bw_site_content").insert(insert).select().single();
     if (error) return toast.error(error.message);
     toast.success("Block created");
     setBlocks((prev) => [...prev, data!]);
@@ -109,7 +109,7 @@ const SiteContentPage = () => {
 
   const onDelete = async () => {
     if (!confirmDelete) return;
-    const { error } = await supabase.from("site_content").delete().eq("id", confirmDelete.id);
+    const { error } = await supabase.from("bw_site_content").delete().eq("id", confirmDelete.id);
     if (error) return toast.error(error.message);
     toast.success("Block deleted");
     setBlocks((prev) => prev.filter((b) => b.id !== confirmDelete.id));

@@ -41,7 +41,7 @@ const BlogEditPage = () => {
   useEffect(() => {
     if (isNew) return;
     const load = async () => {
-      const { data, error } = await supabase.from("blog_posts").select("*").eq("id", id!).maybeSingle();
+      const { data, error } = await supabase.from("bw_blog_posts").select("*").eq("id", id!).maybeSingle();
       if (error) {
         toast.error(error.message);
         setLoading(false);
@@ -82,14 +82,14 @@ const BlogEditPage = () => {
         published: willPublish,
         published_at: willPublish ? new Date().toISOString() : null,
       };
-      const { data, error } = await supabase.from("blog_posts").insert(insert).select().single();
+      const { data, error } = await supabase.from("bw_blog_posts").insert(insert).select().single();
       setSaving(false);
       if (error) return toast.error(error.message);
       toast.success("Post created");
       navigate(`/admin/blog/${data.id}`, { replace: true });
     } else {
       const { error } = await supabase
-        .from("blog_posts")
+        .from("bw_blog_posts")
         .update({
           title: post.title,
           slug,

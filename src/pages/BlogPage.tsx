@@ -47,7 +47,7 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       const { data } = await supabase
-        .from("blog_posts")
+        .from("bw_blog_posts")
         .select("id, title, slug, excerpt, image_url, category, read_time, published_at")
         .eq("published", true)
         .order("published_at", { ascending: false });

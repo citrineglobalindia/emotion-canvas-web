@@ -36,14 +36,14 @@ const DashboardPage = () => {
     const load = async () => {
       const [stories, publishedStories, blog, publishedBlog, newContacts, totalContacts, media, siteContent] =
         await Promise.all([
-          supabase.from("stories").select("*", { count: "exact", head: true }),
-          supabase.from("stories").select("*", { count: "exact", head: true }).eq("published", true),
-          supabase.from("blog_posts").select("*", { count: "exact", head: true }),
-          supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("published", true),
-          supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("status", "new"),
-          supabase.from("contact_submissions").select("*", { count: "exact", head: true }),
-          supabase.from("media_assets").select("*", { count: "exact", head: true }),
-          supabase.from("site_content").select("*", { count: "exact", head: true }),
+          supabase.from("bw_stories").select("*", { count: "exact", head: true }),
+          supabase.from("bw_stories").select("*", { count: "exact", head: true }).eq("published", true),
+          supabase.from("bw_blog_posts").select("*", { count: "exact", head: true }),
+          supabase.from("bw_blog_posts").select("*", { count: "exact", head: true }).eq("published", true),
+          supabase.from("bw_contact_submissions").select("*", { count: "exact", head: true }).eq("status", "new"),
+          supabase.from("bw_contact_submissions").select("*", { count: "exact", head: true }),
+          supabase.from("bw_media_assets").select("*", { count: "exact", head: true }),
+          supabase.from("bw_site_content").select("*", { count: "exact", head: true }),
         ]);
       setCounts({
         stories: stories.count ?? 0,

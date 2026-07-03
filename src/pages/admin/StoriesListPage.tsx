@@ -29,7 +29,7 @@ const StoriesListPage = () => {
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("stories")
+      .from("bw_stories")
       .select("*")
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false });
@@ -42,7 +42,7 @@ const StoriesListPage = () => {
 
   const togglePublished = async (story: Story) => {
     const { error } = await supabase
-      .from("stories")
+      .from("bw_stories")
       .update({ published: !story.published })
       .eq("id", story.id);
     if (error) {
@@ -58,7 +58,7 @@ const StoriesListPage = () => {
   const onDelete = async () => {
     if (!confirmDelete) return;
     setDeleting(true);
-    const { error } = await supabase.from("stories").delete().eq("id", confirmDelete.id);
+    const { error } = await supabase.from("bw_stories").delete().eq("id", confirmDelete.id);
     setDeleting(false);
     if (error) {
       toast.error(error.message);

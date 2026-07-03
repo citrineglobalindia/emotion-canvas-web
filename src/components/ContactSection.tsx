@@ -71,7 +71,7 @@ const ContactSection = () => {
     }
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("contact_submissions").insert({
+      const { error } = await supabase.from("bw_contact_submissions").insert({
         name: formData.name,
         email: formData.email,
         phone: formData.phone || null,

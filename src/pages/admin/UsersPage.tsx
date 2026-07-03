@@ -33,8 +33,8 @@ const UsersPage = () => {
   const load = async () => {
     setLoading(true);
     const [{ data: profs, error: pErr }, { data: roles, error: rErr }] = await Promise.all([
-      supabase.from("profiles").select("*").order("created_at", { ascending: false }),
-      supabase.from("user_roles").select("*"),
+      supabase.from("bw_profiles").select("*").order("created_at", { ascending: false }),
+      supabase.from("bw_user_roles").select("*"),
     ]);
     if (pErr) toast.error(pErr.message);
     if (rErr) toast.error(rErr.message);
@@ -68,7 +68,7 @@ const UsersPage = () => {
       return toast.message("User already has this role");
     }
     setBusy(`${userId}:${role}`);
-    const { error } = await supabase.from("user_roles").insert({ user_id: userId, role });
+    const { error } = await supabase.from("bw_user_roles").insert({ user_id: userId, role });
     setBusy(null);
     if (error) return toast.error(error.message);
     toast.success(`Granted ${role}`);
@@ -82,7 +82,7 @@ const UsersPage = () => {
       if (!confirm("Revoke your own admin role? You'll be locked out of the panel.")) return;
     }
     setBusy(`${userId}:${role}`);
-    const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", role);
+    const { error } = await supabase.from("bw_user_roles").delete().eq("user_id", userId).eq("role", role);
     setBusy(null);
     if (error) return toast.error(error.message);
     toast.success(`Revoked ${role}`);

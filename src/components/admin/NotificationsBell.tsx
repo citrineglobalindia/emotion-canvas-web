@@ -36,7 +36,7 @@ const NotificationsBell = () => {
     const load = async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any)
-        .from("chat_events")
+        .from("bw_chat_events")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(50);
@@ -51,7 +51,7 @@ const NotificationsBell = () => {
       .on(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         "postgres_changes" as any,
-        { event: "INSERT", schema: "public", table: "chat_events" },
+        { event: "INSERT", schema: "public", table: "bw_chat_events" },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (payload: any) => {
           const ev = payload.new as ChatEvent;
@@ -79,7 +79,7 @@ const NotificationsBell = () => {
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (supabase as any)
-      .from("chat_events")
+      .from("bw_chat_events")
       .update({ read: true })
       .in("id", ids);
   };

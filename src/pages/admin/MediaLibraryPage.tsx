@@ -19,7 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
 type Asset = Tables<"media_assets">;
-const BUCKET = "media-library";
+const BUCKET = "bw-media-library";
 
 const MediaLibraryPage = () => {
   const { user } = useAuth();
@@ -37,7 +37,7 @@ const MediaLibraryPage = () => {
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from("media_assets")
+      .from("bw_media_assets")
       .select("*")
       .order("created_at", { ascending: false });
     if (error) toast.error(error.message);
@@ -64,7 +64,7 @@ const MediaLibraryPage = () => {
         toast.error(`${file.name}: ${upErr.message}`);
         continue;
       }
-      const { error: insErr } = await supabase.from("media_assets").insert({
+      const { error: insErr } = await supabase.from("bw_media_assets").insert({
         bucket_id: BUCKET,
         file_name: file.name,
         file_path: path,
@@ -109,7 +109,7 @@ const MediaLibraryPage = () => {
     if (!editing) return;
     const tags = editTags.split(",").map((t) => t.trim()).filter(Boolean);
     const { error } = await supabase
-      .from("media_assets")
+      .from("bw_media_assets")
       .update({ alt_text: editAlt || null, caption: editCaption || null, tags })
       .eq("id", editing.id);
     if (error) return toast.error(error.message);
@@ -122,7 +122,7 @@ const MediaLibraryPage = () => {
     if (!confirmDelete) return;
     const { error: stErr } = await supabase.storage.from(BUCKET).remove([confirmDelete.file_path]);
     if (stErr) toast.error(`Storage: ${stErr.message}`);
-    const { error: rowErr } = await supabase.from("media_assets").delete().eq("id", confirmDelete.id);
+    const { error: rowErr } = await supabase.from("bw_media_assets").delete().eq("id", confirmDelete.id);
     if (rowErr) return toast.error(rowErr.message);
     toast.success("Deleted");
     setAssets((prev) => prev.filter((a) => a.id !== confirmDelete.id));

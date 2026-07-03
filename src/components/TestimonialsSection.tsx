@@ -71,7 +71,7 @@ const TestimonialsSection = () => {
     (async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any)
-        .from("testimonials")
+        .from("bw_testimonials")
         .select("name, role, quote, image_url")
         .eq("published", true)
         .order("sort_order", { ascending: true });

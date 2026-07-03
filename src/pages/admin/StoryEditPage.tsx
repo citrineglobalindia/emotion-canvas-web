@@ -58,9 +58,9 @@ const StoryEditPage = () => {
     const load = async () => {
       const [{ data: s, error: sErr }, { data: secs, error: secErr }, { data: gal, error: galErr }] =
         await Promise.all([
-          supabase.from("stories").select("*").eq("id", id!).maybeSingle(),
-          supabase.from("story_sections").select("*").eq("story_id", id!).order("sort_order"),
-          supabase.from("story_gallery_items").select("*").eq("story_id", id!).order("sort_order"),
+          supabase.from("bw_stories").select("*").eq("id", id!).maybeSingle(),
+          supabase.from("bw_story_sections").select("*").eq("story_id", id!).order("sort_order"),
+          supabase.from("bw_story_gallery_items").select("*").eq("story_id", id!).order("sort_order"),
         ]);
       if (sErr || secErr || galErr) {
         toast.error(sErr?.message ?? secErr?.message ?? galErr?.message ?? "Failed to load story");
@@ -104,7 +104,7 @@ const StoryEditPage = () => {
         published: Boolean(story.published),
         sort_order: Number(story.sort_order) || 0,
       };
-      const { data, error } = await supabase.from("stories").insert(insert).select().single();
+      const { data, error } = await supabase.from("bw_stories").insert(insert).select().single();
       setSaving(false);
       if (error) return toast.error(error.message);
       toast.success("Story created");
@@ -113,7 +113,7 @@ const StoryEditPage = () => {
       navigate(`/admin/stories/${data.id}`, { replace: true });
     } else {
       const { error } = await supabase
-        .from("stories")
+        .from("bw_stories")
         .update({
           title: story.title,
           slug,
@@ -167,7 +167,7 @@ const StoryEditPage = () => {
     const target = sections[idx];
     if (!target) return;
     if (!String(target.id).startsWith("tmp-")) {
-      const { error } = await supabase.from("story_sections").delete().eq("id", target.id);
+      const { error } = await supabase.from("bw_story_sections").delete().eq("id", target.id);
       if (error) return toast.error(error.message);
     }
     setSections((prev) => prev.filter((_, i) => i !== idx).map((s, i) => ({ ...s, sort_order: i })));
@@ -182,7 +182,7 @@ const StoryEditPage = () => {
       const isNewRow = String(sec.id).startsWith("tmp-");
       if (isNewRow) {
         const { data, error } = await supabase
-          .from("story_sections")
+          .from("bw_story_sections")
           .insert({ story_id: storyId, title: sec.title, body: sec.body, sort_order: i })
           .select()
           .single();
@@ -193,7 +193,7 @@ const StoryEditPage = () => {
         setSections((prev) => prev.map((s, idx) => (idx === i ? data! : s)));
       } else {
         const { error } = await supabase
-          .from("story_sections")
+          .from("bw_story_sections")
           .update({ title: sec.title, body: sec.body, sort_order: i })
           .eq("id", sec.id);
         if (error) {
@@ -238,7 +238,7 @@ const StoryEditPage = () => {
     const target = gallery[idx];
     if (!target) return;
     if (!String(target.id).startsWith("tmp-")) {
-      const { error } = await supabase.from("story_gallery_items").delete().eq("id", target.id);
+      const { error } = await supabase.from("bw_story_gallery_items").delete().eq("id", target.id);
       if (error) return toast.error(error.message);
     }
     setGallery((prev) => prev.filter((_, i) => i !== idx).map((g, i) => ({ ...g, sort_order: i })));
@@ -253,7 +253,7 @@ const StoryEditPage = () => {
       const isNewRow = String(item.id).startsWith("tmp-");
       if (isNewRow) {
         const { data, error } = await supabase
-          .from("story_gallery_items")
+          .from("bw_story_gallery_items")
           .insert({
             story_id: storyId,
             image_url: item.image_url,
@@ -269,7 +269,7 @@ const StoryEditPage = () => {
         setGallery((prev) => prev.map((g, idx) => (idx === i ? data! : g)));
       } else {
         const { error } = await supabase
-          .from("story_gallery_items")
+          .from("bw_story_gallery_items")
           .update({ image_url: item.image_url, alt_text: item.alt_text, sort_order: i })
           .eq("id", item.id);
         if (error) {

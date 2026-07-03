@@ -31,7 +31,7 @@ type FormState = {
 const EMPTY: FormState = { name: "", role: "", quote: "", image_url: "", published: true, sort_order: 0 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = () => (supabase as any).from("testimonials");
+const db = () => (supabase as any).from("bw_testimonials");
 
 const TestimonialsListPage = () => {
   const [rows, setRows] = useState<Row[]>([]);
