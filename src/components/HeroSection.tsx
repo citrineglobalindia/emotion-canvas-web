@@ -1,72 +1,38 @@
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { ArrowDown } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
-import heroImg2 from "@/assets/hero-2.jpg";
-import heroImg3 from "@/assets/hero-3.jpg";
-
-const slides = [
-  { src: heroBg, caption: "Udaipur · 2025" },
-  { src: heroImg2, caption: "Tuscany · 2025" },
-  { src: heroImg3, caption: "Goa · 2024" },
-];
 
 const words = ["stories", "moments", "frames"];
 
-const SLIDE_DURATION = 6500; // ms each slide is "active"
-const CROSSFADE_DURATION = 1.8; // seconds
-
 const HeroSection = () => {
   const ref = useRef(null);
-  const [current, setCurrent] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
-  const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  const mediaY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, SLIDE_DURATION);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <section ref={ref} className="relative h-screen w-full overflow-hidden bg-foreground">
-      {/* Image layers — slow Ken-Burns + soft masked crossfade */}
-      <motion.div className="absolute inset-0" style={{ y: imgY }}>
-        {slides.map((slide, i) => (
-          <motion.div
-            key={slide.src + i}
-            className="absolute inset-0"
-            initial={false}
-            animate={{
-              opacity: i === current ? 1 : 0,
-              // Subtle clip-path reveal from the edges as image becomes active
-              clipPath: i === current ? "inset(0% 0% 0% 0%)" : "inset(6% 8% 6% 8%)",
-            }}
-            transition={{
-              opacity: { duration: CROSSFADE_DURATION, ease: [0.22, 1, 0.36, 1] },
-              clipPath: { duration: CROSSFADE_DURATION + 0.4, ease: [0.22, 1, 0.36, 1] },
-            }}
-          >
-            {/* Ken-Burns: each image slowly zooms during its active window */}
-            <motion.img
-              src={slide.src}
-              alt=""
-              aria-hidden
-              className="absolute inset-0 h-full w-full object-cover object-center grayscale"
-              initial={{ scale: 1.12 }}
-              animate={{ scale: i === current ? 1.0 : 1.12 }}
-              transition={{ duration: (SLIDE_DURATION + 2000) / 1000, ease: "linear" }}
-            />
-          </motion.div>
-        ))}
+      {/* Background video — slow parallax + subtle scale */}
+      <motion.div className="absolute inset-0" style={{ y: mediaY }}>
+        <motion.video
+          className="absolute inset-0 h-full w-full object-cover object-center grayscale"
+          src="/films/reel-1.mp4"
+          poster="/films/reel-1.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden
+          initial={{ scale: 1.12 }}
+          animate={{ scale: 1.0 }}
+          transition={{ duration: 8, ease: "easeOut" }}
+        />
 
         {/* Cinematic gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/15 to-black/55" />
@@ -75,10 +41,9 @@ const HeroSection = () => {
           className="absolute inset-0 pointer-events-none"
           style={{ boxShadow: "inset 0 0 220px 60px rgba(0,0,0,0.6)" }}
         />
-        {/* Film-grain feel — already provided by FilmGrain component globally */}
       </motion.div>
 
-      {/* Thin letterbox bars — top and bottom */}
+      {/* Thin letterbox bar — top */}
       <motion.div
         initial={{ scaleX: 0, opacity: 0 }}
         animate={{ scaleX: 1, opacity: 1 }}
@@ -137,48 +102,6 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
       </motion.div>
-
-      {/* Slide caption + progress — bottom-left */}
-      <div className="absolute bottom-8 left-6 md:bottom-10 md:left-12 z-10 flex flex-col items-start gap-3 pointer-events-none">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="font-body text-[10px] tracking-[0.4em] uppercase text-primary-foreground/70"
-          >
-            {slides[current].caption}
-          </motion.div>
-        </AnimatePresence>
-        {/* Progress ticks */}
-        <div className="flex items-center gap-2">
-          {slides.map((_, i) => (
-            <div key={i} className="relative h-px w-10 overflow-hidden bg-primary-foreground/20">
-              {i === current && (
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: SLIDE_DURATION / 1000, ease: "linear" }}
-                  style={{ transformOrigin: "left" }}
-                  className="absolute inset-0 bg-primary-foreground"
-                />
-              )}
-              {i < current && <div className="absolute inset-0 bg-primary-foreground" />}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Slide counter — bottom-right */}
-      <div className="absolute bottom-8 right-6 md:bottom-10 md:right-12 z-10 flex items-center gap-2 font-body text-[10px] tracking-[0.4em] uppercase text-primary-foreground/70 pointer-events-none">
-        <span className="text-primary-foreground text-base font-display font-light leading-none">
-          {String(current + 1).padStart(2, "0")}
-        </span>
-        <span className="opacity-50">/</span>
-        <span>{String(slides.length).padStart(2, "0")}</span>
-      </div>
 
       {/* Warm baseline accent (matches site palette) */}
       <div className="absolute bottom-0 left-0 right-0 h-2 bg-warm z-20" />
