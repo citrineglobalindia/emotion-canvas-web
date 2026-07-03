@@ -25,7 +25,7 @@ const videos: VideoItem[] = [
     title: "Featured Reel",
     location: "Stories by Black & White",
     file: "/films/reel-1.mp4",
-    portrait: true,
+    portrait: false,
   },
   { thumb: film2, title: "Sarah & Michael", location: "Tuscany", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
   { thumb: film3, title: "Aisha & Ravi", location: "Jaipur", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
