@@ -295,6 +295,41 @@ const ContactSection = () => {
               </form>
             </motion.div>
           </div>
+
+          {/* Interactive location map */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-16 md:mt-20"
+          >
+            <div className="flex items-center justify-between mb-5">
+              <p className="font-body text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                Visit the Studio
+              </p>
+              <a
+                href={SITE_MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body text-[10px] uppercase tracking-[0.2em] text-foreground/60 hover:text-foreground transition-colors underline-offset-4 hover:underline"
+              >
+                Get Directions →
+              </a>
+            </div>
+            <div className="relative overflow-hidden rounded-xl border border-border/40 shadow-sm group">
+              <iframe
+                title="Stories by Black & White — Studio location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.9965051829695!2d77.5346185!3d12.907945900000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3fd4ab960987%3A0xe685d0fbfb35a5f5!2sStories%20by%20Black%20and%20White!5e0!3m2!1sen!2sin!4v1783072993190!5m2!1sen!2sin"
+                width="100%"
+                height="380"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="w-full grayscale contrast-[1.05] transition-all duration-700 group-hover:grayscale-0"
+              />
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
