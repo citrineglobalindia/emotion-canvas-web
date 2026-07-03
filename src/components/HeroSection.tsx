@@ -29,9 +29,9 @@ const HeroSection = () => {
           loop
           playsInline
           aria-hidden
-          initial={{ scale: 1.12 }}
+          initial={{ scale: 1.06 }}
           animate={{ scale: 1.0 }}
-          transition={{ duration: 8, ease: "easeOut" }}
+          transition={{ duration: 12, ease: "easeOut" }}
         />
 
         {/* Cinematic gradient overlay */}
