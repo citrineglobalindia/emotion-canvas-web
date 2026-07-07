@@ -1,6 +1,7 @@
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Instagram } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
@@ -8,11 +9,40 @@ import gallery4 from "@/assets/gallery-4.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
 import gallery6 from "@/assets/gallery-6.jpg";
 
-const feedImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6];
+const PROFILE_URL = "https://www.instagram.com/storiesby_black_and_white";
+
+// Shown until an admin adds photos in Admin → Instagram (falls back to these).
+const fallbackImages: FeedItem[] = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6].map(
+  (src) => ({ src, href: PROFILE_URL }),
+);
+
+type FeedItem = { src: string; href: string };
 
 const InstagramFeed = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [images, setImages] = useState<FeedItem[]>(fallbackImages);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const { data, error } = await supabase
+        .from("bw_site_content")
+        .select("image_url, cta_href")
+        .eq("page_key", "home")
+        .eq("section_key", "instagram")
+        .eq("published", true)
+        .order("sort_order");
+      if (!active) return;
+      const items = (data ?? [])
+        .filter((r) => r.image_url)
+        .map((r) => ({ src: r.image_url as string, href: r.cta_href || PROFILE_URL }));
+      if (!error && items.length) setImages(items);
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <section ref={ref} className="bg-warm py-20 md:py-28">
@@ -35,7 +65,7 @@ const InstagramFeed = () => {
           className="font-display text-3xl md:text-5xl text-foreground"
         >
           <a
-            href="https://www.instagram.com/storiesby_black_and_white"
+            href={PROFILE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-muted-foreground transition-colors"
@@ -46,10 +76,10 @@ const InstagramFeed = () => {
       </div>
 
       <div className="grid grid-cols-3 md:grid-cols-6 gap-0">
-        {feedImages.map((img, i) => (
+        {images.map((item, i) => (
           <motion.a
             key={i}
-            href="https://www.instagram.com/storiesby_black_and_white"
+            href={item.href}
             target="_blank"
             rel="noopener noreferrer"
             initial={{ opacity: 0 }}
@@ -58,7 +88,7 @@ const InstagramFeed = () => {
             className="aspect-square overflow-hidden group relative"
           >
             <img
-              src={img}
+              src={item.src}
               alt={`Instagram post ${i + 1}`}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               loading="lazy"

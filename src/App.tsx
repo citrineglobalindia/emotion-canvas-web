@@ -31,6 +31,7 @@ import ContactSubmissionsPage from "./pages/admin/ContactSubmissionsPage.tsx";
 import MediaLibraryPage from "./pages/admin/MediaLibraryPage.tsx";
 import UsersPage from "./pages/admin/UsersPage.tsx";
 import TestimonialsListPage from "./pages/admin/TestimonialsListPage.tsx";
+import InstagramManagePage from "./pages/admin/InstagramManagePage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ const AnimatedRoutes = () => {
           <Route path="media" element={<MediaLibraryPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="testimonials" element={<TestimonialsListPage />} />
+          <Route path="instagram" element={<InstagramManagePage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -8,6 +8,7 @@ import {
   Image as ImageIcon,
   Users,
   Quote,
+  Instagram,
   LogOut,
   ExternalLink,
   Menu,
@@ -27,6 +28,7 @@ const NAV = [
   { to: "/admin/contact", label: "Contact", icon: Mail },
   { to: "/admin/media", label: "Media", icon: ImageIcon },
   { to: "/admin/testimonials", label: "Testimonials", icon: Quote },
+  { to: "/admin/instagram", label: "Instagram", icon: Instagram },
   { to: "/admin/users", label: "Users", icon: Users },
 ];
 
