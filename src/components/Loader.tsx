@@ -141,7 +141,19 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               className="font-display text-2xl md:text-3xl text-background tracking-[0.15em]"
             >
-              BLACK & WHITE
+              <img
+                src="/logo-white.png"
+                alt="Black & White Films"
+                onError={(e) => {
+                  const el = e.currentTarget;
+                  el.style.display = "none";
+                  if (el.nextElementSibling instanceof HTMLElement) {
+                    el.nextElementSibling.style.display = "inline";
+                  }
+                }}
+                className="mx-auto h-12 md:h-16 w-auto object-contain"
+              />
+              <span style={{ display: "none" }}>BLACK & WHITE</span>
             </motion.h2>
           </div>
 

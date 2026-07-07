@@ -36,6 +36,7 @@ const footerPhotos = [gallery1, gallery3, gallery5];
 const Footer = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
   const [activePhoto, setActivePhoto] = useState(0);
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -81,12 +82,23 @@ const Footer = () => {
           {/* Brand - full width on mobile */}
           <div className="col-span-2 lg:col-span-1">
             <Link to="/" onClick={scrollToTop} className="inline-block mb-5" aria-label="Black & White Films — Home">
-              <div className="font-display text-[24px] font-light tracking-[0.18em] text-background leading-none">
-                BLACK<span className="opacity-50 mx-0.5">&amp;</span>WHITE
-              </div>
-              <div className="mt-1.5 font-body text-[8px] tracking-[0.5em] uppercase text-background/45">
-                Films · Photography
-              </div>
+              {!logoError ? (
+                <img
+                  src="/logo-white.png"
+                  alt="Black & White Films"
+                  onError={() => setLogoError(true)}
+                  className="h-14 w-auto object-contain"
+                />
+              ) : (
+                <>
+                  <div className="font-display text-[24px] font-light tracking-[0.18em] text-background leading-none">
+                    BLACK<span className="opacity-50 mx-0.5">&amp;</span>WHITE
+                  </div>
+                  <div className="mt-1.5 font-body text-[8px] tracking-[0.5em] uppercase text-background/45">
+                    Films · Photography
+                  </div>
+                </>
+              )}
             </Link>
             <p className="font-body text-[12px] leading-relaxed text-background/50 max-w-[260px]">
               Crafting cinematic wedding stories that celebrate love in its most authentic form.

@@ -22,6 +22,7 @@ const navItems = [
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [logoError, setLogoError] = useState(false);
   const location = useLocation();
   const { theme, toggle } = useTheme();
 
@@ -60,22 +61,31 @@ const Header = () => {
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 px-6 md:px-10 py-4 md:py-5">
           {/* Wordmark */}
           <Link to="/" className="group flex items-center" aria-label="Black &amp; White Films — Home">
-            <div className="leading-none">
-              <div
-                className={`font-display text-[22px] md:text-[26px] font-light tracking-[0.18em] transition-colors duration-500 ${
-                  onLight ? "text-foreground" : "text-primary-foreground"
-                }`}
-              >
-                BLACK<span className="opacity-50 mx-0.5">&amp;</span>WHITE
+            {!logoError ? (
+              <img
+                src={onLight ? "/logo-black.png" : "/logo-white.png"}
+                alt="Black & White Films"
+                onError={() => setLogoError(true)}
+                className="h-11 md:h-14 w-auto object-contain transition-opacity duration-500"
+              />
+            ) : (
+              <div className="leading-none">
+                <div
+                  className={`font-display text-[22px] md:text-[26px] font-light tracking-[0.18em] transition-colors duration-500 ${
+                    onLight ? "text-foreground" : "text-primary-foreground"
+                  }`}
+                >
+                  BLACK<span className="opacity-50 mx-0.5">&amp;</span>WHITE
+                </div>
+                <div
+                  className={`mt-1 font-body text-[8px] tracking-[0.5em] uppercase transition-colors duration-500 ${
+                    onLight ? "text-foreground/45" : "text-primary-foreground/55"
+                  }`}
+                >
+                  Films · Photography
+                </div>
               </div>
-              <div
-                className={`mt-1 font-body text-[8px] tracking-[0.5em] uppercase transition-colors duration-500 ${
-                  onLight ? "text-foreground/45" : "text-primary-foreground/55"
-                }`}
-              >
-                Films · Photography
-              </div>
-            </div>
+            )}
           </Link>
 
           {/* Center nav (desktop) */}
