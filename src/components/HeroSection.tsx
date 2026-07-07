@@ -35,11 +35,11 @@ const HeroSection = () => {
         />
 
         {/* Cinematic gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/15 to-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/35" />
         {/* Vignette */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ boxShadow: "inset 0 0 220px 60px rgba(0,0,0,0.6)" }}
+          style={{ boxShadow: "inset 0 0 180px 40px rgba(0,0,0,0.4)" }}
         />
       </motion.div>
 
