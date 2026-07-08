@@ -39,7 +39,7 @@ const HeroSection = () => {
         {/* Portrait video for mobile */}
         <video
           ref={setupVideo}
-          className="absolute inset-0 h-full w-full object-cover object-center grayscale md:hidden"
+          className="absolute inset-0 h-full w-full object-cover object-center md:hidden"
           src="/films/reel-mobile.mp4"
           poster="/films/reel-mobile.jpg"
           autoPlay
@@ -52,7 +52,7 @@ const HeroSection = () => {
         {/* Landscape reel for desktop */}
         <video
           ref={setupVideo}
-          className="absolute inset-0 hidden h-full w-full object-cover object-center grayscale md:block"
+          className="absolute inset-0 hidden h-full w-full object-cover object-center md:block"
           src="/films/reel-1.mp4"
           poster="/films/reel-1.jpg"
           autoPlay
