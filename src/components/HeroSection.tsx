@@ -21,7 +21,7 @@ const HeroSection = () => {
       {/* Background video — slow parallax + subtle scale */}
       <motion.div className="absolute inset-0" style={{ y: mediaY }}>
         <motion.video
-          className="absolute inset-0 h-full w-full object-cover object-center grayscale"
+          className="absolute inset-0 h-full w-full object-contain md:object-cover object-center grayscale"
           src="/films/reel-1.mp4"
           poster="/films/reel-1.jpg"
           autoPlay
