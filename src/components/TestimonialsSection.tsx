@@ -99,7 +99,7 @@ const TestimonialsSection = () => {
           <span className="rounded-full border border-border/60 px-4 py-1 font-body text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
             Testimonials
           </span>
-          <h2 className="mt-6 font-display text-4xl text-foreground md:text-5xl lg:text-6xl">Kind Words</h2>
+          <h2 className="mt-6 font-display text-4xl text-foreground md:text-5xl lg:text-6xl">Our Client's Say</h2>
           <p className="mt-4 max-w-md font-body text-sm text-muted-foreground">
             Every couple, every celebration — here's what they say about their films and frames.
           </p>

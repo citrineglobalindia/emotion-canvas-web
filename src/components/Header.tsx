@@ -122,7 +122,7 @@ const Header = () => {
           </nav>
 
           {/* Right cluster */}
-          <div className="flex items-center justify-end gap-2 md:gap-4">
+          <div className="col-start-3 flex items-center justify-end gap-2 md:gap-4">
             <Link
               to="/contact"
               className={`hidden md:inline-flex items-center font-body text-[10px] tracking-[0.3em] uppercase border px-5 py-2.5 transition-all duration-300 ${
