@@ -20,8 +20,23 @@ const HeroSection = () => {
     <section ref={ref} className="relative h-screen w-full overflow-hidden bg-foreground">
       {/* Background video — slow parallax + subtle scale */}
       <motion.div className="absolute inset-0" style={{ y: mediaY }}>
+        {/* Portrait video for mobile */}
         <motion.video
-          className="absolute inset-0 h-full w-full object-contain md:object-cover object-center grayscale"
+          className="absolute inset-0 h-full w-full object-cover object-center grayscale md:hidden"
+          src="/films/reel-mobile.mp4"
+          poster="/films/reel-mobile.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden
+          initial={{ scale: 1.06 }}
+          animate={{ scale: 1.0 }}
+          transition={{ duration: 12, ease: "easeOut" }}
+        />
+        {/* Landscape reel for desktop */}
+        <motion.video
+          className="absolute inset-0 hidden h-full w-full object-cover object-center grayscale md:block"
           src="/films/reel-1.mp4"
           poster="/films/reel-1.jpg"
           autoPlay
