@@ -1,10 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Instagram, Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
-import gallery5 from "@/assets/gallery-5.jpg";
 import {
   SITE_EMAIL,
   SITE_EMAIL_HREF,
@@ -31,51 +27,12 @@ const services = [
   "Destination Weddings",
 ];
 
-const footerPhotos = [gallery1, gallery3, gallery5];
-
 const Footer = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-  const [activePhoto, setActivePhoto] = useState(0);
   const [logoError, setLogoError] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActivePhoto((prev) => (prev + 1) % footerPhotos.length);
-    }, 3500);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <footer className="bg-foreground text-background">
-      {/* Auto-scrolling photo strip */}
-      <div className="relative w-full h-[280px] md:h-[360px] overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={activePhoto}
-            src={footerPhotos[activePhoto]}
-            alt="Wedding moment"
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-foreground" />
-        {/* Dots */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
-          {footerPhotos.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActivePhoto(i)}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
-                i === activePhoto ? "bg-background w-5" : "bg-background/40"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-
       {/* Main footer */}
       <div className="max-w-[1600px] mx-auto px-6 md:px-10 pt-12 md:pt-16 pb-10">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
