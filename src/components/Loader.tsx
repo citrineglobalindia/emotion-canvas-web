@@ -111,7 +111,7 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               />
             </svg>
 
-            {/* Ampersand monogram with subtle pulse */}
+            {/* Logo mark with subtle pulse */}
             <motion.div
               initial={{ scale: 0.7, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -120,41 +120,18 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
                 delay: 0.2,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="relative z-10 flex items-center justify-center w-20 h-20"
+              className="relative z-10 flex items-center justify-center px-4"
               aria-label="Black & White Films"
             >
-              <motion.span
-                className="font-display italic font-light text-background text-[68px] leading-none"
-                animate={{ scale: [1, 1.04, 1], opacity: [0.92, 1, 0.92] }}
-                transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-              >
-                &amp;
-              </motion.span>
-            </motion.div>
-          </div>
-
-          {/* Brand text with stagger */}
-          <div className="text-center overflow-hidden">
-            <motion.h2
-              initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-2xl md:text-3xl text-background tracking-[0.15em]"
-            >
-              <img
+              <motion.img
                 src="/logo-white.png"
                 alt="Black & White Films"
-                onError={(e) => {
-                  const el = e.currentTarget;
-                  el.style.display = "none";
-                  if (el.nextElementSibling instanceof HTMLElement) {
-                    el.nextElementSibling.style.display = "inline";
-                  }
-                }}
-                className="mx-auto h-12 md:h-16 w-auto object-contain"
+                animate={{ scale: [1, 1.04, 1], opacity: [0.92, 1, 0.92] }}
+                transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                className="h-16 md:h-20 w-auto object-contain"
               />
-              <span style={{ display: "none" }}>BLACK & WHITE</span>
-            </motion.h2>
+            </motion.div>
           </div>
 
           <motion.div
