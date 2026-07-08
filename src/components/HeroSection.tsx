@@ -16,12 +16,29 @@ const HeroSection = () => {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
+  // Guarantee background autoplay on mobile: force-mute (React can drop the
+  // muted attribute) and call play() as soon as the video can start.
+  const setupVideo = (el: HTMLVideoElement | null) => {
+    if (!el) return;
+    el.muted = true;
+    el.defaultMuted = true;
+    el.setAttribute("muted", "");
+    const tryPlay = () => {
+      const p = el.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+    tryPlay();
+    el.addEventListener("canplay", tryPlay, { once: true });
+    el.addEventListener("loadeddata", tryPlay, { once: true });
+  };
+
   return (
     <section ref={ref} className="relative h-screen w-full overflow-hidden bg-foreground">
       {/* Background video — slow parallax + subtle scale */}
       <motion.div className="absolute inset-0" style={{ y: mediaY }}>
         {/* Portrait video for mobile */}
-        <motion.video
+        <video
+          ref={setupVideo}
           className="absolute inset-0 h-full w-full object-cover object-center grayscale md:hidden"
           src="/films/reel-mobile.mp4"
           poster="/films/reel-mobile.jpg"
@@ -29,13 +46,12 @@ const HeroSection = () => {
           muted
           loop
           playsInline
+          preload="auto"
           aria-hidden
-          initial={{ scale: 1.06 }}
-          animate={{ scale: 1.0 }}
-          transition={{ duration: 12, ease: "easeOut" }}
         />
         {/* Landscape reel for desktop */}
-        <motion.video
+        <video
+          ref={setupVideo}
           className="absolute inset-0 hidden h-full w-full object-cover object-center grayscale md:block"
           src="/films/reel-1.mp4"
           poster="/films/reel-1.jpg"
@@ -43,10 +59,8 @@ const HeroSection = () => {
           muted
           loop
           playsInline
+          preload="auto"
           aria-hidden
-          initial={{ scale: 1.06 }}
-          animate={{ scale: 1.0 }}
-          transition={{ duration: 12, ease: "easeOut" }}
         />
 
         {/* Cinematic gradient overlay */}
