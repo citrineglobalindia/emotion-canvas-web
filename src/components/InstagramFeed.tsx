@@ -1,48 +1,40 @@
 import { motion, useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Instagram } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
 import gallery4 from "@/assets/gallery-4.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
 import gallery6 from "@/assets/gallery-6.jpg";
-
-const PROFILE_URL = "https://www.instagram.com/storiesby_black_and_white";
-
-// Shown until an admin adds photos in Admin → Instagram (falls back to these).
-const fallbackImages: FeedItem[] = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6].map(
-  (src) => ({ src, href: PROFILE_URL }),
-);
+import { useSection, useSectionList } from "@/lib/siteContent";
+import { defaultsFor } from "@/lib/contentSchema";
+import { useSiteSettings } from "@/lib/siteSettings";
 
 type FeedItem = { src: string; href: string };
+
+const fallbackImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6];
 
 const InstagramFeed = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [images, setImages] = useState<FeedItem[]>(fallbackImages);
+  const settings = useSiteSettings();
+  const intro = useSection("home", "instagram-intro", {
+    ...defaultsFor("home", "instagram-intro"),
+    heading: settings.instagramHandle,
+    ctaHref: settings.instagramUrl,
+  });
+  const profileUrl = intro.ctaHref ?? settings.instagramUrl;
 
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      const { data, error } = await supabase
-        .from("bw_site_content")
-        .select("image_url, cta_href")
-        .eq("page_key", "home")
-        .eq("section_key", "instagram")
-        .eq("published", true)
-        .order("sort_order");
-      if (!active) return;
-      const items = (data ?? [])
-        .filter((r) => r.image_url)
-        .map((r) => ({ src: r.image_url as string, href: r.cta_href || PROFILE_URL }));
-      if (!error && items.length) setImages(items);
-    })();
-    return () => {
-      active = false;
-    };
-  }, []);
+  // Tiles are managed in Admin → Instagram (rows of home/instagram).
+  const { items: images } = useSectionList<FeedItem>(
+    "home",
+    "instagram",
+    fallbackImages.map((src) => ({ src, href: profileUrl })),
+    (block) => ({ src: block.image_url ?? "", href: block.cta_href?.trim() || profileUrl }),
+  );
+
+  const tiles = images.filter((item) => item.src);
 
   return (
     <section ref={ref} className="bg-warm py-20 md:py-28">
@@ -55,7 +47,7 @@ const InstagramFeed = () => {
         >
           <Instagram size={18} className="text-foreground" />
           <span className="font-body text-[11px] tracking-[0.3em] uppercase text-muted-foreground">
-            Follow Along
+            {intro.subheading}
           </span>
         </motion.div>
         <motion.h2
@@ -65,20 +57,20 @@ const InstagramFeed = () => {
           className="font-display text-3xl md:text-5xl text-foreground"
         >
           <a
-            href={PROFILE_URL}
+            href={profileUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-muted-foreground transition-colors"
           >
-            @storiesby_black_and_white
+            {intro.heading}
           </a>
         </motion.h2>
       </div>
 
       <div className="grid grid-cols-3 md:grid-cols-6 gap-0">
-        {images.map((item, i) => (
+        {tiles.map((item, i) => (
           <motion.a
-            key={i}
+            key={`${item.src}-${i}`}
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"

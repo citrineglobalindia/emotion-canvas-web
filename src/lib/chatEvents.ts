@@ -32,8 +32,7 @@ export async function logChatEvent(type: ChatEventType, message?: string): Promi
       typeof window !== "undefined" ? window.location.pathname.slice(0, 300) : null;
 
     // chat_events isn't in the generated Supabase types yet; cast to keep TS happy.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase as any).from("bw_chat_events").insert({
+    await supabase.from("bw_chat_events").insert({
       event_type: type,
       message: message ? message.slice(0, 2000) : null,
       path,

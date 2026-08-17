@@ -1,15 +1,9 @@
+import { useSiteSettings } from "@/lib/siteSettings";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon, Instagram, Mail, Phone } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
-import {
-  SITE_EMAIL,
-  SITE_EMAIL_HREF,
-  SITE_PHONE_DISPLAY,
-  SITE_PHONE_HREF,
-  SITE_INSTAGRAM_URL,
-} from "@/lib/siteContact";
 
 const navItems = [
   { label: "Stories", path: "/stories" },
@@ -20,6 +14,7 @@ const navItems = [
 ];
 
 const Header = () => {
+  const site = useSiteSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [logoError, setLogoError] = useState(false);
@@ -223,22 +218,22 @@ const Header = () => {
                 className="mt-8 pt-6 border-t border-border/40 space-y-4"
               >
                 <a
-                  href={SITE_EMAIL_HREF}
+                  href={site.emailHref}
                   className="flex items-center gap-3 text-sm text-foreground/70 hover:text-foreground transition-colors"
                 >
                   <Mail size={14} strokeWidth={1.5} />
-                  <span className="font-body tracking-wider break-all">{SITE_EMAIL}</span>
+                  <span className="font-body tracking-wider break-all">{site.email}</span>
                 </a>
                 <a
-                  href={SITE_PHONE_HREF}
+                  href={site.phoneHref}
                   className="flex items-center gap-3 text-sm text-foreground/70 hover:text-foreground transition-colors"
                 >
                   <Phone size={14} strokeWidth={1.5} />
-                  <span className="font-body tracking-wider">{SITE_PHONE_DISPLAY}</span>
+                  <span className="font-body tracking-wider">{site.phoneDisplay}</span>
                 </a>
                 <div className="flex items-center justify-between pt-2">
                   <a
-                    href={SITE_INSTAGRAM_URL}
+                    href={site.instagramUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors"

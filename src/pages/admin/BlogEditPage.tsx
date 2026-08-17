@@ -13,8 +13,9 @@ import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import { ImageField } from "@/components/admin/MediaPicker";
 
-type Post = Tables<"blog_posts">;
+type Post = Tables<"bw_blog_posts">;
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").slice(0, 80);
@@ -71,7 +72,7 @@ const BlogEditPage = () => {
     const publishedAt = willPublish && wasUnpublished ? new Date().toISOString() : post.published_at ?? null;
 
     if (isNew) {
-      const insert: TablesInsert<"blog_posts"> = {
+      const insert: TablesInsert<"bw_blog_posts"> = {
         title: post.title!,
         slug,
         excerpt: post.excerpt || null,
@@ -168,12 +169,11 @@ const BlogEditPage = () => {
               onChange={(e) => update({ read_time: e.target.value })}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="image">Cover image URL</Label>
-            <Input
-              id="image"
+          <div>
+            <ImageField
+              label="Cover image"
               value={post.image_url ?? ""}
-              onChange={(e) => update({ image_url: e.target.value })}
+              onChange={(url) => update({ image_url: url })}
             />
           </div>
           <div className="space-y-2 md:col-span-2">

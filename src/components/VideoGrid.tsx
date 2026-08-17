@@ -1,6 +1,9 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { X, Play } from "lucide-react";
+import { useSection, useSectionList } from "@/lib/siteContent";
+import { defaultsFor } from "@/lib/contentSchema";
+import { RichText } from "@/components/RichText";
 import film2 from "@/assets/film-2.jpg";
 import film3 from "@/assets/film-3.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
@@ -19,7 +22,7 @@ type VideoItem = {
   portrait?: boolean;
 };
 
-const videos: VideoItem[] = [
+const fallbackVideos: VideoItem[] = [
   {
     thumb: "/films/reel-1.jpg",
     title: "Featured Reel",
@@ -34,12 +37,32 @@ const videos: VideoItem[] = [
   { thumb: gallery4, title: "Neha & Rohan", location: "Kerala", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
 ];
 
+/** A path we serve ourselves plays in a <video>; anything else is an embed. */
+const isSelfHosted = (href: string) => href.startsWith("/") || /\.(mp4|webm|mov)$/i.test(href);
+
 const VideoGrid = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [activeVideo, setActiveVideo] = useState<number | null>(null);
+  const intro = useSection("home", "films-intro", defaultsFor("home", "films-intro"));
+  const { items: videos } = useSectionList<VideoItem>(
+    "home",
+    "film",
+    fallbackVideos,
+    (block) => {
+      const href = block.cta_href?.trim() || "";
+      return {
+        thumb: block.image_url?.trim() || "",
+        title: block.heading?.trim() || "",
+        location: block.subheading?.trim() || "",
+        file: href && isSelfHosted(href) ? href : undefined,
+        url: href && !isSelfHosted(href) ? href : undefined,
+        portrait: String((block.metadata as Record<string, unknown>)?.portrait) === "true",
+      };
+    },
+  );
 
-  const active = activeVideo !== null ? videos[activeVideo] : null;
+  const active = activeVideo !== null ? videos[activeVideo] ?? null : null;
 
   return (
     <section ref={ref} className="bg-background">
@@ -50,7 +73,7 @@ const VideoGrid = () => {
           transition={{ duration: 0.8 }}
           className="font-body text-[11px] tracking-[0.3em] uppercase text-muted-foreground mb-4"
         >
-          Our Films
+          {intro.subheading}
         </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -58,7 +81,7 @@ const VideoGrid = () => {
           transition={{ duration: 1, delay: 0.2 }}
           className="font-display text-3xl md:text-5xl lg:text-6xl text-foreground leading-[1.2]"
         >
-          every frame tells a <em>story</em>
+          <RichText text={intro.heading} />
         </motion.h2>
       </div>
 

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
+import { ImageField } from "@/components/admin/MediaPicker";
 
 type Row = {
   id: string;
@@ -30,8 +31,7 @@ type FormState = {
 
 const EMPTY: FormState = { name: "", role: "", quote: "", image_url: "", published: true, sort_order: 0 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = () => (supabase as any).from("bw_testimonials");
+const db = () => supabase.from("bw_testimonials");
 
 const TestimonialsListPage = () => {
   const [rows, setRows] = useState<Row[]>([]);
@@ -146,9 +146,13 @@ const TestimonialsListPage = () => {
             <Textarea rows={3} value={form.quote} onChange={(e) => setForm({ ...form, quote: e.target.value })} />
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="space-y-2 sm:col-span-2">
-              <Label>Image URL (optional)</Label>
-              <Input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://..." />
+            <div className="sm:col-span-2">
+              <ImageField
+                label="Photo (optional)"
+                value={form.image_url}
+                help="Leave empty to show the couple's initials instead."
+                onChange={(url) => setForm({ ...form, image_url: url })}
+              />
             </div>
             <div className="space-y-2">
               <Label>Sort order</Label>

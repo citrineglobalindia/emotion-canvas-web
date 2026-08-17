@@ -16,7 +16,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
 
-type Story = Tables<"stories">;
+type Story = Tables<"bw_stories">;
 
 const StoriesListPage = () => {
   const navigate = useNavigate();

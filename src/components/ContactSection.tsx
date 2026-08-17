@@ -1,16 +1,9 @@
+import { useSiteSettings } from "@/lib/siteSettings";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Mail, Phone, MapPin, Instagram, Send } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  SITE_EMAIL,
-  SITE_EMAIL_HREF,
-  SITE_PHONE_DISPLAY,
-  SITE_PHONE_HREF,
-  SITE_LOCATION_LABEL,
-  SITE_MAPS_URL,
-} from "@/lib/siteContact";
 import photo1 from "@/assets/photo-1.jpg";
 import photo2 from "@/assets/photo-2.jpg";
 import photo3 from "@/assets/photo-3.jpg";
@@ -52,6 +45,7 @@ const mosaicPhotos = [
 ];
 
 const ContactSection = () => {
+  const site = useSiteSettings();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -127,24 +121,24 @@ const ContactSection = () => {
                   Get in Touch
                 </p>
                 <div className="space-y-5">
-                  <a href={SITE_EMAIL_HREF} className="flex items-center gap-3 group">
+                  <a href={site.emailHref} className="flex items-center gap-3 group">
                     <div className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center group-hover:border-foreground transition-colors">
                       <Mail size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
                     <span className="font-body text-sm text-foreground/70 group-hover:text-foreground transition-colors">
-                      {SITE_EMAIL}
+                      {site.email}
                     </span>
                   </a>
-                  <a href={SITE_PHONE_HREF} className="flex items-center gap-3 group">
+                  <a href={site.phoneHref} className="flex items-center gap-3 group">
                     <div className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center group-hover:border-foreground transition-colors">
                       <Phone size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
                     <span className="font-body text-sm text-foreground/70 group-hover:text-foreground transition-colors">
-                      {SITE_PHONE_DISPLAY}
+                      {site.phoneDisplay}
                     </span>
                   </a>
                   <a
-                    href={SITE_MAPS_URL}
+                    href={site.mapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 group"
@@ -153,7 +147,7 @@ const ContactSection = () => {
                       <MapPin size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
                     <span className="font-body text-sm text-foreground/70 group-hover:text-foreground transition-colors underline-offset-4 group-hover:underline">
-                      {SITE_LOCATION_LABEL}
+                      {site.locationLabel}
                     </span>
                   </a>
                 </div>
@@ -276,7 +270,7 @@ const ContactSection = () => {
                 Visit the Studio
               </p>
               <a
-                href={SITE_MAPS_URL}
+                href={site.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-body text-[10px] uppercase tracking-[0.2em] text-foreground/60 hover:text-foreground transition-colors underline-offset-4 hover:underline"

@@ -1,11 +1,24 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ArrowDown } from "lucide-react";
-
-const words = ["stories", "moments", "frames"];
+import { metaString, useSection } from "@/lib/siteContent";
+import { defaultsFor, metaDefaultsFor } from "@/lib/contentSchema";
 
 const HeroSection = () => {
   const ref = useRef(null);
+  const content = useSection("home", "hero", defaultsFor("home", "hero"));
+  const metaDefaults = metaDefaultsFor("home", "hero");
+
+  // One word per line in the admin; blank lines are ignored.
+  const words = (content.body ?? "")
+    .split("\n")
+    .map((w) => w.trim())
+    .filter(Boolean);
+
+  const videoDesktop = metaString(content, "video_desktop", metaDefaults.video_desktop)!;
+  const videoMobile = metaString(content, "video_mobile", metaDefaults.video_mobile)!;
+  const posterDesktop = metaString(content, "poster_desktop", metaDefaults.poster_desktop);
+  const posterMobile = metaString(content, "poster_mobile", metaDefaults.poster_mobile);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -40,8 +53,9 @@ const HeroSection = () => {
         <video
           ref={setupVideo}
           className="absolute inset-0 h-full w-full object-cover object-center md:hidden"
-          src="/films/reel-mobile.mp4"
-          poster="/films/reel-mobile.jpg"
+          key={videoMobile}
+          src={videoMobile}
+          poster={posterMobile}
           autoPlay
           muted
           loop
@@ -53,8 +67,9 @@ const HeroSection = () => {
         <video
           ref={setupVideo}
           className="absolute inset-0 hidden h-full w-full object-cover object-center md:block"
-          src="/films/reel-1.mp4"
-          poster="/films/reel-1.jpg"
+          key={videoDesktop}
+          src={videoDesktop}
+          poster={posterDesktop}
           autoPlay
           muted
           loop
@@ -95,7 +110,7 @@ const HeroSection = () => {
         >
           <span className="h-px w-10 bg-primary-foreground/45" />
           <span className="font-body text-[10px] tracking-[0.5em] uppercase text-primary-foreground/75">
-            Cinematic Wedding Films
+            {content.subheading}
           </span>
           <span className="h-px w-10 bg-primary-foreground/45" />
         </motion.div>

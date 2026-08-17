@@ -9,6 +9,8 @@ import PageHero from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useSection } from "@/lib/siteContent";
+import { defaultsFor } from "@/lib/contentSchema";
 import blog1 from "@/assets/blog-1.jpg";
 import blog2 from "@/assets/blog-2.jpg";
 import blog3 from "@/assets/blog-3.jpg";
@@ -37,12 +39,15 @@ interface BlogPost {
   published_at: string | null;
 }
 
-const categories = ["All", "Behind the Scenes", "Photography Tips", "Inspiration", "Planning Tips"];
-
 const BlogPage = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [loading, setLoading] = useState(true);
+  const hero = useSection("blog", "hero", defaultsFor("blog", "hero"));
+
+  // Filter buttons follow the categories admins actually used on posts, rather
+  // than a hardcoded list that silently hides new ones.
+  const categories = ["All", ...Array.from(new Set(posts.map((p) => p.category).filter(Boolean)))];
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -69,10 +74,10 @@ const BlogPage = () => {
       <FilmGrain />
       <Header />
       <PageHero
-        eyebrow="Insights &amp; Inspiration"
-        title="Journal"
-        tagline="Tips, stories, and behind-the-scenes from the world of cinematic wedding filmmaking."
-        image={[blog3, blog4, blog6]}
+        eyebrow={hero.subheading}
+        title={hero.heading ?? "Journal"}
+        tagline={hero.body}
+        image={hero.image ? [hero.image] : [blog3, blog4, blog6]}
       />
       <div className="min-h-screen pt-16 md:pt-24 pb-0">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}

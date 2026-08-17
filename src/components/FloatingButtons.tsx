@@ -1,11 +1,12 @@
+import { useSiteSettings } from "@/lib/siteSettings";
 import { MessageCircle, Phone, X, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ChatBot from "@/components/ChatBot";
 import { logChatEvent } from "@/lib/chatEvents";
-import { SITE_PHONE_HREF } from "@/lib/siteContact";
 
 const FloatingButtons = () => {
+  const site = useSiteSettings();
   const [chatOpen, setChatOpen] = useState(false);
   const [showTeaser, setShowTeaser] = useState(false);
 
@@ -74,7 +75,7 @@ const FloatingButtons = () => {
       <div className="fixed bottom-6 right-4 sm:right-6 z-50 flex flex-col-reverse items-center gap-3">
         {/* Call button */}
         <motion.a
-          href={SITE_PHONE_HREF}
+          href={site.phoneHref}
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
