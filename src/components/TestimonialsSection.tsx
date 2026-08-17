@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { useSection } from "@/lib/siteContent";
+import { defaultsFor } from "@/lib/contentSchema";
+import { RichText } from "@/components/RichText";
 
 type Testimonial = {
   name: string;
@@ -65,12 +68,12 @@ const TestimonialsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [items, setItems] = useState<Testimonial[]>(FALLBACK);
+  const intro = useSection("home", "testimonials-intro", defaultsFor("home", "testimonials-intro"));
 
   useEffect(() => {
     let active = true;
     (async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("bw_testimonials")
         .select("name, role, quote, image_url")
         .eq("published", true)
@@ -97,12 +100,12 @@ const TestimonialsSection = () => {
       >
         <div className="mb-14 flex flex-col items-center text-center">
           <span className="rounded-full border border-border/60 px-4 py-1 font-body text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-            Testimonials
+            {intro.subheading}
           </span>
-          <h2 className="mt-6 font-display text-4xl text-foreground md:text-5xl lg:text-6xl">Our Client's Say</h2>
-          <p className="mt-4 max-w-md font-body text-sm text-muted-foreground">
-            Every couple, every celebration — here's what they say about their films and frames.
-          </p>
+          <h2 className="mt-6 font-display text-4xl text-foreground md:text-5xl lg:text-6xl">
+            <RichText text={intro.heading} />
+          </h2>
+          <p className="mt-4 max-w-md font-body text-sm text-muted-foreground">{intro.body}</p>
         </div>
         <div className="flex max-h-[680px] justify-center gap-6 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]">
           <Column items={col(0)} duration={22} />

@@ -12,10 +12,11 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
+import { ImageField } from "@/components/admin/MediaPicker";
 
-type Story = Tables<"stories">;
-type Section = Tables<"story_sections">;
-type GalleryItem = Tables<"story_gallery_items">;
+type Story = Tables<"bw_stories">;
+type Section = Tables<"bw_story_sections">;
+type GalleryItem = Tables<"bw_story_gallery_items">;
 
 const slugify = (s: string) =>
   s
@@ -90,7 +91,7 @@ const StoryEditPage = () => {
 
     setSaving(true);
     if (isNew) {
-      const insert: TablesInsert<"stories"> = {
+      const insert: TablesInsert<"bw_stories"> = {
         title: story.title!,
         slug,
         couple_names: story.couple_names!,
@@ -371,12 +372,12 @@ const StoryEditPage = () => {
                   onChange={(e) => update({ sort_order: Number(e.target.value) })}
                 />
               </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="cover">Cover image URL</Label>
-                <Input
-                  id="cover"
+              <div className="md:col-span-2">
+                <ImageField
+                  label="Cover image"
                   value={story.cover_image_url ?? ""}
-                  onChange={(e) => update({ cover_image_url: e.target.value })}
+                  help="Shown on the Stories grid. If you leave this empty, the first gallery image is used."
+                  onChange={(url) => update({ cover_image_url: url })}
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
@@ -484,26 +485,17 @@ const StoryEditPage = () => {
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="grid gap-3 md:grid-cols-[1fr_120px]">
-                <div className="space-y-2">
-                  <Input
-                    placeholder="Image URL"
-                    value={g.image_url}
-                    onChange={(e) => updateGalleryItem(idx, { image_url: e.target.value })}
-                  />
-                  <Input
-                    placeholder="Alt text"
-                    value={g.alt_text ?? ""}
-                    onChange={(e) => updateGalleryItem(idx, { alt_text: e.target.value })}
-                  />
-                </div>
-                {g.image_url && (
-                  <img
-                    src={g.image_url}
-                    alt={g.alt_text ?? ""}
-                    className="h-24 w-full rounded-md border object-cover"
-                  />
-                )}
+              <CardContent className="space-y-3">
+                <ImageField
+                  label="Photo"
+                  value={g.image_url}
+                  onChange={(url) => updateGalleryItem(idx, { image_url: url })}
+                />
+                <Input
+                  placeholder="Alt text (describes the photo for screen readers)"
+                  value={g.alt_text ?? ""}
+                  onChange={(e) => updateGalleryItem(idx, { alt_text: e.target.value })}
+                />
               </CardContent>
             </Card>
           ))}

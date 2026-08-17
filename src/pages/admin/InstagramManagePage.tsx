@@ -17,13 +17,14 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
+import { ImageField } from "@/components/admin/MediaPicker";
 
 // Instagram feed items are stored as rows in site_content, scoped to this
 // page/section pair. image_url = the photo shown; cta_href = where clicking goes.
 const PAGE_KEY = "home";
 const SECTION_KEY = "instagram";
 
-type Item = Tables<"site_content">;
+type Item = Tables<"bw_site_content">;
 
 const InstagramManagePage = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -124,13 +125,7 @@ const InstagramManagePage = () => {
               </DialogHeader>
               <div className="grid gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="img">Image URL</Label>
-                  <Input
-                    id="img"
-                    placeholder="https://.../photo.jpg"
-                    value={newImageUrl}
-                    onChange={(e) => setNewImageUrl(e.target.value)}
-                  />
+                  <ImageField label="Image" value={newImageUrl} onChange={setNewImageUrl} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="link">Instagram post link (optional)</Label>
@@ -202,13 +197,11 @@ const InstagramManagePage = () => {
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
                 </div>
-                <div className="space-y-1">
-                  <Label className="text-xs">Image URL</Label>
-                  <Input
-                    value={b.image_url ?? ""}
-                    onChange={(e) => updateLocal(b.id, { image_url: e.target.value })}
-                  />
-                </div>
+                <ImageField
+                  label="Image"
+                  value={b.image_url ?? ""}
+                  onChange={(url) => updateLocal(b.id, { image_url: url })}
+                />
                 <div className="space-y-1">
                   <Label className="text-xs">Instagram link</Label>
                   <Input

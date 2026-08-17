@@ -12,17 +12,29 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { MEDIA_BUCKET, MEDIA_QUERY_KEY, PLACEMENT_TAGS, mediaUrl } from "@/lib/media";
+import { uploadMediaFiles } from "@/lib/mediaUpload";
+import { Badge } from "@/components/ui/badge";
 import type { Tables } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
-type Asset = Tables<"media_assets">;
-const BUCKET = "bw-media-library";
+type Asset = Tables<"bw_media_assets">;
+const BUCKET = MEDIA_BUCKET;
+
+/** What each placement tag does, shown next to the toggles in the edit dialog. */
+const PLACEMENT_HELP: Record<string, string> = {
+  gallery: "Show on the Gallery page",
+  "home-photos": "Show in the home page photo strip",
+  films: "Use as a film thumbnail",
+};
 
 const MediaLibraryPage = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
@@ -47,44 +59,19 @@ const MediaLibraryPage = () => {
 
   useEffect(() => { void load(); }, []);
 
-  const publicUrl = (path: string) => supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  const publicUrl = mediaUrl;
 
   const onFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setUploading(true);
-    let succeeded = 0;
-    for (const file of Array.from(files)) {
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
-      const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, file, {
-        cacheControl: "3600",
-        contentType: file.type,
-      });
-      if (upErr) {
-        toast.error(`${file.name}: ${upErr.message}`);
-        continue;
-      }
-      const { error: insErr } = await supabase.from("bw_media_assets").insert({
-        bucket_id: BUCKET,
-        file_name: file.name,
-        file_path: path,
-        mime_type: file.type,
-        file_size: file.size,
-        uploaded_by: user?.id ?? null,
-        is_public: true,
-      });
-      if (insErr) {
-        toast.error(`${file.name}: ${insErr.message}`);
-        await supabase.storage.from(BUCKET).remove([path]);
-        continue;
-      }
-      succeeded++;
-    }
+    const { uploaded, errors } = await uploadMediaFiles(files, user?.id ?? null);
     setUploading(false);
     if (fileInput.current) fileInput.current.value = "";
-    if (succeeded > 0) {
-      toast.success(`${succeeded} file${succeeded === 1 ? "" : "s"} uploaded`);
+    errors.forEach((e) => toast.error(e));
+    if (uploaded.length > 0) {
+      toast.success(`${uploaded.length} file${uploaded.length === 1 ? "" : "s"} uploaded`);
       void load();
+      void queryClient.invalidateQueries({ queryKey: MEDIA_QUERY_KEY });
     }
   };
 
@@ -116,6 +103,7 @@ const MediaLibraryPage = () => {
     toast.success("Saved");
     setEditing(null);
     void load();
+    void queryClient.invalidateQueries({ queryKey: MEDIA_QUERY_KEY });
   };
 
   const onDelete = async () => {
@@ -125,6 +113,7 @@ const MediaLibraryPage = () => {
     const { error: rowErr } = await supabase.from("bw_media_assets").delete().eq("id", confirmDelete.id);
     if (rowErr) return toast.error(rowErr.message);
     toast.success("Deleted");
+    void queryClient.invalidateQueries({ queryKey: MEDIA_QUERY_KEY });
     setAssets((prev) => prev.filter((a) => a.id !== confirmDelete.id));
     setConfirmDelete(null);
   };
@@ -144,7 +133,7 @@ const MediaLibraryPage = () => {
     <div>
       <PageHeader
         title="Media library"
-        description="Images and assets stored in the public media-library bucket."
+        description="Upload photos here, then tag them to place them on the website."
         actions={
           <>
             <input
@@ -249,6 +238,35 @@ const MediaLibraryPage = () => {
               <div className="space-y-2">
                 <Label htmlFor="cap">Caption</Label>
                 <Textarea id="cap" value={editCaption} onChange={(e) => setEditCaption(e.target.value)} rows={2} />
+              </div>
+              <div className="space-y-2">
+                <Label>Where this image appears</Label>
+                <div className="flex flex-wrap gap-2">
+                  {PLACEMENT_TAGS.map((tag) => {
+                    const current = editTags.split(",").map((x) => x.trim()).filter(Boolean);
+                    const on = current.some((x) => x.toLowerCase() === tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() =>
+                          setEditTags(
+                            (on
+                              ? current.filter((x) => x.toLowerCase() !== tag)
+                              : [...current, tag]
+                            ).join(", "),
+                          )
+                        }
+                        title={PLACEMENT_HELP[tag]}
+                      >
+                        <Badge variant={on ? "default" : "outline"}>{PLACEMENT_HELP[tag] ?? tag}</Badge>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Any other tag becomes a filter category on the Gallery page.
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="tags">Tags (comma-separated)</Label>

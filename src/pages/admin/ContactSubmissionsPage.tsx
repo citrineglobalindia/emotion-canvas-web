@@ -24,7 +24,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
-type Submission = Tables<"contact_submissions">;
+type Submission = Tables<"bw_contact_submissions">;
 
 const STATUSES = ["new", "in_progress", "responded", "archived"] as const;
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline"> = {

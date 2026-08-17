@@ -15,8 +15,8 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
-type Profile = Tables<"profiles">;
-type RoleRow = Tables<"user_roles">;
+type Profile = Tables<"bw_profiles">;
+type RoleRow = Tables<"bw_user_roles">;
 type AppRole = "admin" | "editor" | "user";
 
 const ROLES: AppRole[] = ["admin", "editor", "user"];

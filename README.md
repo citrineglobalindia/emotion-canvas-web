@@ -71,3 +71,90 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+---
+
+## How content works
+
+Everything on the public website is driven by the admin panel at `/admin`, with
+the design's original copy as a safety net.
+
+**The rule:** if the database has content for a section, that content is shown.
+If it doesn't — or a field is left blank — the site falls back to the copy and
+images compiled into the code. The live site can never go blank because a row
+was deleted or a field was cleared.
+
+| Admin screen | Drives |
+| --- | --- |
+| Stories | `/stories` and every `/stories/:slug` page |
+| Blog | `/blog` |
+| Testimonials | The quotes carousel on the home page |
+| Instagram | The Instagram strip on the home page |
+| Media | Gallery page and the home photo strip (see *Placing images* below) |
+| Site content | All remaining headings, body copy, images, buttons and studio contact details |
+
+### Site content
+
+`bw_site_content` rows are addressed by `page_key` + `section_key`. The full
+catalogue of editable sections lives in `src/lib/contentSchema.ts` — that file
+is the single source of truth: it renders the admin form (friendly labels, only
+the fields a section uses, an image picker where an image is expected) *and*
+supplies each component's fallback copy.
+
+To make a new part of the site editable:
+
+1. Add an entry to `CONTENT_SCHEMA` in `src/lib/contentSchema.ts`, including the
+   current copy under `defaults`.
+2. In the component, read it:
+
+   ```tsx
+   const hero = useSection("home", "hero", defaultsFor("home", "hero"));
+   ```
+
+The admin screen picks the new section up automatically.
+
+Copy fields support two safe conventions instead of HTML: `*asterisks*` render
+as italic accent text, and blank lines split body copy into paragraphs. Nothing
+typed into the admin is ever rendered as markup.
+
+### Placing images
+
+Upload in **Admin → Media**, then tag the image to place it:
+
+- `gallery` — appears on the Gallery page
+- `home-photos` — appears in the home page photo strip
+
+Any *other* tag on a gallery image becomes a filter category on the Gallery
+page, so tagging a photo `gallery, Weddings` puts it under a "Weddings" filter.
+
+## Database
+
+This Supabase project is shared with other products, so every object this site
+owns is namespaced `bw_`: tables (`bw_stories`), functions (`bw_has_role`), the
+role enum (`bw_app_role`) and the storage bucket (`bw-media-library`).
+
+- `supabase/migrations/` holds a single baseline that reproduces the live schema
+  and is safe to re-run.
+- `supabase/migrations/_archive_pre_bw_prefix/` holds the original
+  Lovable-generated migrations. They created *unprefixed* objects that do not
+  exist in the live database and are kept for history only — do not apply them.
+
+After changing the schema, regenerate the TypeScript types so the compiler keeps
+catching mistyped table names:
+
+```sh
+python3 scripts/gen-types.py
+```
+
+## Checks
+
+```sh
+npm run typecheck   # tsc -b — the root tsconfig has "files": [], so plain `tsc` checks nothing
+npm run lint
+npm test            # vitest
+npm run build
+
+# End-to-end smoke test against a built site and the real Supabase project
+npm run build && npx vite preview --port 4173 &
+node scripts/smoke.mjs
+```

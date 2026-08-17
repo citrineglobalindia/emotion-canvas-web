@@ -1,15 +1,7 @@
+import { useSiteSettings } from "@/lib/siteSettings";
 import { useState } from "react";
 import { Instagram, Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  SITE_EMAIL,
-  SITE_EMAIL_HREF,
-  SITE_PHONE_DISPLAY,
-  SITE_PHONE_HREF,
-  SITE_LOCATION_LABEL,
-  SITE_MAPS_URL,
-  SITE_INSTAGRAM_URL,
-} from "@/lib/siteContact";
 
 const navLinks = [
   { label: "Stories", path: "/stories" },
@@ -28,6 +20,7 @@ const services = [
 ];
 
 const Footer = () => {
+  const site = useSiteSettings();
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
   const [logoError, setLogoError] = useState(false);
 
@@ -61,7 +54,7 @@ const Footer = () => {
               Crafting cinematic wedding stories that celebrate love in its most authentic form.
             </p>
             <a
-              href={SITE_INSTAGRAM_URL}
+              href={site.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 mt-5 font-body text-[11px] tracking-[0.15em] text-background/50 hover:text-background transition-colors uppercase"
@@ -119,31 +112,31 @@ const Footer = () => {
             <ul className="space-y-3 md:space-y-4">
               <li>
                 <a
-                  href={SITE_EMAIL_HREF}
+                  href={site.emailHref}
                   className="flex items-start gap-2.5 font-body text-[12px] text-background/50 hover:text-background transition-colors break-all"
                 >
                   <Mail size={13} className="mt-0.5 shrink-0" />
-                  {SITE_EMAIL}
+                  {site.email}
                 </a>
               </li>
               <li>
                 <a
-                  href={SITE_PHONE_HREF}
+                  href={site.phoneHref}
                   className="flex items-start gap-2.5 font-body text-[12px] text-background/50 hover:text-background transition-colors"
                 >
                   <Phone size={13} className="mt-0.5 shrink-0" />
-                  {SITE_PHONE_DISPLAY}
+                  {site.phoneDisplay}
                 </a>
               </li>
               <li>
                 <a
-                  href={SITE_MAPS_URL}
+                  href={site.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-2.5 font-body text-[12px] text-background/50 hover:text-background transition-colors"
                 >
                   <MapPin size={13} className="mt-0.5 shrink-0" />
-                  <span>{SITE_LOCATION_LABEL}</span>
+                  <span>{site.locationLabel}</span>
                 </a>
               </li>
             </ul>

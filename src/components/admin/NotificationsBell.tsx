@@ -34,8 +34,7 @@ const NotificationsBell = () => {
     let active = true;
 
     const load = async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("bw_chat_events")
         .select("*")
         .order("created_at", { ascending: false })
@@ -48,13 +47,13 @@ const NotificationsBell = () => {
 
     const channel = supabase
       .channel("chat_events_feed")
-      .on(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        "postgres_changes" as any,
+      .on<ChatEvent>(
+        // supabase-js types this channel event as a string literal union that
+        // its own overloads don't expose; the payload shape is what matters.
+        "postgres_changes" as unknown as never,
         { event: "INSERT", schema: "public", table: "bw_chat_events" },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (payload: any) => {
-          const ev = payload.new as ChatEvent;
+        (payload: { new: ChatEvent }) => {
+          const ev = payload.new;
           setEvents((prev) => [ev, ...prev].slice(0, 50));
           toast(
             ev.event_type === "first_message"
@@ -77,8 +76,7 @@ const NotificationsBell = () => {
     setEvents((prev) =>
       prev.map((e) => (ids.includes(e.id) ? { ...e, read: true } : e)),
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase as any)
+    await supabase
       .from("bw_chat_events")
       .update({ read: true })
       .in("id", ids);

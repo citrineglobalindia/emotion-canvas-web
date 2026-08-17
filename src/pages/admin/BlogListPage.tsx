@@ -17,7 +17,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
-type Post = Tables<"blog_posts">;
+type Post = Tables<"bw_blog_posts">;
 
 const BlogListPage = () => {
   const navigate = useNavigate();
