@@ -9,6 +9,7 @@ import film3 from "@/assets/film-3.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery4 from "@/assets/gallery-4.jpg";
+import SmartImage from "@/components/SmartImage";
 
 type VideoItem = {
   thumb: string;
@@ -95,11 +96,12 @@ const VideoGrid = () => {
             className="relative aspect-[4/5] md:aspect-[3/4] cursor-pointer group overflow-hidden bg-background"
             onClick={() => setActiveVideo(i)}
           >
-            <img
+            <SmartImage
               src={video.thumb}
               alt={video.title}
+              width={700}
+              sizes="(min-width: 1024px) 33vw, 50vw"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              loading="lazy"
             />
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-background/25 backdrop-blur-sm border border-white/40 flex items-center justify-center">

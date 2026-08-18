@@ -14,6 +14,7 @@ import gallery5 from "@/assets/gallery-5.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import { useSection, useSectionList } from "@/lib/siteContent";
 import { defaultsFor } from "@/lib/contentSchema";
+import SmartImage from "@/components/SmartImage";
 
 const ALL = "All";
 
@@ -90,7 +91,7 @@ const FilmsPage = () => {
                 onClick={() => film.href && setPlaying(film)}
                 className={film.href ? "group cursor-pointer" : "group"}>
                 <div className="relative overflow-hidden rounded-2xl aspect-[3/4] shadow-lg">
-                  <img src={film.image} alt={film.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <SmartImage src={film.image} alt={film.title} width={700} sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   {film.category && (
                     <div className="absolute top-4 left-4">

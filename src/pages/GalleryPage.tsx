@@ -15,6 +15,7 @@ import film1 from "@/assets/film-1.jpg";
 import film2 from "@/assets/film-2.jpg";
 import film3 from "@/assets/film-3.jpg";
 import { categoriesOf, useTaggedMedia, type MediaItem } from "@/lib/media";
+import SmartImage from "@/components/SmartImage";
 import { useSection } from "@/lib/siteContent";
 import { defaultsFor } from "@/lib/contentSchema";
 
@@ -88,7 +89,13 @@ const GalleryPage = () => {
                   initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ delay: 0.05 * i, duration: 0.4 }}
                   className="mb-4 break-inside-avoid group relative overflow-hidden rounded-2xl cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-300">
-                  <img src={img.url} alt={img.alt} className="w-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                  <SmartImage
+                    src={img.url}
+                    alt={img.alt}
+                    width={800}
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
                   {img.caption && (
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex items-end p-5">
                       <span className="bg-primary-foreground/15 backdrop-blur-md text-primary-foreground font-body text-xs px-3 py-1.5 rounded-full border border-primary-foreground/20">{img.caption}</span>

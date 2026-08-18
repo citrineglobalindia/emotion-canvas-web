@@ -10,6 +10,7 @@ import gallery6 from "@/assets/gallery-6.jpg";
 import { useSection, useSectionList } from "@/lib/siteContent";
 import { defaultsFor } from "@/lib/contentSchema";
 import { useSiteSettings } from "@/lib/siteSettings";
+import SmartImage from "@/components/SmartImage";
 
 type FeedItem = { src: string; href: string };
 
@@ -79,11 +80,12 @@ const InstagramFeed = () => {
             transition={{ duration: 0.6, delay: 0.08 * i }}
             className="aspect-square overflow-hidden group relative"
           >
-            <img
+            <SmartImage
               src={item.src}
               alt={`Instagram post ${i + 1}`}
+              width={400}
+              sizes="(min-width: 768px) 17vw, 33vw"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              loading="lazy"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
               <Instagram

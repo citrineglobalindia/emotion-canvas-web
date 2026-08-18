@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
 import photo1 from "@/assets/photo-1.jpg";
 import photo2 from "@/assets/photo-2.jpg";
@@ -8,20 +8,30 @@ import photo5 from "@/assets/photo-5.jpg";
 import photo6 from "@/assets/photo-6.jpg";
 import photo7 from "@/assets/photo-7.jpg";
 import photo8 from "@/assets/photo-8.jpg";
-import { useTaggedMedia } from "@/lib/media";
+import { useTaggedMedia, sizedImageUrl } from "@/lib/media";
 
 const fallbackPhotos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8].map(
   (src, i) => ({ url: src, alt: `Wedding photo ${i + 1}` }),
 );
 
-const ParallaxPhoto = ({ src, alt, index }: { src: string; alt: string; index: number }) => {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+const ParallaxPhoto = ({
+  src,
+  alt,
+  index,
+  progress,
+}: {
+  src: string;
+  alt: string;
+  index: number;
+  progress: MotionValue<number>;
+}) => {
+  // Alternate the direction so neighbouring photos drift apart slightly, which
+  // reads the same as before but needs only the one shared scroll subscription.
+  const drift = index % 2 === 0 ? ["-8%", "8%"] : ["-5%", "5%"];
+  const y = useTransform(progress, [0, 1], drift);
 
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
@@ -29,11 +39,17 @@ const ParallaxPhoto = ({ src, alt, index }: { src: string; alt: string; index: n
       className="aspect-[3/4] overflow-hidden group cursor-pointer"
     >
       <motion.img
-        src={src}
+        src={sizedImageUrl(src, 700)}
         alt={alt}
         className="w-full h-[120%] object-cover transition-transform duration-700 group-hover:scale-105"
         style={{ y }}
         loading="lazy"
+        decoding="async"
+        onError={(e) => {
+          // Fall back to the original if Supabase declined to transform it.
+          const img = e.currentTarget;
+          if (img.src !== src) img.src = src;
+        }}
       />
     </motion.div>
   );
@@ -41,6 +57,10 @@ const ParallaxPhoto = ({ src, alt, index }: { src: string; alt: string; index: n
 
 const PhotoGrid = () => {
   const ref = useRef(null);
+  // One scroll subscription for the whole strip. Each photo used to open its
+  // own, so a single scroll frame triggered eight separate layout
+  // measurements — a steady source of stutter on slower machines.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   // Admin → Media: tag an image `home-photos` to place it in this strip.
   const { items, managed } = useTaggedMedia("home-photos");
   const photos = managed ? items.map((m) => ({ url: m.url, alt: m.alt })) : fallbackPhotos;
@@ -49,7 +69,13 @@ const PhotoGrid = () => {
     <section ref={ref}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
         {photos.map((photo, i) => (
-          <ParallaxPhoto key={photo.url} src={photo.url} alt={photo.alt} index={i} />
+          <ParallaxPhoto
+            key={photo.url}
+            src={photo.url}
+            alt={photo.alt}
+            index={i}
+            progress={scrollYProgress}
+          />
         ))}
       </div>
     </section>

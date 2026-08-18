@@ -8,6 +8,7 @@ import PageTransition from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
 import { findStory, usePublicStories } from "@/lib/stories";
 import NotFound from "./NotFound";
+import SmartImage from "@/components/SmartImage";
 
 /** YouTube/Vimeo need an /embed URL; a self-hosted file plays in <video>. */
 const isSelfHosted = (href: string) => href.startsWith("/") || /\.(mp4|webm|mov)$/i.test(href);
@@ -110,7 +111,7 @@ const StoryDetailPage = () => {
               className="relative"
             >
               <div className="aspect-[4/5] overflow-hidden border border-border/70 bg-card p-3 shadow-sm">
-                <img src={story.image} alt={story.title} className="h-full w-full object-cover" />
+                <SmartImage src={story.image} alt={story.title} width={900} loading="eager" className="h-full w-full object-cover" />
               </div>
             </motion.div>
           </div>
@@ -122,11 +123,12 @@ const StoryDetailPage = () => {
               {story.gallery.map((image, index) => (
                 <div key={`${story.slug}-gallery-${index}`} className="bg-background p-3">
                   <div className={`overflow-hidden ${index % 3 === 0 ? "aspect-[4/5]" : "aspect-[5/4]"}`}>
-                    <img
+                    <SmartImage
                       src={image}
                       alt={`${story.title} gallery image ${index + 1}`}
+                      width={800}
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                       className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
-                      loading="lazy"
                     />
                   </div>
                 </div>
@@ -244,7 +246,7 @@ const StoryDetailPage = () => {
                   {relatedStories.map((entry) => (
                     <Link key={entry.slug} to={`/stories/${entry.slug}`} className="group border border-border/70 bg-card/30 p-3 transition-colors hover:bg-card/60">
                       <div className="aspect-[4/3] overflow-hidden">
-                        <img src={entry.image} alt={entry.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" loading="lazy" />
+                        <SmartImage src={entry.image} alt={entry.title} width={700} sizes="(min-width: 768px) 50vw, 100vw" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
                       </div>
                       <div className="px-2 py-5">
                         <p className="font-body text-[10px] uppercase tracking-[0.24em] text-muted-foreground">{entry.location}</p>

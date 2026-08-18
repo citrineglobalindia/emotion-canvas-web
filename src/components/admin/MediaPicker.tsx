@@ -12,6 +12,7 @@ import { MEDIA_BUCKET, mediaUrl } from "@/lib/media";
 import { uploadMediaFiles } from "@/lib/mediaUpload";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import SmartImage from "@/components/SmartImage";
 
 type Asset = Tables<"bw_media_assets">;
 
@@ -139,11 +140,11 @@ export const MediaPickerDialog = ({
                     className="group overflow-hidden rounded-md border bg-muted transition-colors hover:border-primary"
                   >
                     <span className="block aspect-square">
-                      <img
+                      <SmartImage
                         src={url}
                         alt={a.alt_text ?? a.file_name}
+                        width={240}
                         className="h-full w-full object-cover"
-                        loading="lazy"
                       />
                     </span>
                     <span className="block truncate px-1.5 py-1 text-left text-[11px]">
@@ -180,7 +181,7 @@ export const ImageField = ({
     <div className="flex gap-3">
       <div className="h-20 w-20 shrink-0 overflow-hidden rounded-md border bg-muted">
         {value ? (
-          <img src={value} alt="" className="h-full w-full object-cover" />
+          <SmartImage src={value} alt="" width={200} className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-muted-foreground">
             <ImagePlus className="h-5 w-5" />

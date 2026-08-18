@@ -18,6 +18,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
 import { ImageField } from "@/components/admin/MediaPicker";
+import SmartImage from "@/components/SmartImage";
 
 // Instagram feed items are stored as rows in site_content, scoped to this
 // page/section pair. image_url = the photo shown; cta_href = where clicking goes.
@@ -138,9 +139,10 @@ const InstagramManagePage = () => {
                 </div>
                 {newImageUrl.trim() && (
                   <div className="overflow-hidden rounded-md border">
-                    <img
+                    <SmartImage
                       src={newImageUrl}
                       alt="Preview"
+                      width={500}
                       className="aspect-square w-full object-cover"
                     />
                   </div>
@@ -176,11 +178,11 @@ const InstagramManagePage = () => {
             <CardContent className="flex gap-4 p-4">
               <div className="h-24 w-24 shrink-0 overflow-hidden rounded-md border bg-muted">
                 {b.image_url ? (
-                  <img
+                  <SmartImage
                     src={b.image_url}
                     alt="Instagram"
+                    width={200}
                     className="h-full w-full object-cover"
-                    onError={(e) => (e.currentTarget.style.display = "none")}
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-muted-foreground">
