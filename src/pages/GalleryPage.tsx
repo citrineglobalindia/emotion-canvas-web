@@ -16,7 +16,7 @@ import film2 from "@/assets/film-2.jpg";
 import film3 from "@/assets/film-3.jpg";
 import { categoriesOf, useTaggedMedia, type MediaItem } from "@/lib/media";
 import SmartImage from "@/components/SmartImage";
-import { useSection } from "@/lib/siteContent";
+import { useDemoContentAllowed, useSection } from "@/lib/siteContent";
 import { defaultsFor } from "@/lib/contentSchema";
 
 const ALL = "All";
@@ -49,7 +49,8 @@ const GalleryPage = () => {
   // Admin → Media: tag an image `gallery` to publish it here; any further tag
   // becomes a filter category.
   const { items, managed } = useTaggedMedia("gallery");
-  const images = managed ? items : fallbackImages;
+  const demoAllowed = useDemoContentAllowed();
+  const images = managed ? items : demoAllowed ? fallbackImages : [];
 
   const categories = useMemo(() => [ALL, ...categoriesOf(images)], [images]);
   const filtered =

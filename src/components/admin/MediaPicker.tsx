@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ImagePlus, Loader2, Search, Trash2, Upload } from "lucide-react";
+import { Film, ImagePlus, Loader2, Search, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,9 +27,12 @@ type Asset = Tables<"bw_media_assets">;
 export const MediaPickerDialog = ({
   onSelect,
   trigger,
+  accept = "image",
 }: {
   onSelect: (url: string) => void;
   trigger: React.ReactNode;
+  /** `all` also lists and uploads video files, for article content. */
+  accept?: "image" | "all";
 }) => {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
@@ -69,8 +72,12 @@ export const MediaPickerDialog = ({
     }
   };
 
+  const isVideo = (a: Asset) => (a.mime_type ?? "").startsWith("video/");
+
   const q = filter.trim().toLowerCase();
-  const filtered = assets.filter((a) =>
+  const filtered = assets
+    .filter((a) => (accept === "all" ? true : !isVideo(a)))
+    .filter((a) =>
     !q
       ? true
       : a.file_name.toLowerCase().includes(q) ||
@@ -84,7 +91,7 @@ export const MediaPickerDialog = ({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Choose an image</DialogTitle>
+          <DialogTitle>{accept === "all" ? "Choose a photo or video" : "Choose an image"}</DialogTitle>
           <DialogDescription>
             Pick from the media library, or upload a new file to use straight away.
           </DialogDescription>
@@ -100,7 +107,7 @@ export const MediaPickerDialog = ({
           <input
             ref={fileInput}
             type="file"
-            accept="image/*"
+            accept={accept === "all" ? "image/*,video/*" : "image/*"}
             multiple
             hidden
             onChange={(e) => void onFiles(e.target.files)}
@@ -140,12 +147,19 @@ export const MediaPickerDialog = ({
                     className="group overflow-hidden rounded-md border bg-muted transition-colors hover:border-primary"
                   >
                     <span className="block aspect-square">
-                      <SmartImage
-                        src={url}
-                        alt={a.alt_text ?? a.file_name}
-                        width={240}
-                        className="h-full w-full object-cover"
-                      />
+                      {isVideo(a) ? (
+                        <span className="flex h-full w-full flex-col items-center justify-center gap-1 bg-muted text-muted-foreground">
+                          <Film className="h-6 w-6" />
+                          <span className="text-[10px] uppercase tracking-wide">Video</span>
+                        </span>
+                      ) : (
+                        <SmartImage
+                          src={url}
+                          alt={a.alt_text ?? a.file_name}
+                          width={240}
+                          className="h-full w-full object-cover"
+                        />
+                      )}
                     </span>
                     <span className="block truncate px-1.5 py-1 text-left text-[11px]">
                       {a.file_name}

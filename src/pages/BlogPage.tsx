@@ -102,7 +102,10 @@ const BlogPage = () => {
             {featured && (
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.8 }}
                 className="px-6 md:px-10 mb-20">
-                <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-0 bg-card rounded-3xl overflow-hidden border border-border shadow-lg hover:shadow-xl transition-shadow duration-500 group cursor-pointer">
+                <Link
+                  to={`/blog/${featured.slug}`}
+                  className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-0 bg-card rounded-3xl overflow-hidden border border-border shadow-lg hover:shadow-xl transition-shadow duration-500 group cursor-pointer"
+                >
                   <div className="relative overflow-hidden">
                     <SmartImage src={getImage(featured)} alt={featured.title} width={1000}
                       sizes="(min-width: 1024px) 50vw, 100vw" loading="eager"
@@ -125,9 +128,11 @@ const BlogPage = () => {
                       <span className="flex items-center gap-1.5"><Calendar size={12} /> {formatDate(featured.published_at)}</span>
                       <span className="flex items-center gap-1.5"><Clock size={12} /> {featured.read_time}</span>
                     </div>
-                    <Button variant="accent" className="w-fit">Read Article <ArrowRight size={14} /></Button>
+                    <span className="inline-flex w-fit items-center gap-2 rounded-md bg-accent px-4 py-2 font-body text-sm font-medium text-accent-foreground">
+                      Read Article <ArrowRight size={14} />
+                    </span>
                   </div>
-                </div>
+                </Link>
               </motion.div>
             )}
 
@@ -138,6 +143,7 @@ const BlogPage = () => {
                     <motion.article key={post.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }}
                       className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-lg hover:border-accent/30 transition-all duration-500 group cursor-pointer">
+                      <Link to={`/blog/${post.slug}`} className="block">
                       <div className="relative overflow-hidden aspect-[4/3]">
                         <SmartImage src={getImage(post)} alt={post.title} width={600}
                           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -161,6 +167,7 @@ const BlogPage = () => {
                           Read More <ArrowRight size={14} />
                         </div>
                       </div>
+                      </Link>
                     </motion.article>
                   ))}
                 </div>

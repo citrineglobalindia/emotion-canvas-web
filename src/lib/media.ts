@@ -68,7 +68,7 @@ export const useTaggedMedia = (tag: string): { items: MediaItem[]; managed: bool
 };
 
 /** Tag namespace used to place assets. Anything else is treated as a category. */
-export const PLACEMENT_TAGS = ["gallery", "home-photos", "films"] as const;
+export const PLACEMENT_TAGS = ["gallery"] as const;
 export type PlacementTag = (typeof PLACEMENT_TAGS)[number];
 
 /** Categories an admin has used on the given assets, for filter buttons. */

@@ -13,6 +13,7 @@ import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
 import { ImageField } from "@/components/admin/MediaPicker";
+import RichEditor from "@/components/admin/RichEditor";
 
 type Story = Tables<"bw_stories">;
 type Section = Tables<"bw_story_sections">;
@@ -448,11 +449,11 @@ const StoryEditPage = () => {
                   value={sec.title}
                   onChange={(e) => updateSection(idx, { title: e.target.value })}
                 />
-                <Textarea
-                  rows={4}
-                  placeholder="Section body (markdown allowed)"
+                <RichEditor
                   value={sec.body}
-                  onChange={(e) => updateSection(idx, { body: e.target.value })}
+                  onChange={(html) => updateSection(idx, { body: html })}
+                  placeholder="Write this chapter of the story…"
+                  minHeight={200}
                 />
               </CardContent>
             </Card>

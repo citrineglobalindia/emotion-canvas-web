@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useInView } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { useSection } from "@/lib/siteContent";
+import { useDemoContentAllowed, useSection } from "@/lib/siteContent";
 import { defaultsFor } from "@/lib/contentSchema";
 import { RichText } from "@/components/RichText";
 import SmartImage from "@/components/SmartImage";
@@ -80,7 +80,8 @@ const TestimonialsSection = () => {
   // Unlike the reveal above, this one keeps updating so the marquee can be
   // paused whenever the section is scrolled out of view.
   const isOnScreen = useInView(ref, { margin: "200px" });
-  const [items, setItems] = useState<Testimonial[]>(FALLBACK);
+  const demoAllowed = useDemoContentAllowed();
+  const [items, setItems] = useState<Testimonial[] | null>(null);
   const intro = useSection("home", "testimonials-intro", defaultsFor("home", "testimonials-intro"));
 
   useEffect(() => {
@@ -91,17 +92,23 @@ const TestimonialsSection = () => {
         .select("name, role, quote, image_url")
         .eq("published", true)
         .order("sort_order", { ascending: true });
-      if (active && !error && data && data.length) setItems(data as Testimonial[]);
+      if (active && !error) setItems((data as Testimonial[] | null) ?? []);
     })();
     return () => {
       active = false;
     };
   }, []);
 
+  // Until the query resolves, show nothing rather than flashing the samples.
+  const quotes = items === null ? [] : items.length ? items : demoAllowed ? FALLBACK : [];
+
   const col = (c: number) => {
-    const filtered = items.filter((_, i) => i % 3 === c);
-    return filtered.length ? filtered : items;
+    const filtered = quotes.filter((_, i) => i % 3 === c);
+    return filtered.length ? filtered : quotes;
   };
+
+  // With no quotes to show, the heading alone would look like a mistake.
+  if (items !== null && !quotes.length) return null;
 
   return (
     <section ref={ref} className="overflow-hidden bg-warm py-24 md:py-32">

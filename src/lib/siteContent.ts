@@ -57,6 +57,23 @@ export type SectionFallback = {
   ctaHref?: string;
 };
 
+/**
+ * Whether the design's built-in demo photographs, stories and quotes may be
+ * used to fill an empty section.
+ *
+ * They exist so a fresh site never looks broken, but they are baked into the
+ * code rather than stored in the database — so deleting the last real item made
+ * them reappear, which reads as mock data that cannot be deleted. Turning this
+ * off in Admin → Site content → Global → Demo content leaves empty sections
+ * genuinely empty.
+ */
+export const useDemoContentAllowed = (): boolean => {
+  const { data } = useSiteContent();
+  const settings = data?.find((b) => b.page_key === "site" && b.section_key === "settings");
+  const meta = (settings?.metadata as Record<string, unknown> | null) ?? {};
+  return String(meta.demo_content ?? "shown").toLowerCase() !== "hidden";
+};
+
 export type SectionContent = SectionFallback & {
   /** True once the admin has created a row for this section. */
   managed: boolean;
@@ -103,10 +120,11 @@ export const useSectionList = <T,>(
   map: (block: ContentBlock) => T,
 ): { items: T[]; managed: boolean } => {
   const { data } = useSiteContent();
+  const demoAllowed = useDemoContentAllowed();
   const blocks = (data ?? [])
     .filter((b) => b.page_key === pageKey && b.section_key === sectionKey)
     .sort((a, b) => a.sort_order - b.sort_order);
-  if (!blocks.length) return { items: fallback, managed: false };
+  if (!blocks.length) return { items: demoAllowed ? fallback : [], managed: false };
   return { items: blocks.map(map), managed: true };
 };
 

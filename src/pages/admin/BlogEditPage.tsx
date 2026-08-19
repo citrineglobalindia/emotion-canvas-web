@@ -7,13 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
 import { ImageField } from "@/components/admin/MediaPicker";
+import RichEditor from "@/components/admin/RichEditor";
 
 type Post = Tables<"bw_blog_posts">;
 
@@ -121,7 +120,7 @@ const BlogEditPage = () => {
     <div>
       <PageHeader
         title={isNew ? "New post" : "Edit post"}
-        description={post.slug ? `/blog/${post.slug}` : "Markdown is supported in the body."}
+        description={post.slug ? `Published at /blog/${post.slug}` : "This becomes a page visitors can read."}
         actions={
           <>
             <Button variant="outline" onClick={() => navigate("/admin/blog")}>
@@ -185,27 +184,14 @@ const BlogEditPage = () => {
               onChange={(e) => update({ excerpt: e.target.value })}
             />
           </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label>Content (markdown)</Label>
-            <Tabs defaultValue="write">
-              <TabsList>
-                <TabsTrigger value="write">Write</TabsTrigger>
-                <TabsTrigger value="preview">Preview</TabsTrigger>
-              </TabsList>
-              <TabsContent value="write" className="mt-2">
-                <Textarea
-                  rows={16}
-                  value={post.content ?? ""}
-                  onChange={(e) => update({ content: e.target.value })}
-                  className="font-mono text-sm"
-                />
-              </TabsContent>
-              <TabsContent value="preview" className="mt-2">
-                <div className="prose prose-sm dark:prose-invert max-w-none rounded-md border bg-muted/40 p-4">
-                  <ReactMarkdown>{post.content || "_Nothing to preview_"}</ReactMarkdown>
-                </div>
-              </TabsContent>
-            </Tabs>
+          <div className="md:col-span-2">
+            <RichEditor
+              label="Content"
+              value={post.content ?? ""}
+              onChange={(html) => update({ content: html })}
+              placeholder="Tell the story…"
+              minHeight={420}
+            />
           </div>
           <div className="flex items-center gap-3 md:col-span-2">
             <Switch

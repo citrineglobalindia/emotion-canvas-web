@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { AuthProvider } from "@/hooks/useAuth";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, lazy, Suspense } from "react";
 import Lenis from "lenis";
 import Loader from "@/components/Loader";
 import Index from "./pages/Index.tsx";
@@ -15,23 +15,35 @@ import GalleryPage from "./pages/GalleryPage.tsx";
 import StoriesPage from "./pages/StoriesPage.tsx";
 import StoryDetailPage from "./pages/StoryDetailPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
+import BlogPostPage from "./pages/BlogPostPage.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import { AdminLayout } from "@/components/admin/AdminLayout";
-import { RequireAdmin } from "@/components/admin/RequireAdmin";
-import LoginPage from "./pages/admin/LoginPage.tsx";
-import DashboardPage from "./pages/admin/DashboardPage.tsx";
-import StoriesListPage from "./pages/admin/StoriesListPage.tsx";
-import StoryEditPage from "./pages/admin/StoryEditPage.tsx";
-import BlogListPage from "./pages/admin/BlogListPage.tsx";
-import BlogEditPage from "./pages/admin/BlogEditPage.tsx";
-import SiteContentPage from "./pages/admin/SiteContentPage.tsx";
-import ContactSubmissionsPage from "./pages/admin/ContactSubmissionsPage.tsx";
-import MediaLibraryPage from "./pages/admin/MediaLibraryPage.tsx";
-import UsersPage from "./pages/admin/UsersPage.tsx";
-import TestimonialsListPage from "./pages/admin/TestimonialsListPage.tsx";
-import InstagramManagePage from "./pages/admin/InstagramManagePage.tsx";
+
+
+// The admin panel carries the rich-text editor and its dependencies. Loading it
+// lazily keeps all of that out of the bundle visitors download.
+const AdminLayout = lazy(() =>
+  import("@/components/admin/AdminLayout").then((m) => ({ default: m.AdminLayout })),
+);
+const RequireAdmin = lazy(() =>
+  import("@/components/admin/RequireAdmin").then((m) => ({ default: m.RequireAdmin })),
+);
+const LoginPage = lazy(() => import("./pages/admin/LoginPage.tsx"));
+const DashboardPage = lazy(() => import("./pages/admin/DashboardPage.tsx"));
+const StoriesListPage = lazy(() => import("./pages/admin/StoriesListPage.tsx"));
+const StoryEditPage = lazy(() => import("./pages/admin/StoryEditPage.tsx"));
+const BlogListPage = lazy(() => import("./pages/admin/BlogListPage.tsx"));
+const BlogEditPage = lazy(() => import("./pages/admin/BlogEditPage.tsx"));
+const SiteContentPage = lazy(() => import("./pages/admin/SiteContentPage.tsx"));
+const ContactSubmissionsPage = lazy(() => import("./pages/admin/ContactSubmissionsPage.tsx"));
+const MediaLibraryPage = lazy(() => import("./pages/admin/MediaLibraryPage.tsx"));
+const UsersPage = lazy(() => import("./pages/admin/UsersPage.tsx"));
+const TestimonialsListPage = lazy(() => import("./pages/admin/TestimonialsListPage.tsx"));
+const InstagramManagePage = lazy(() => import("./pages/admin/InstagramManagePage.tsx"));
+const HomeMediaPage = lazy(() => import("./pages/admin/HomeMediaPage.tsx"));
+const GalleryManagePage = lazy(() => import("./pages/admin/GalleryManagePage.tsx"));
+const FilmsManagePage = lazy(() => import("./pages/admin/FilmsManagePage.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -39,6 +51,13 @@ const AnimatedRoutes = () => {
   const location = useLocation();
   return (
     <AnimatePresence mode="wait">
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center bg-background">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-accent" />
+          </div>
+        }
+      >
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
         <Route path="/films" element={<FilmsPage />} />
@@ -46,6 +65,7 @@ const AnimatedRoutes = () => {
         <Route path="/stories" element={<StoriesPage />} />
         <Route path="/stories/:slug" element={<StoryDetailPage />} />
         <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/admin/login" element={<LoginPage />} />
@@ -68,9 +88,13 @@ const AnimatedRoutes = () => {
           <Route path="users" element={<UsersPage />} />
           <Route path="testimonials" element={<TestimonialsListPage />} />
           <Route path="instagram" element={<InstagramManagePage />} />
+          <Route path="home-media" element={<HomeMediaPage />} />
+          <Route path="gallery" element={<GalleryManagePage />} />
+          <Route path="films" element={<FilmsManagePage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
     </AnimatePresence>
   );
 };
