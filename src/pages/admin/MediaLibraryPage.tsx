@@ -30,8 +30,6 @@ const BUCKET = MEDIA_BUCKET;
 /** What each placement tag does, shown next to the toggles in the edit dialog. */
 const PLACEMENT_HELP: Record<string, string> = {
   gallery: "Show on the Gallery page",
-  "home-photos": "Show in the home page photo strip",
-  films: "Use as a film thumbnail",
 };
 
 const MediaLibraryPage = () => {

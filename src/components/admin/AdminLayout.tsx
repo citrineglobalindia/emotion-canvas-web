@@ -1,6 +1,9 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
+  Home,
+  BookOpen,
+  GalleryHorizontal,
   Film,
   FileText,
   Layout as LayoutIcon,
@@ -22,7 +25,10 @@ import NotificationsBell from "@/components/admin/NotificationsBell";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
-  { to: "/admin/stories", label: "Stories", icon: Film },
+  { to: "/admin/home-media", label: "Home Page", icon: Home },
+  { to: "/admin/stories", label: "Stories", icon: BookOpen },
+  { to: "/admin/gallery", label: "Gallery", icon: GalleryHorizontal },
+  { to: "/admin/films", label: "Films", icon: Film },
   { to: "/admin/blog", label: "Blog", icon: FileText },
   { to: "/admin/site-content", label: "Site Content", icon: LayoutIcon },
   { to: "/admin/contact", label: "Contact", icon: Mail },

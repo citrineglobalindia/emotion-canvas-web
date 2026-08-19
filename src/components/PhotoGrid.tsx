@@ -8,9 +8,13 @@ import photo5 from "@/assets/photo-5.jpg";
 import photo6 from "@/assets/photo-6.jpg";
 import photo7 from "@/assets/photo-7.jpg";
 import photo8 from "@/assets/photo-8.jpg";
-import { useTaggedMedia, sizedImageUrl } from "@/lib/media";
+import { sizedImageUrl } from "@/lib/media";
+import { useSectionList } from "@/lib/siteContent";
 
-const fallbackPhotos = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8].map(
+type Photo = { url: string; alt: string };
+
+/** Shown until an admin adds photographs in Admin → Home page. */
+const fallbackPhotos: Photo[] = [photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8].map(
   (src, i) => ({ url: src, alt: `Wedding photo ${i + 1}` }),
 );
 
@@ -61,14 +65,18 @@ const PhotoGrid = () => {
   // own, so a single scroll frame triggered eight separate layout
   // measurements — a steady source of stutter on slower machines.
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  // Admin → Media: tag an image `home-photos` to place it in this strip.
-  const { items, managed } = useTaggedMedia("home-photos");
-  const photos = managed ? items.map((m) => ({ url: m.url, alt: m.alt })) : fallbackPhotos;
+  const { items: photos } = useSectionList<Photo>("home", "photo", fallbackPhotos, (block) => ({
+    url: block.image_url ?? "",
+    alt: block.heading?.trim() || "Wedding photograph",
+  }));
+
+  const visible = photos.filter((p) => p.url);
+  if (!visible.length) return null;
 
   return (
     <section ref={ref}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
-        {photos.map((photo, i) => (
+        {visible.map((photo, i) => (
           <ParallaxPhoto
             key={photo.url}
             src={photo.url}

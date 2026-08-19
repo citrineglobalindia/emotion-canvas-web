@@ -63,7 +63,11 @@ const VideoGrid = () => {
     },
   );
 
-  const active = activeVideo !== null ? videos[activeVideo] ?? null : null;
+  const tiles = videos.filter((v) => v.thumb);
+  const active = activeVideo !== null ? tiles[activeVideo] ?? null : null;
+
+  // No films to show: the heading on its own would look like a broken section.
+  if (!tiles.length) return null;
 
   return (
     <section ref={ref} className="bg-background">
@@ -87,7 +91,7 @@ const VideoGrid = () => {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-px bg-border">
-        {videos.map((video, i) => (
+        {tiles.map((video, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0 }}

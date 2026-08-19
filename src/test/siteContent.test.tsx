@@ -129,11 +129,11 @@ describe("useSectionList", () => {
 });
 
 describe("media placement tags", () => {
-  it("treats placement tags as placement, and other tags as gallery categories", () => {
+  it("treats `gallery` as placement and every other tag as a filter category", () => {
     const items = [
       { id: "a", url: "", alt: "", caption: null, tags: ["gallery", "Weddings"] },
       { id: "b", url: "", alt: "", caption: null, tags: ["gallery", "Portraits"] },
-      { id: "c", url: "", alt: "", caption: null, tags: ["home-photos"] },
+      { id: "c", url: "", alt: "", caption: null, tags: ["gallery"] },
     ];
     expect(categoriesOf(items)).toEqual(["Portraits", "Weddings"]);
   });
@@ -146,5 +146,31 @@ describe("media placement tags", () => {
     });
     expect(item.alt).toBe("DSC01.jpg");
     expect(item.url).toBe("https://cdn.test/p/DSC01.jpg");
+  });
+});
+
+describe("demo content switch", () => {
+  it("stops falling back to samples once demo content is hidden", async () => {
+    // The samples live in code, not the database, so without this switch
+    // deleting the last real item made them reappear.
+    rows = [
+      {
+        id: "s",
+        page_key: "site",
+        section_key: "settings",
+        metadata: { demo_content: "hidden" },
+        sort_order: 0,
+        published: true,
+      },
+    ];
+    render(<ListProbe />, { wrapper });
+    await waitFor(() => expect(screen.getByTestId("items")).toHaveTextContent(""));
+    expect(screen.getByTestId("items").textContent).toBe("");
+  });
+
+  it("uses the samples while the switch is left alone", async () => {
+    rows = [];
+    render(<ListProbe />, { wrapper });
+    await waitFor(() => expect(screen.getByTestId("items")).toHaveTextContent("built-in a"));
   });
 });

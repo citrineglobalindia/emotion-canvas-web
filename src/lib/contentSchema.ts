@@ -77,6 +77,20 @@ export const CONTENT_SCHEMA: PageDef[] = [
     help: "Shown across every page — header, footer and contact blocks.",
     sections: [
       {
+        key: "settings",
+        label: "Demo content",
+        help: "The design ships with sample photographs, stories and quotes that fill any section you have not populated yet. Set this to \u201chidden\u201d once you have added your own, so empty sections stay empty instead of showing samples.",
+        fields: [],
+        meta: [
+          {
+            name: "demo_content",
+            label: "Sample content",
+            help: 'Type "hidden" to switch the built-in samples off everywhere, or "shown" to allow them.',
+          },
+        ],
+        defaults: { meta: { demo_content: "shown" } },
+      },
+      {
         key: "contact-details",
         label: "Contact details",
         help: "Studio email, phone and address used by the header, footer and contact page.",
@@ -145,15 +159,27 @@ export const CONTENT_SCHEMA: PageDef[] = [
       {
         key: "film",
         label: "Films grid items",
-        help: "The video tiles on the home page. Use the film link for YouTube/Vimeo, or a /films/... path for a self-hosted file.",
+        help: "The video tiles on the home page. Manage these in Admin → Home page, where you can upload the video itself.",
         list: true,
         fields: [
           { name: "heading", label: "Title" },
           { name: "subheading", label: "Location" },
           IMAGE,
-          { name: "cta_href", label: "Film link", type: "url" },
+          {
+            name: "cta_href",
+            label: "Video",
+            type: "url",
+            help: "An uploaded video's address, or a YouTube/Vimeo embed link.",
+          },
         ],
         meta: [{ name: "portrait", label: "Portrait reel? (true/false)" }],
+      },
+      {
+        key: "photo",
+        label: "Photo strip",
+        help: "The full-width band of photographs below the parallax banner. Manage these in Admin → Home page.",
+        list: true,
+        fields: [IMAGE, { name: "heading", label: "Description (for screen readers)" }],
       },
       {
         key: "defines-us",

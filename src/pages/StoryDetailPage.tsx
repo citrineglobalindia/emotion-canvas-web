@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { findStory, usePublicStories } from "@/lib/stories";
 import NotFound from "./NotFound";
 import SmartImage from "@/components/SmartImage";
+import RichContent from "@/components/RichContent";
 
 /** YouTube/Vimeo need an /embed URL; a self-hosted file plays in <video>. */
 const isSelfHosted = (href: string) => href.startsWith("/") || /\.(mp4|webm|mov)$/i.test(href);
@@ -158,7 +159,10 @@ const StoryDetailPage = () => {
                       Sequence {String(index + 1).padStart(2, "0")}
                     </p>
                     <h3 className="mt-3 font-display text-3xl text-foreground">{moment.title}</h3>
-                    <p className="mt-4 max-w-2xl font-body text-base leading-relaxed text-muted-foreground md:text-lg">{moment.body}</p>
+                    <RichContent
+                      content={moment.body}
+                      className="prose mt-4 max-w-2xl font-body text-base leading-relaxed text-muted-foreground md:text-lg dark:prose-invert prose-headings:font-display prose-img:rounded-xl"
+                    />
                   </motion.article>
                 ))}
               </div>

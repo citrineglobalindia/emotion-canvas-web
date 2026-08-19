@@ -10,6 +10,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { stories as demoStories } from "@/data/stories";
+import { useDemoContentAllowed } from "@/lib/siteContent";
 import storyPlaceholder from "@/assets/story-1.jpg";
 
 export type StoryMoment = { title: string; body: string };
@@ -106,6 +107,7 @@ export const usePublicStories = (): {
   managed: boolean;
   isLoading: boolean;
 } => {
+  const demoAllowed = useDemoContentAllowed();
   const { data, isLoading } = useQuery({
     queryKey: STORIES_KEY,
     queryFn: fetchPublicStories,
@@ -113,7 +115,8 @@ export const usePublicStories = (): {
     retry: 1,
   });
   const managed = Boolean(data?.length);
-  return { stories: managed ? data! : demo, managed, isLoading };
+  if (managed) return { stories: data!, managed, isLoading };
+  return { stories: demoAllowed ? demo : [], managed, isLoading };
 };
 
 export const findStory = (stories: PublicStory[], slug: string | undefined) =>
