@@ -81,3 +81,42 @@ export const categoriesOf = (items: MediaItem[]): string[] => {
   }
   return Array.from(set).sort((a, b) => a.localeCompare(b));
 };
+
+/**
+ * Rewrite a media-library URL to Supabase's image transform endpoint so the
+ * browser downloads a display-sized image instead of the camera original.
+ *
+ * The originals in this library are full-resolution JPEGs — several are 20-30MB
+ * — and were being decoded into thumbnails a couple of hundred pixels wide.
+ * That is what made scrolling stutter: the download is bad enough, but decoding
+ * a 45-megapixel JPEG also costs hundreds of megabytes of memory per image.
+ *
+ * Only URLs that point at this project's storage are rewritten; bundled assets
+ * and third-party URLs are returned untouched.
+ */
+export const sizedImageUrl = (
+  url: string | null | undefined,
+  width: number,
+  quality = 72,
+): string => {
+  if (!url) return "";
+  const marker = "/storage/v1/object/public/";
+  const at = url.indexOf(marker);
+  if (at === -1) return url;
+  const [base, rest] = [url.slice(0, at), url.slice(at + marker.length)];
+  const [path, query] = rest.split("?");
+  const params = new URLSearchParams(query);
+  params.set("width", String(width));
+  params.set("quality", String(quality));
+  params.set("resize", params.get("resize") ?? "contain");
+  return `${base}/storage/v1/render/image/public/${path}?${params.toString()}`;
+};
+
+/** Above this, an asset is worth re-encoding before it reaches a visitor. */
+export const LARGE_ASSET_BYTES = 2 * 1024 * 1024;
+
+/**
+ * Supabase refuses to transform very large source images, so those still have
+ * to be served as-is until they are re-encoded (Admin → Media → Optimise).
+ */
+export const TRANSFORM_SOURCE_LIMIT_BYTES = 25 * 1024 * 1024;

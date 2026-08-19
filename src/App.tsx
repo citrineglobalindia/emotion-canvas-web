@@ -82,17 +82,30 @@ const App = () => {
   });
 
   useEffect(() => {
+    // Honour the OS "reduce motion" preference: hijacking the scroll wheel is
+    // exactly the kind of motion that setting asks us not to do.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
-    function raf(time: number) {
+
+    // Keep the handle so the loop can be cancelled. Without this the callback
+    // kept rescheduling itself after teardown, leaving an orphaned rAF loop
+    // calling into a destroyed Lenis instance on every frame.
+    let frame = 0;
+    const raf = (time: number) => {
       lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-    return () => lenis.destroy();
+      frame = requestAnimationFrame(raf);
+    };
+    frame = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      lenis.destroy();
+    };
   }, []);
 
   const handleComplete = useCallback(() => {

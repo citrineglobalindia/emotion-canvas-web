@@ -5,10 +5,13 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 import { MEDIA_BUCKET } from "@/lib/media";
+import { downscaleImage } from "@/lib/imageResize";
 
 export type UploadResult = {
   uploaded: { path: string; url: string }[];
   errors: string[];
+  /** Bytes saved by resizing before upload, for reporting back to the admin. */
+  savedBytes: number;
 };
 
 export const uploadMediaFiles = async (
@@ -16,9 +19,14 @@ export const uploadMediaFiles = async (
   uploadedBy: string | null,
   tags: string[] = [],
 ): Promise<UploadResult> => {
-  const result: UploadResult = { uploaded: [], errors: [] };
+  const result: UploadResult = { uploaded: [], errors: [], savedBytes: 0 };
 
-  for (const file of Array.from(files)) {
+  for (const original of Array.from(files)) {
+    // Resize before upload so the library never stores a photo too large for
+    // Supabase to generate display-sized copies from.
+    const { file, resized, originalBytes, bytes } = await downscaleImage(original);
+    if (resized) result.savedBytes += originalBytes - bytes;
+
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
 

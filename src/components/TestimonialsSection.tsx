@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useInView } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useSection } from "@/lib/siteContent";
 import { defaultsFor } from "@/lib/contentSchema";
 import { RichText } from "@/components/RichText";
+import SmartImage from "@/components/SmartImage";
 
 type Testimonial = {
   name: string;
@@ -24,12 +25,21 @@ const FALLBACK: Testimonial[] = [
 const initials = (name: string) =>
   name.split(/[\s&]+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
-const Column = ({ items, duration, className }: { items: Testimonial[]; duration: number; className?: string }) => (
+const Column = ({
+  items,
+  duration,
+  className,
+  paused,
+}: {
+  items: Testimonial[];
+  duration: number;
+  className?: string;
+  paused: boolean;
+}) => (
   <div className={className}>
-    <motion.div
-      animate={{ translateY: "-50%" }}
-      transition={{ duration, repeat: Infinity, ease: "linear", repeatType: "loop" }}
-      className="flex flex-col gap-6 pb-6"
+    <div
+      className={`marquee-track flex flex-col gap-6 pb-6 ${paused ? "marquee-paused" : ""}`}
+      style={{ "--marquee-duration": `${duration}s` } as CSSProperties}
     >
       {[0, 1].map((dup) => (
         <div key={dup} className="flex flex-col gap-6" aria-hidden={dup === 1}>
@@ -41,7 +51,7 @@ const Column = ({ items, duration, className }: { items: Testimonial[]; duration
               <p className="font-body text-sm leading-relaxed text-muted-foreground">"{t.quote}"</p>
               <div className="mt-6 flex items-center gap-3">
                 {t.image_url ? (
-                  <img src={t.image_url} alt={t.name} className="h-10 w-10 rounded-full object-cover grayscale" />
+                  <SmartImage src={t.image_url} alt={t.name} width={80} className="h-10 w-10 rounded-full object-cover grayscale" />
                 ) : (
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground font-display text-xs text-background">
                     {initials(t.name)}
@@ -60,13 +70,16 @@ const Column = ({ items, duration, className }: { items: Testimonial[]; duration
           ))}
         </div>
       ))}
-    </motion.div>
+    </div>
   </div>
 );
 
 const TestimonialsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  // Unlike the reveal above, this one keeps updating so the marquee can be
+  // paused whenever the section is scrolled out of view.
+  const isOnScreen = useInView(ref, { margin: "200px" });
   const [items, setItems] = useState<Testimonial[]>(FALLBACK);
   const intro = useSection("home", "testimonials-intro", defaultsFor("home", "testimonials-intro"));
 
@@ -108,9 +121,9 @@ const TestimonialsSection = () => {
           <p className="mt-4 max-w-md font-body text-sm text-muted-foreground">{intro.body}</p>
         </div>
         <div className="flex max-h-[680px] justify-center gap-6 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]">
-          <Column items={col(0)} duration={22} />
-          <Column items={col(1)} duration={28} className="hidden md:block" />
-          <Column items={col(2)} duration={25} className="hidden lg:block" />
+          <Column items={col(0)} duration={22} paused={!isOnScreen} />
+          <Column items={col(1)} duration={28} className="hidden md:block" paused={!isOnScreen} />
+          <Column items={col(2)} duration={25} className="hidden lg:block" paused={!isOnScreen} />
         </div>
       </motion.div>
     </section>

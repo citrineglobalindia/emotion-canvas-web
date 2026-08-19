@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { sizedImageUrl } from "@/lib/media";
 
 interface PageHeroProps {
   eyebrow?: string;
@@ -68,7 +69,12 @@ const PageHero = ({
             transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.img
-              src={src}
+              src={sizedImageUrl(src, 1920, 78)}
+              decoding="async"
+              onError={(e) => {
+                const img = e.currentTarget;
+                if (img.src !== src) img.src = src;
+              }}
               alt=""
               aria-hidden
               className={`absolute inset-0 h-full w-full object-cover ${grayscale ? "grayscale" : ""}`}

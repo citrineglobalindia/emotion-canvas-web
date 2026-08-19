@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Trash2, Copy, Upload, Search } from "lucide-react";
+import { Loader2, Trash2, Copy, Upload, Search, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,13 +14,15 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { MEDIA_BUCKET, MEDIA_QUERY_KEY, PLACEMENT_TAGS, mediaUrl } from "@/lib/media";
+import { LARGE_ASSET_BYTES, MEDIA_BUCKET, MEDIA_QUERY_KEY, PLACEMENT_TAGS, mediaUrl } from "@/lib/media";
+import { downscaleImage, formatBytes } from "@/lib/imageResize";
 import { uploadMediaFiles } from "@/lib/mediaUpload";
 import { Badge } from "@/components/ui/badge";
 import type { Tables } from "@/integrations/supabase/types";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import SmartImage from "@/components/SmartImage";
 
 type Asset = Tables<"bw_media_assets">;
 const BUCKET = MEDIA_BUCKET;
@@ -45,6 +47,7 @@ const MediaLibraryPage = () => {
   const [editCaption, setEditCaption] = useState("");
   const [editTags, setEditTags] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<Asset | null>(null);
+  const [optimising, setOptimising] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -64,15 +67,80 @@ const MediaLibraryPage = () => {
   const onFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setUploading(true);
-    const { uploaded, errors } = await uploadMediaFiles(files, user?.id ?? null);
+    const { uploaded, errors, savedBytes } = await uploadMediaFiles(files, user?.id ?? null);
     setUploading(false);
     if (fileInput.current) fileInput.current.value = "";
     errors.forEach((e) => toast.error(e));
     if (uploaded.length > 0) {
-      toast.success(`${uploaded.length} file${uploaded.length === 1 ? "" : "s"} uploaded`);
+      const saved = savedBytes > 0 ? ` (${formatBytes(savedBytes)} saved by resizing)` : "";
+      toast.success(`${uploaded.length} file${uploaded.length === 1 ? "" : "s"} uploaded${saved}`);
       void load();
       void queryClient.invalidateQueries({ queryKey: MEDIA_QUERY_KEY });
     }
+  };
+
+  /** Assets big enough to hurt page speed — and too big for Supabase to resize. */
+  const oversized = assets.filter((a) => (a.file_size ?? 0) > LARGE_ASSET_BYTES);
+
+  /**
+   * Re-encode already-uploaded photos that are too large.
+   *
+   * Runs in the browser under the admin's own session, and writes back to the
+   * same storage path so every URL already saved in stories, blog posts and
+   * site content keeps working.
+   */
+  const optimiseAssets = async (targets: Asset[]) => {
+    let done = 0;
+    let saved = 0;
+    const failures: string[] = [];
+
+    for (const asset of targets) {
+      setOptimising(`${done + 1} of ${targets.length}`);
+      try {
+        const response = await fetch(mediaUrl(asset.file_path));
+        if (!response.ok) throw new Error(`download failed (${response.status})`);
+        const blob = await response.blob();
+        const source = new File([blob], asset.file_name, {
+          type: asset.mime_type ?? blob.type,
+        });
+
+        const { file, resized, originalBytes, bytes } = await downscaleImage(source);
+        if (!resized) {
+          done++;
+          continue;
+        }
+
+        const { error: upErr } = await supabase.storage
+          .from(BUCKET)
+          .upload(asset.file_path, file, {
+            cacheControl: "3600",
+            contentType: file.type,
+            upsert: true,
+          });
+        if (upErr) throw new Error(upErr.message);
+
+        const { error: rowErr } = await supabase
+          .from("bw_media_assets")
+          .update({ file_size: file.size, mime_type: file.type })
+          .eq("id", asset.id);
+        if (rowErr) throw new Error(rowErr.message);
+
+        saved += originalBytes - bytes;
+        done++;
+      } catch (error) {
+        failures.push(`${asset.file_name}: ${String(error instanceof Error ? error.message : error)}`);
+      }
+    }
+
+    setOptimising(null);
+    failures.slice(0, 3).forEach((f) => toast.error(f));
+    if (saved > 0) {
+      toast.success(`Optimised ${done} photo${done === 1 ? "" : "s"} — ${formatBytes(saved)} saved`);
+    } else if (!failures.length) {
+      toast.success("Nothing needed optimising");
+    }
+    void load();
+    void queryClient.invalidateQueries({ queryKey: MEDIA_QUERY_KEY });
   };
 
   const onCopy = async (asset: Asset) => {
@@ -143,6 +211,21 @@ const MediaLibraryPage = () => {
               hidden
               onChange={(e) => void onFiles(e.target.files)}
             />
+            {oversized.length > 0 && (
+              <Button
+                variant="outline"
+                onClick={() => void optimiseAssets(oversized)}
+                disabled={Boolean(optimising)}
+                title="Re-encode oversized photos so pages load quickly"
+              >
+                {optimising ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Wand2 className="mr-2 h-4 w-4" />
+                )}
+                {optimising ? `Optimising ${optimising}` : `Optimise ${oversized.length} large photo${oversized.length === 1 ? "" : "s"}`}
+              </Button>
+            )}
             <Button onClick={() => fileInput.current?.click()} disabled={uploading}>
               {uploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
               Upload
@@ -150,6 +233,18 @@ const MediaLibraryPage = () => {
           </>
         }
       />
+
+      {oversized.length > 0 && (
+        <Card className="mb-4 border-amber-500/40 bg-amber-500/5">
+          <CardContent className="py-3 text-sm">
+            <strong>{oversized.length} photo{oversized.length === 1 ? " is" : "s are"} much larger than needed</strong>{" "}
+            ({formatBytes(oversized.reduce((s, a) => s + (a.file_size ?? 0), 0))} in total). Visitors
+            download these in full, which makes pages scroll slowly. Click{" "}
+            <em>Optimise</em> above to resize them — the pictures keep their existing
+            links and stay sharp on screen.
+          </CardContent>
+        </Card>
+      )}
 
       <div className="mb-4 flex items-center gap-2">
         <Search className="h-4 w-4 text-muted-foreground" />
@@ -185,7 +280,7 @@ const MediaLibraryPage = () => {
                   title={a.file_name}
                 >
                   {isImage ? (
-                    <img src={url} alt={a.alt_text ?? a.file_name} className="h-full w-full object-cover" />
+                    <SmartImage src={url} alt={a.alt_text ?? a.file_name} width={300} className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
                       {a.mime_type ?? "file"}
@@ -194,6 +289,11 @@ const MediaLibraryPage = () => {
                 </button>
                 <CardContent className="space-y-1 p-2">
                   <div className="truncate text-xs font-medium" title={a.file_name}>{a.file_name}</div>
+                  {(a.file_size ?? 0) > LARGE_ASSET_BYTES && (
+                    <div className="text-[11px] font-medium text-amber-600">
+                      {formatBytes(a.file_size ?? 0)} — needs optimising
+                    </div>
+                  )}
                   <div className="flex justify-between gap-1">
                     <Button size="icon" variant="ghost" onClick={() => onCopy(a)} aria-label="Copy URL">
                       <Copy className="h-3.5 w-3.5" />
@@ -217,9 +317,10 @@ const MediaLibraryPage = () => {
           </DialogHeader>
           {editing && (
             <div className="grid gap-3">
-              <img
+              <SmartImage
                 src={publicUrl(editing.file_path)}
                 alt={editing.alt_text ?? editing.file_name}
+                width={900}
                 className="aspect-video w-full rounded-md border object-contain bg-muted"
               />
               <div className="space-y-2">

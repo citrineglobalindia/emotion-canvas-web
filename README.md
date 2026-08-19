@@ -146,6 +146,37 @@ catching mistyped table names:
 python3 scripts/gen-types.py
 ```
 
+## Images and page speed
+
+Photographs are served through Supabase's image transform endpoint, not as the
+stored original: `SmartImage` (and `sizedImageUrl` for the few places that need
+a bare URL) asks for a copy at roughly the size it will be displayed. A 22MB
+camera JPEG shown as a thumbnail becomes about 20KB.
+
+Two rules keep this working:
+
+- **Uploads are downscaled in the browser** to a 2560px longest edge before
+  they reach storage (`src/lib/imageResize.ts`). Supabase refuses to generate
+  resized copies from very large sources, so an oversized original cannot be
+  optimised on delivery — it has to be right at upload time.
+- **Already-oversized files** are flagged in Admin → Media with an
+  *Optimise* button that re-encodes them in place, keeping the same URL so
+  existing references stay valid.
+
+To check a change hasn't made scrolling worse:
+
+```sh
+npm run build && npx vite preview --port 4173 &
+node scripts/perf.mjs "my change"
+
+# Model what the page will look like once the media library is optimised
+# (needs `npm i -D sharp`, which is not a project dependency)
+PERF_SIMULATE_OPTIMISED=1 node scripts/perf.mjs "projected"
+```
+
+It reports frame times under CPU throttling; `p95 frame time` and
+`frames over budget` are the numbers that correspond to visible stutter.
+
 ## Checks
 
 ```sh

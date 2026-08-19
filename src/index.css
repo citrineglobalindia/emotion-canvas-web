@@ -98,6 +98,36 @@
     opacity: 0.015;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     animation: grain 0.5s steps(6) infinite;
+    /* Keep the overlay on its own compositor layer so the grain shuffle
+       never repaints the page underneath it. */
+    will-change: transform;
+    contain: strict;
+  }
+
+  /*
+   * Vertical marquee for the testimonials columns.
+   *
+   * This used to be a JavaScript animation driven every frame by Framer Motion.
+   * Running it in CSS hands it to the compositor instead, so it no longer
+   * competes with scrolling for the main thread. `--marquee-duration` sets the
+   * speed per column and `.marquee-paused` stops it while offscreen.
+   */
+  .marquee-track {
+    animation: marquee-up var(--marquee-duration, 24s) linear infinite;
+    will-change: transform;
+  }
+
+  .marquee-paused {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-up {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(0, -50%, 0);
+    }
   }
 
   @keyframes grain {
@@ -128,4 +158,19 @@
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+}
+
+/*
+ * Respect the operating system's "reduce motion" setting: stop the decorative
+ * loops entirely rather than merely shortening them.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .film-grain {
+    animation: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
 }

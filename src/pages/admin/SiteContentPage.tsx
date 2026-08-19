@@ -23,6 +23,7 @@ import {
 } from "@/lib/contentSchema";
 import { SITE_CONTENT_QUERY_KEY } from "@/lib/siteContent";
 import { toast } from "sonner";
+import SmartImage from "@/components/SmartImage";
 
 type Block = Tables<"bw_site_content">;
 type Meta = Record<string, string>;
@@ -303,9 +304,10 @@ const SiteContentPage = () => {
           >
             {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             {block.image_url && (
-              <img
+              <SmartImage
                 src={block.image_url}
                 alt=""
+                width={72}
                 className="h-9 w-9 shrink-0 rounded object-cover"
               />
             )}
