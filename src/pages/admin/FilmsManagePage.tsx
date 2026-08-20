@@ -6,7 +6,7 @@ const FilmsManagePage = () => (
   <div>
     <PageHeader
       title="Films page"
-      description="Everything shown at /films. The category you give each film becomes a filter button on that page."
+      description="Everything shown at /films — plus the home page films grid, which appears there automatically. The category you give each film becomes a filter button."
     />
     <ContentListManager
       pageKey="films"

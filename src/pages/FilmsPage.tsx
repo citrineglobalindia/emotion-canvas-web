@@ -12,7 +12,8 @@ import film3 from "@/assets/film-3.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
-import { useSection, useSectionList } from "@/lib/siteContent";
+import { useDemoContentAllowed, useSection, useSectionList } from "@/lib/siteContent";
+import { isPlayableFile as isSelfHosted, toEmbedUrl } from "@/lib/videoEmbed";
 import { defaultsFor } from "@/lib/contentSchema";
 import SmartImage from "@/components/SmartImage";
 
@@ -36,7 +37,6 @@ const fallbackFilms: Film[] = [
   { image: heroBg, title: "Meera & Sahil", subtitle: "Golden Hour, Jaipur", category: "Cinematic Stories" },
 ];
 
-const isSelfHosted = (href: string) => href.startsWith("/") || /\.(mp4|webm|mov)$/i.test(href);
 
 const FilmsPage = () => {
   const ref = useRef(null);
@@ -45,13 +45,39 @@ const FilmsPage = () => {
   const [playing, setPlaying] = useState<Film | null>(null);
   const hero = useSection("films", "hero", defaultsFor("films", "hero"));
 
-  const { items: allFilms } = useSectionList<Film>("films", "film", fallbackFilms, (block) => ({
+  // Films managed on this page directly…
+  const { items: pageFilms } = useSectionList<Film>("films", "film", [], (block) => ({
     image: block.image_url?.trim() || "",
     title: block.heading?.trim() || "",
     subtitle: block.subheading?.trim() || "",
     category: block.cta_label?.trim() || "",
     href: block.cta_href?.trim() || undefined,
   }));
+
+  // …plus the home page films grid, so a film added there appears here too
+  // without having to be entered twice.
+  const { items: homeFilms } = useSectionList<Film>("home", "film", [], (block) => ({
+    image: block.image_url?.trim() || "",
+    title: block.heading?.trim() || "",
+    subtitle: block.subheading?.trim() || "",
+    category: block.cta_label?.trim() || "",
+    href: block.cta_href?.trim() || undefined,
+  }));
+
+  const demoAllowed = useDemoContentAllowed();
+
+  const allFilms = useMemo(() => {
+    // Films-page entries first (they carry categories); then any home film not
+    // already present, matched by title + image so the same film entered in
+    // both places shows once.
+    const seen = new Set(pageFilms.map((f) => `${f.title.toLowerCase()}|${f.image}`));
+    const merged = [
+      ...pageFilms,
+      ...homeFilms.filter((f) => !seen.has(`${f.title.toLowerCase()}|${f.image}`)),
+    ].filter((f) => f.image);
+    if (merged.length) return merged;
+    return demoAllowed ? fallbackFilms : [];
+  }, [pageFilms, homeFilms, demoAllowed]);
 
   const categories = useMemo(() => {
     const set = new Set(allFilms.map((f) => f.category).filter(Boolean));
@@ -139,7 +165,7 @@ const FilmsPage = () => {
               <video src={playing.href} className="h-full w-full bg-black object-contain" controls autoPlay playsInline />
             ) : (
               <iframe
-                src={`${playing.href}?autoplay=1&rel=0`}
+                src={toEmbedUrl(playing.href, { autoplay: true })}
                 className="h-full w-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

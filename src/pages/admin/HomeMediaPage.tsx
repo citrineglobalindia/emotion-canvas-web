@@ -18,7 +18,8 @@ const HomeMediaPage = () => (
       <TabsContent value="films" className="mt-4">
         <p className="mb-4 text-sm text-muted-foreground">
           The tiles under <em>“every frame tells a story”</em>. Each needs a picture; add a video and
-          the tile gets a play button that opens it.
+          the tile gets a play button that opens it. Films added here automatically appear on the
+          Films page as well.
         </p>
         <ContentListManager
           pageKey="home"

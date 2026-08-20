@@ -4,6 +4,7 @@ import { X, Play } from "lucide-react";
 import { useSection, useSectionList } from "@/lib/siteContent";
 import { defaultsFor } from "@/lib/contentSchema";
 import { RichText } from "@/components/RichText";
+import { isPlayableFile as isSelfHosted, toEmbedUrl } from "@/lib/videoEmbed";
 import film2 from "@/assets/film-2.jpg";
 import film3 from "@/assets/film-3.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
@@ -38,8 +39,6 @@ const fallbackVideos: VideoItem[] = [
   { thumb: gallery4, title: "Neha & Rohan", location: "Kerala", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
 ];
 
-/** A path we serve ourselves plays in a <video>; anything else is an embed. */
-const isSelfHosted = (href: string) => href.startsWith("/") || /\.(mp4|webm|mov)$/i.test(href);
 
 const VideoGrid = () => {
   const ref = useRef(null);
@@ -153,7 +152,7 @@ const VideoGrid = () => {
               />
             ) : (
               <iframe
-                src={`${active.url}?autoplay=1&rel=0`}
+                src={toEmbedUrl(active.url!, { autoplay: true })}
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
