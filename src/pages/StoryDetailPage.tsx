@@ -10,9 +10,8 @@ import { findStory, usePublicStories } from "@/lib/stories";
 import NotFound from "./NotFound";
 import SmartImage from "@/components/SmartImage";
 import RichContent from "@/components/RichContent";
+import { isPlayableFile as isSelfHosted, toEmbedUrl } from "@/lib/videoEmbed";
 
-/** YouTube/Vimeo need an /embed URL; a self-hosted file plays in <video>. */
-const isSelfHosted = (href: string) => href.startsWith("/") || /\.(mp4|webm|mov)$/i.test(href);
 
 const StoryDetailPage = () => {
   const { slug } = useParams();
@@ -191,7 +190,7 @@ const StoryDetailPage = () => {
                   />
                 ) : (
                   <iframe
-                    src={`${story.videoUrl}?rel=0`}
+                    src={toEmbedUrl(story.videoUrl)}
                     title={`${story.title} film`}
                     className="h-full w-full"
                     loading="lazy"

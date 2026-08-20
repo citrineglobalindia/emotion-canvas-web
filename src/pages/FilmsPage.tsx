@@ -13,6 +13,7 @@ import gallery1 from "@/assets/gallery-1.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import { useDemoContentAllowed, useSection, useSectionList } from "@/lib/siteContent";
+import { isPlayableFile as isSelfHosted, toEmbedUrl } from "@/lib/videoEmbed";
 import { defaultsFor } from "@/lib/contentSchema";
 import SmartImage from "@/components/SmartImage";
 
@@ -36,7 +37,6 @@ const fallbackFilms: Film[] = [
   { image: heroBg, title: "Meera & Sahil", subtitle: "Golden Hour, Jaipur", category: "Cinematic Stories" },
 ];
 
-const isSelfHosted = (href: string) => href.startsWith("/") || /\.(mp4|webm|mov)$/i.test(href);
 
 const FilmsPage = () => {
   const ref = useRef(null);
@@ -165,7 +165,7 @@ const FilmsPage = () => {
               <video src={playing.href} className="h-full w-full bg-black object-contain" controls autoPlay playsInline />
             ) : (
               <iframe
-                src={`${playing.href}?autoplay=1&rel=0`}
+                src={toEmbedUrl(playing.href, { autoplay: true })}
                 className="h-full w-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

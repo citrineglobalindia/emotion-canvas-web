@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { uploadMediaFiles } from "@/lib/mediaUpload";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { isPlayableFile } from "@/lib/videoSource";
+import { isPlayableFile } from "@/lib/videoEmbed";
 
 /** Uploads beyond this are likely to be rejected or painfully slow to load. */
 const WARN_BYTES = 50 * 1024 * 1024;
@@ -66,7 +66,7 @@ export const VideoField = ({
       ) : null}
       <Input
         value={value}
-        placeholder="Paste a YouTube/Vimeo embed link, or upload a file"
+        placeholder="Paste any YouTube/Vimeo link, or upload a file"
         onChange={(e) => onChange(e.target.value)}
         className="font-mono text-xs"
       />
